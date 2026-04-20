@@ -1,0 +1,69 @@
+<form class="profile__user-result profile__form active" data-profile-user-result="my-data" method="post" action="{{ action }}">
+    <div class="profile__form-inputs">
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-first-name">Имя</label>
+            <div class="profile__form-input">
+                <input type="text" name="firstname" id="profile-first-name" required value="{{ firstname }}">
+                {% if error_firstname %}
+                    <p class="text-danger">{{ error_firstname }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-last-name">Фамилия</label>
+            <div class="profile__form-input">
+                <input type="text" name="lastname" id="profile-last-name" required value="{{ lastname }}">
+                {% if error_lastname %}
+                    <p class="text-danger">{{ error_lastname }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-email">E-mail</label>
+            <div class="profile__form-input">
+                <input type="email" name="email" id="profile-email" required value="{{ email }}">
+                <button class="change-email" type="button"></button>
+                {% if error_email %}
+                    <p class="text-danger">{{ error_email }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-phone">Телефон</label>
+            <div class="profile__form-input">
+                <input type="text" name="telephone" id="profile-phone" required value="{{ telephone }}">
+                <button class="change-phone" type="button"></button>
+                {% if error_telephone %}
+                    <p class="text-danger">{{ error_telephone }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-password">Пароль</label>
+
+            <div class="profile__form-input">
+                <input type="password" name="password" id="profile-password" placeholder="Введите новый пароль">
+                <button class="change-password" type="button"></button>
+                {% if error_password %}
+                    <p class="text-danger">{{ error_password }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="profile__form-bottom">
+        <button class="profile__form-password btn-5 change-password" type="button">Изменить пароль</button>
+        <span></span>
+        <button class="profile__form-submit btn" type="submit">Сохранить изменения</button>
+    </div>
+
+    {% if success %}
+        <p class="text-success">{{ success }}</p>
+    {% endif %}
+
+</form>

@@ -1,0 +1,177 @@
+<div class="shop__content">
+    <form class="shop__filters" action="{{ action }}" method="get">
+        <div class="shop__filters-top">
+            <button class="shop__filters-open" type="button">Фільтр</button>
+
+            {# Вибрані фільтри #}
+            <div class="shop__filters-selected filters-selected">
+                {% for group in filter_groups %}
+                    {% for filter in group.filter %}
+                        {% if filter.selected %}
+                            <div class="filters-selected-item">
+                                <p class="filters-selected-title">{{ filter.name }}</p>
+                                <button class="filters-selected-delete" type="button" data-filter-id="{{ filter.filter_id }}"></button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+            {# Сортування #}
+            <select class="shop__filters-sort" name="sort_order">
+                {% for option in sort_options %}
+                    <option value="{{ option.value }}"
+                        {% if sort_selected == option.value %}selected{% endif %}>
+                        {{ option.text }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="shop__filters-bottom">
+            <div class="container">
+                <div class="shop__filters-info">
+                    {# Фільтри по групах #}
+                    {% for group in filter_groups %}
+                        <div class="shop__filters-box" data-filter-id="{{ group.filter_group_id }}">
+                            <div class="shop__filters-block">
+                                <h3 class="shop__filters-title">{{ group.name }}</h3>
+                                <div class="shop__filters-select">
+                                    {% for filter in group.filter %}
+                                        <label class="checkbox-block">
+                                            <input type="checkbox" name="filter[]" value="{{ filter.filter_id }}" hidden
+                                                {% if filter.selected %}checked{% endif %}>
+                                            <span>{{ filter.name }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="shop__filters-end">
+                                    <button class="shop__filters-send btn-4" type="submit">Підтвердити</button>
+                                    <button class="shop__filters-resets btn-3" type="button">Скинути фільтр</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {# Ціновий фільтр #}
+                    <div class="shop__filters-box">
+                        <div class="shop__filters-block">
+                            <h3 class="shop__filters-title">Ціна</h3>
+                            <div class="shop__filters-price filters-price">
+                                <input type="number" name="price-from" value="{{ price_from|default('') }}" min="0" placeholder="від">
+                                <input type="number" name="price-to" value="{{ price_to|default('') }}" min="0" placeholder="до">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Кнопки застосування / скидання #}
+                <div class="shop__filters-buttons">
+                    <button class="shop__filters-reset btn-3" type="reset">Скинути</button>
+                    <button class="shop__filters-submit btn-4" type="submit">Застосувати</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const filterForm = document.querySelector(".shop__filters");
+    if (!filterForm) return;
+
+    const baseUrl = document.querySelector('base')?.getAttribute('href') || '';
+
+    // Відкриття / закриття фільтрів
+    const toggleBtn = document.querySelector(".shop__filters-open");
+    if (toggleBtn) toggleBtn.addEventListener("click", () => filterForm.classList.toggle("active"));
+
+    // Скидання чекбоксів конкретної групи
+    document.querySelectorAll(".shop__filters-resets").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const box = btn.closest(".shop__filters-box");
+            if (!box) return;
+            box.querySelectorAll('input[type="checkbox"]').forEach(input => input.checked = false);
+        });
+    });
+
+    // Видалення конкретного фільтра
+    document.querySelectorAll(".filters-selected-delete").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const filterId = btn.dataset.filterId;
+            document.querySelectorAll(`input[type="checkbox"][value="${filterId}"]`)
+                .forEach(cb => cb.checked = false);
+            submitFilters();
+        });
+    });
+
+    // Сортування — одразу застосовуємо
+    const sortSelect = document.querySelector('.shop__filters-sort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => submitFilters());
+    }
+
+    // Перехоплюємо ВСІ submit-кнопки форми
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitFilters();
+    });
+
+    // Кнопка "Скинути" — очищаємо і редіректимо
+    const resetBtn = filterForm.querySelector('.shop__filters-reset');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const currentParams = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams();
+            if (currentParams.has('route')) params.set('route', currentParams.get('route'));
+            if (currentParams.has('search')) params.set('search', currentParams.get('search'));
+            window.location.href = baseUrl + 'index.php?' + params.toString();
+        });
+    }
+
+    function submitFilters() {
+        const currentParams = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams();
+
+        // Зберігаємо route
+        if (currentParams.has('route')) {
+            params.set('route', currentParams.get('route'));
+        }
+
+        // Search
+        const searchInput = filterForm.querySelector('input[name="search"]');
+        if (searchInput && searchInput.value.trim() !== '') {
+            params.set('search', searchInput.value.trim());
+        } else if (currentParams.has('search')) {
+            params.set('search', currentParams.get('search'));
+        }
+
+        // Фільтри — беремо з чекбоксів форми (Twig вже відмітив потрібні)
+        filterForm.querySelectorAll('input[name="filter[]"]:checked')
+            .forEach(input => params.append('filter[]', input.value));
+
+        // Ціна
+        const priceFrom = filterForm.querySelector('input[name="price-from"]');
+        const priceTo   = filterForm.querySelector('input[name="price-to"]');
+        if (priceFrom?.value) params.set('price-from', priceFrom.value);
+        if (priceTo?.value)   params.set('price-to', priceTo.value);
+
+        // Сортування — беремо з select (без name, тому не потрапляє у нативний submit)
+        const sortValue = sortSelect?.value;
+        if (sortValue) {
+            // Якщо value = "p-asc", "p-desc", "name-asc" тощо
+            const dashIndex = sortValue.lastIndexOf('-');
+            if (dashIndex !== -1) {
+                params.set('sort', sortValue.substring(0, dashIndex));
+                params.set('order', sortValue.substring(dashIndex + 1));
+            } else {
+                params.set('sort', sortValue);
+            }
+        }
+
+        window.location.href = baseUrl + 'index.php?' + params.toString();
+    }
+});
+</script>

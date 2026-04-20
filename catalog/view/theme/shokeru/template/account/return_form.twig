@@ -1,0 +1,104 @@
+{{ header }}
+<section class="refund">
+    <div class="container">
+        <ul class="breadcrumbs">
+			{% for breadcrumb in breadcrumbs %}
+			    <li><a href="{{ breadcrumb.href }}" {{ loop.last ? 'class="active"' : '' }}>{{ breadcrumb.text }}</a></li>
+		    {% endfor %}
+			  
+        </ul>    
+        <div class="refund__inner">
+            <h1 class="refund__title main-title">{{ heading_title }}</h1>
+            <p class="refund__name">{{ heading_form }}</p>
+            <form class="refund__form" action="{{ action }}">
+                <div class="refund__form-box">
+                    <div class="refund__form-top">
+                        <p class="refund__form-num">1</p>
+                        <h3 class="refund__form-title">{{ column_order_id }}</h3>
+                    </div>
+                    <div class="refund__form-block">
+                        <div class="refund__form-inputs">
+                            <input type="text" name="firstname" placeholder="{{ entry_firstname }}" class="form-input">
+                            <input type="text" name="lastname" placeholder="{{ entry_lastname }}" class="form-input">
+                            <span></span>
+                            <input type="text" name="thirdname" placeholder="{{ entry_thirdname }}" class="form-input">
+                            <input type="tel" name="telephone" placeholder="{{ entry_telephone }}" class="form-input">
+                            <span></span>
+                            <input type="email" name="email" placeholder="{{ entry_email }}" class="form-input">
+                            <span></span>
+                            <span></span>
+                            <input type="text" name="Номер-заказа" placeholder="Номер заказа" class="form-input">     
+                            <input type="text" name="date_ordered" placeholder="{{ text_date_ordered }}" class="form-input">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="refund__form-box">
+                    <div class="refund__form-top">
+                        <p class="refund__form-num">2</p>
+                        <h3 class="refund__form-title">{{ text_reason }}</h3>
+                    </div>
+                    <div class="refund__form-block">
+                        <div class="refund__form-inputs">
+                            <input type="text" name="product" placeholder="* {{ column_product }}:" required class="form-input fill-input">                                    
+                            <input type="text" name="model" placeholder="* {{ column_model }}" required class="form-input">
+                            <input type="text" name="quantity" placeholder="{{ column_quantity }}:" class="form-input">
+                        </div>
+                        <div class="refund__form-block--fill">
+
+                            <div class="refund__form-refund">
+                                <h4 class="refund__form-name">{{ column_reason }}</h4>
+                                <div class="refund__form-checkbox">
+                                    {% for reason in reasons %}
+                                        <label class="checkbox-block">
+                                            <input type="radio" value="{{ reason }}" name="reason_refund" hidden>
+                                            <span>{{ reason }}</span>
+                                        </label>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="refund__form-unpacked">
+                                <div class="refund__form-unpacked--block">
+                                    <h4 class="refund__form-name">{{ text_product_unpacked }}</h4>
+                                    <div class="refund__form-checkbox">
+                                        <label class="checkbox-block">
+                                            <input type="radio" value="1" name="unpacked" hidden>
+                                            <span>{{ text_yes }}</span>
+                                        </label>
+                                        <label class="checkbox-block">
+                                            <input type="radio" value="0" name="unpacked" hidden>
+                                            <span>{{ text_no }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="refund__form-defects">                                         
+                                    <textarea class="form-input" name="defects-message" placeholder="{{ entry_fault_detail }}"></textarea>        
+                                    <div class="refund__form-buttons">
+                                        <button class="refund__form-btn btn-3" type="button">{{ button_remove }}</button>
+                                        <button class="refund__form-btn btn-4" type="button">{{ button_add }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="refund__form-box">
+                        <div class="refund__form-top">
+                            <p class="refund__form-num">3</p>
+                            <h3 class="refund__form-title">{{ column_comment }}</h3>
+                        </div>
+                        <div class="refund__form-message">
+                            <textarea class="form-input" name="message" placeholder="{{ entry_comment }}"></textarea>
+                            <button class="refund__form-send btn-4" type="submit">{{ button_submit }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{{ footer }}

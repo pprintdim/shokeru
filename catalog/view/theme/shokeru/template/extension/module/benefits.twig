@@ -1,0 +1,19 @@
+<section class="advantages">
+            <div class="container">
+                <div class="advantages__inner">
+                    <div class="advantages__top">
+                        <h2 class="advantages__title title">{{ title }}</h2>
+                        <p class="advantages__descr">{{ description }}</p>
+                    </div>
+                    <div class="advantages__block">
+                        {% for item in items %}
+                            <div class="advantages__item{{ loop.last ? ' advantages__item-fill' : '' }}">
+                                <p class="advantages__item-number">{{ item.order }}</p>
+                                <h3 class="advantages__item-title">{{ item.title }}</h3>
+                                <p class="advantages__item-descr">{{ item.descr }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+</section>

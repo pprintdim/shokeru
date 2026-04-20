@@ -1,0 +1,263 @@
+{{ header }}
+
+    <section class="prod">
+            <div class="container">
+                <ul class="breadcrumbs">
+			      {% for breadcrumb in breadcrumbs %}
+			        <li>
+			          <a href="{{ breadcrumb.href }}" {% if loop.last %}class="active"{% endif %}>
+			            {{ breadcrumb.text }}
+			          </a>
+			        </li>
+			      {% endfor %}
+			    </ul>
+                <div class="prod__inner">
+                    <div class="prod__left">
+                        <div class="prod__thumbs">
+                            <div class="swiper-wrapper">
+                                {% if thumb %}
+    				            <div class="swiper-slide">
+    				              <img src="{{ thumb }}" alt="{{ name }}">
+    				            </div>
+    				            {% endif %}
+
+    				            {% if images %}
+    				              {% for image in images %}
+    				                <div class="swiper-slide">
+    				                	<img src="{{ image.popup }}" alt="{{ name }}">
+    				                </div>
+    				              {% endfor %}
+    				            {% endif %}
+                            </div>
+                        </div>
+                        <div class="prod__slider">
+                            <button class="prod__slider-prev slider-btn-prev"></button>
+                            <div class="prod__slider-inner">
+                                <div class="swiper-wrapper">
+                                    {% if thumb %}
+							         <div class="swiper-slide">
+							             <img src="{{ thumb }}" alt="{{ name }}">
+							         </div>
+							         {% endif %}
+
+							         {% if images %}
+							              {% for image in images %}
+							              <div class="swiper-slide">
+							                 <img src="{{ image.thumb }}" alt="{{ name }}">
+							              </div>
+							             {% endfor %}
+							         {% endif %}
+                                </div>
+                            </div>
+                            <button class="prod__slider-next slider-btn-next"></button>
+                        </div>
+                    </div>
+                    <div class="prod__content">
+                        <div class="prod__start">
+                            <div class="prod__top">
+                                <div class="prod__top-info">
+                                    <p class="prod__top-name">Электрошокер</p>
+                                    <h1 class="prod__top-title">{{ name }}</h1>
+                                    <p class="prod__top-made">{{ text_manufacturer }}: <strong>{{ manufacturer }}</strong> </p>
+                                </div>
+                                <div class="prod__top-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="118" height="70" viewBox="0 0 118 70" fill="none">
+                                        <path d="M61.3496 17.2407C62.317 17.2407 63.2849 17.2597 64.2275 17.2974C64.7237 17.3162 65.0711 17.6927 64.8975 18.0503L62.9629 22.1909L53.1885 43.0073C52.9652 43.5154 51.9732 43.3836 51.9727 42.8569C51.8982 36.947 51.3021 23.5837 47.6553 24.3931C47.6303 24.4116 47.5806 24.4115 47.5312 24.4302H47.5068C47.4078 24.449 47.3334 24.4865 47.2344 24.5054C36.7406 27.3662 29.7445 32.5422 29.7441 38.4331C29.7441 47.4297 45.9934 54.7143 66.0635 54.7144C73.8782 54.7144 81.0727 53.6031 87.002 51.7397C87.002 51.7397 87.0269 51.74 87.0518 51.7212C88.0441 51.4012 89.0118 51.0622 89.9297 50.7046C93.2292 49.6318 97.3225 48.6917 90.8477 53.1899C83.3803 57.1612 72.9357 59.6079 61.375 59.6079C38.6503 59.6079 20.2422 50.1212 20.2422 38.4331C20.2425 30.9047 27.8835 24.2793 39.3945 20.5151C45.7454 18.4449 53.2623 17.2408 61.3496 17.2407ZM55.8916 9.39209C78.5914 9.39212 96.999 18.8781 96.999 30.5474C96.999 38.0758 91.7649 47.129 80.2539 50.8745C73.9029 52.9449 67.7251 53.8478 59.7119 53.1138C56.9831 52.8691 55.2957 52.2669 54.0801 51.7964C52.9145 51.3447 52.4433 50.705 52.8896 49.7642L54.3037 46.771L61.9443 30.4907C62.6141 29.0792 65.3678 29.3992 65.4424 30.9048C65.7649 37.2664 67.7252 40.0708 70.5781 39.4497C70.6029 39.4309 70.6526 39.4313 70.7021 39.4126H70.7275C70.8266 39.3938 70.9009 39.3552 71 39.3364C81.4689 36.4756 81.296 34.4621 80.7998 29.8511C79.8571 20.8921 71.2479 14.2856 51.1777 14.2856C43.3879 14.2857 36.1685 15.3772 30.2393 17.2593C30.2372 17.2593 30.2132 17.2598 30.1895 17.2778C29.222 17.579 28.2792 17.9183 27.3613 18.2759C27.3366 18.276 27.3118 18.2944 27.2871 18.2944C23.9876 19.3672 19.9439 20.2895 26.4189 15.8101C33.8863 11.8388 44.3308 9.39209 55.8916 9.39209Z" fill="black"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="prod__about">
+                                <p class="prod__about-price">
+                                	{% if special %}
+                                	<span>{{ price }}</span>
+                                	{% endif %}
+                                	{{ special ?: price }}
+                                </p>
+                                <p class="prod__about-avaliable" data-product-avaliable="yes">Есть в наличии</p>
+                                <div class="prod__about-quantity">
+                                    <button class="quantity-minus"></button>
+                                    <input class="quantity-count" type="number" value="1" min="1" max="999">
+                                    <button class="quantity-plus"></button>
+                                </div>
+                            </div>
+                            <div class="prod__buttons">
+                                <button class="prod__add btn-4">
+                                    {{ text_product_add }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M9.33496 6.66675H13.335V9.33374H9.33496V13.3337H6.66797V9.33374H2.66797V6.66675H6.66797V2.66675H9.33496V6.66675Z" fill="white"/>
+                                    </svg>
+                                </button>
+                                <button class="prod__fav"></button>
+                            </div>
+                        </div>
+                        <div class="prod__block">
+                            <div class="prod__item">
+                                <h3 class="prod__item-title">{{ tab_description }}</h3>
+                                <div class="prod__item-content">
+                                    {{ description }}
+                                    <div class="prod__item-video">
+                                        <iframe width="560" height="315" src="https://www.youtube.com/embed/50o6dsdbpUU?si=xlxqdInaOR4SXCXG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for group in attribute_groups %}
+	                            <div class="prod__item">
+
+	                                <h3 class="prod__item-title">{{ group.name }}</h3>
+	                                <div class="prod__item-content prod__item-info">
+	                                	{% for attribute in group.attribute %}
+	                                    	<p>{{ attribute.name }}: <strong>{{ attribute.text }}</strong></p>
+	                                    {% endfor %}
+	                                </div>
+	                            </div>
+	                        {% endfor %}
+                            <div class="prod__item">
+                                <h3 class="prod__item-title">Гарантийные обязательства</h3>
+                                <div class="prod__item-content prod__item-info">
+                                    <p>Условия продажи электрошокера: <strong>18 лет, без лицензии</strong></p>
+                                    <p>Срок эксплуатации: <strong>3 года</strong></p>
+                                    <p>Гарантия: <strong>5 лет, включая ремонт:</strong></p>
+                                    <p>- 1 год посебестоемости запчастей;</p>
+                                    <p>- 4 года полная стоимость запчастей(+работа)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+        
+
+
+{% if products %}
+<section class="productSlider">
+    <div class="container">
+        <div class="productSlider__inner">
+            <div class="productSlider__top">
+                <h2 class="productSlider__title title">Подобрано Для Вас</h2>
+                <div class="productSlider__button slider-buttons">
+                    <button class="productSlider-prev slider-btn-prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z" fill="#8A909B"/></svg>
+                    </button>
+                    <button class="productSlider-next slider-btn-next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.99976 18.0002L12.9998 12.0002L6.99976 6.00024L8.99976 4.00024L16.9998 12.0002L8.99976 20.0002L6.99976 18.0002Z" fill="#8A909B"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="productSlider__slider">
+                <div class="swiper-wrapper">
+                    {% set min_slides = 5 %}
+                    {% set product_count = products|length %} 
+                    {% set total = product_count < min_slides ? min_slides : product_count %}
+                    {% for i in 0..(total-1) %}
+                        {% set product = products[i % product_count] %}
+                        <div class="productSlider__slide swiper-slide product__item">
+                            <button class="product__item-fav"></button>
+                            <a class="product__item-image" href="{{ product.href }}">
+                                <img src="{{ product.thumb }}" alt="{{ product.name }}">
+                            </a>
+                            <div class="product__item-content">
+                                <div class="product__item-buttons">
+                                    <button class="product__item-btn btn">
+                                        {{ button_cart }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/></svg>
+                                    </button>
+                                    <a class="product__item-btn btn" href="#">
+                                        Подробнее
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/></svg>
+                                    </a>
+                                </div>
+                                <div class="product__item-info">
+                                    <a class="product__item-title" href="#">
+                                        <h3>{{ product.name }}</h3>
+                                    </a>
+                                    <p class="product__item-price">
+                                        {% if product.special %}
+                                            <span>{{ product.price }}</span>
+                                        {% endif %}
+                                        {{ product.special ?: product.price }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="feedback">
+            <div class="container">
+                <div class="feedback__inner">
+                    <h2 class="feedback__title title">Контакт <span>Хотите поговорить с нами напрямую?</span></h2>
+                    <form class="feedback__form" action="#">
+                        <input class="feedback__form-input" type="text" placeholder="Ваше Имя" required>
+                        <input class="feedback__form-input" type="text" placeholder="Email">
+                        <input class="feedback__form-input" type="text" placeholder="Ваш номер телефона" required>
+                        <button class="feedback__form-btn btn">Отправить</button>
+                    </form>
+                </div>
+            </div>
+</section>
+<script>
+document.querySelectorAll('.prod__item-title').forEach(title => {
+    title.addEventListener('click', () => {
+        const currentItem = title.closest('.prod__item');
+        const isActive = currentItem.classList.contains('active');
+        document.querySelectorAll('.prod__item').forEach(item => {
+            item.classList.remove('active');
+        });
+        if (!isActive) {
+            currentItem.classList.add('active');
+            if (window.innerWidth < 1000) {
+                const offsetTop = currentItem.getBoundingClientRect().top + window.scrollY - 90;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
+});
+
+
+const thumbsSwiper = new Swiper('.prod__thumbs', {
+    direction: 'vertical',
+    slidesPerView: 'auto',
+    spaceBetween: 24,
+    watchSlidesProgress: true,
+    simulateTouch: true,
+    grabCursor: true,
+    mousewheel: true, // дозволяє скрол на трекпаді
+});
+
+const mainSwiper = new Swiper('.prod__slider-inner', {
+    slidesPerView: 1,
+    spaceBetween: 16,
+    simulateTouch: true,
+    grabCursor: true,
+    navigation: {
+      nextEl: '.prod__slider-next',
+      prevEl: '.prod__slider-prev',
+    },
+    thumbs: {
+      swiper: thumbsSwiper,
+    },
+    breakpoints: {
+        1280: {
+            spaceBetween: 24,
+            slidesPerView: 2,
+        },
+    },
+});
+
+   
+
+
+</script>
+{{ footer }}

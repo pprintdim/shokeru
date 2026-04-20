@@ -1,0 +1,29 @@
+{{ header }}
+<section class="profile">
+    <div class="container">
+        <div class="profile__inner">
+            {{ column_left }}
+            <div class="profile__result profile-files" data-profile-content="files">
+                <div class="profile__result-top">
+                    <h2 class="profile__result-heading">{{ text_files_heading }}</h2>
+                </div>
+
+                {% if downloads %}
+                    <div class="profile__files-block">
+                        {% for file in downloads %}
+                            <div class="profile__files-item">
+                                <h3 class="profile__files-title">{{ file.name }}</h3>
+                                <p class="profile__files-descr">{{ file.description }}</p>
+                                <a class="profile__files-download" href="{{ file.href }}" download></a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="profile__result-name">{{ text_empty }}</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+{{ footer }}

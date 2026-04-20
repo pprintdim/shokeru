@@ -1,0 +1,142 @@
+{{ header }}
+<section class="profile">
+    <div class="container">
+        <div class="profile__inner">
+            {{ column_left }}
+            <div class="profile__result profile-orders" data-profile-content="my-orders">
+                <div class="profile__orders-top">
+                    <h2 class="profile__orders-heading">Мои заказы</h2>
+                    <form class="profile__orders-filters" action="#">
+                        <select name="years-date">
+                            <option value="2025" selected>2025</option>
+                        </select>
+                        <select name="status">
+                            <option value="" selected disabled>Статус</option>
+                            <option value="Принят">Принят</option>
+                            <option value="Отправлен">Отправлен</option>
+                        </select>
+                        <button class="profile__orders-btn btn">Применить</button>
+                    </form>
+                </div>
+
+                <div class="profile__orders-block">
+                    <div class="profile__orders-item">
+                        <div class="profile__orders-start">
+                            <div class="profile__orders-start--left">
+                                <p class="profile__orders-number">№ 56800 от 25.10.21 в 12:34</p>
+                                <p class="profile__orders-status">В обработке</p>
+                            </div>
+                            <div class="profile__orders-start--content">
+                                <div class="profile__orders-info">
+                                    <div class="profile__orders-info--block">
+                                        <h4>Статус заказа</h4>
+                                        <p>Принят</p>
+                                    </div>
+                                    <div class="profile__orders-info--block">
+                                        <h4>Статус оплаты</h4>
+                                        <p>Оплачен</p>
+                                    </div>
+                                    <div class="profile__orders-info--block">
+                                        <h4>Сумма</h4>
+                                        <p>5 500 грн</p>
+                                    </div>
+                                    <div class="profile__orders-info--block">
+                                        <h4>Всего товаров:</h4>
+                                        <p>1</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile__orders-content">
+                            <div class="profile__orders-left">
+                                <div class="profile__orders-left--block">
+                                    <div class="profile__orders-left--item">
+                                        <h4>Получатель</h4>
+                                        <p>Дмитрий Верховецкий (050 478 90 00)</p>
+                                    </div>
+                                    <div class="profile__orders-left--item">
+                                        <h4>Адрес доставки</h4>
+                                        <p>Самовывоз из Новой Почты: <br>Запорожская обл., Бердянский р-н., Бердянск, Отделение №233, Софиевская ул., д.40</p>
+                                    </div>
+                                    <div class="profile__orders-left--item">
+                                        <h4>Информация о заказе</h4>
+                                        <p>ТТН 414063108</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="profile__orders-products">
+                                <div class="profile__orders-products--block">
+                                    <div class="profile__orders-products--item">
+                                        <a class="profile__orders-products--image" href="#">
+                                            <img src="img/productSlider/1.png" alt="">
+                                        </a>
+                                        <a class="profile__orders-products--title" href="#">
+                                            <h3>Шокер 1102 Scorpion (950W)</h3>
+                                        </a>
+                                        <div class="profile__orders-products--info">
+                                            <h4>Цена:</h4>
+                                            <p>450 грн</p>
+                                        </div>
+                                        <div class="profile__orders-products--info">
+                                            <h4>Кол-во: </h4>
+                                            <p>1</p>
+                                        </div>
+                                        <div class="profile__orders-products--info">
+                                            <h4>Сумма: </h4>
+                                            <p>450 грн</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile__orders-products--item">
+                                        <a class="profile__orders-products--image" href="#">
+                                            <img src="img/productSlider/1.png" alt="">
+                                        </a>
+                                        <a class="profile__orders-products--title" href="#">
+                                            <h3>Шокер 1102 Scorpion (950W)</h3>
+                                        </a>
+                                        <div class="profile__orders-products--info">
+                                            <h4>Цена:</h4>
+                                            <p>450 грн</p>
+                                        </div>
+                                        <div class="profile__orders-products--info">
+                                            <h4>Кол-во: </h4>
+                                            <p>1</p>
+                                        </div>
+                                        <div class="profile__orders-products--info">
+                                            <h4>Сумма: </h4>
+                                            <p>450 грн</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="profile__orders-products--bottom">
+                                    <button class="profile__orders-products--repeat btn-4">Повторить заказ</button>
+                                    <div class="profile__orders-products--total">
+                                        <h4 class="profile__orders-products--pay">Оплата при получении товара</h4>
+                                        <div class="profile__orders-products--total-price">
+                                            <h4>Итого: </h4>
+                                            <p>900 грн</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile__orders-bottom">
+                    <h4 class="profile__orders-bottom--title">Стараница</h4>
+                    <div class="profile__orders-pages">
+                        <a class="active" href="#">1</a>
+                        <a href="#">2</a>
+                        <a class="next-page" href="#"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ footer }}

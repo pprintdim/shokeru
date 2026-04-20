@@ -1,0 +1,307 @@
+<?php
+class ControllerProductLatest extends Controller {
+    public function index() {
+        $this->load->language('product/category');
+
+        $this->load->model('catalog/product');
+        $this->load->model('tool/image');
+
+        $filter_category_id = $this->request->get['category_id'] ?? 0;
+        $filter_filter      = $this->request->get['filter'] ?? '';
+        $filter_option      = $this->request->get['option'] ?? [];
+        $filter_attribute   = $this->request->get['attribute'] ?? [];
+
+
+
+        // ======================
+        // Параметри пагінації / сортування
+        // ======================
+        $sort  = $this->request->get['sort'] ?? 'p.date_added';
+        $order = $this->request->get['order'] ?? 'DESC';
+        $page  = isset($this->request->get['page']) ? (int)$this->request->get['page'] : 1;
+        $limit = isset($this->request->get['limit']) && (int)$this->request->get['limit'] > 0
+            ? (int)$this->request->get['limit']
+            : $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
+
+
+        $url = '';
+
+        if (isset($this->request->get['filter'])) {
+            $url .= '&filter=' . $this->request->get['filter'];
+        }
+        if (isset($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
+
+
+        $data['sorts'] = [];
+
+
+
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_default'),
+            'value' => '',
+            'href'  => $this->url->link('product/latest', $url)
+        );
+
+        $data['sorts'][] = [
+            'text'  => $this->language->get('text_date_asc'), // старіші спочатку
+            'value' => 'p.date_added-ASC',
+            'href'  => $this->url->link('product/shop', 'sort=p.date_added&order=ASC' . $url)
+        ];
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_model_asc'),
+            'value' => 'p.model-ASC',
+            'href'  => $this->url->link('product/shop', 'sort=p.model&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_model_desc'),
+            'value' => 'p.model-DESC',
+            'href'  => $this->url->link('product/shop', 'sort=p.model&order=DESC' . $url)
+        );
+        if ($this->config->get('config_review_status')) {
+
+            $data['sorts'][] = [
+                'text'  => $this->language->get('text_rating_asc'),
+                'value' => 'rating-ASC',
+                'href'  => $this->url->link('product/latest', 'sort=rating&order=ASC' . $url)
+            ];
+
+            $data['sorts'][] = [
+                'text'  => $this->language->get('text_rating_desc'),
+                'value' => 'rating-DESC',
+                'href'  => $this->url->link('product/latest', 'sort=rating&order=DESC' . $url)
+            ];
+        }
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_name_asc'),
+            'value' => 'pd.name-ASC',
+            'href'  => $this->url->link('product/latest', 'sort=pd.name&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_name_desc'),
+            'value' => 'pd.name-DESC',
+            'href'  => $this->url->link('product/latest', 'sort=pd.name&order=DESC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_price_asc'),
+            'value' => 'p.price-ASC',
+            'href'  => $this->url->link('product/latest', 'sort=p.price&order=ASC' . $url)
+        );
+
+        $data['sorts'][] = array(
+            'text'  => $this->language->get('text_price_desc'),
+            'value' => 'p.price-DESC',
+            'href'  => $this->url->link('product/latest', 'sort=p.price&order=DESC' . $url)
+        );        
+
+        $data['sort_selected'] = $sort . '-' . $order;
+
+        // ======================
+        // SEO заголовки
+        // ======================
+        $this->document->setTitle('Новинки');
+        $this->document->setDescription('Останні надходження в магазині');
+        $this->document->setKeywords('нові товари, latest products');
+        $data['heading_title'] = 'Новинки';
+
+        // ======================
+        // Підключення Swiper
+        // ======================
+        $this->document->addStyle('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+        $this->document->addScript('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js');
+
+        // ======================
+        // Отримуємо останні товари
+        // ======================
+        $data['products'] = [];
+        $filter_data = [
+            'filter_category_id' => $filter_category_id,
+            'filter_filter'      => $filter_filter,
+            'filter_option'      => $filter_option,
+            'filter_attribute'   => $filter_attribute,
+            'sort'  => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $limit,
+            'limit' => $limit
+        ];
+
+        $results = $this->model_catalog_product->getProducts($filter_data);
+        $product_total = $this->model_catalog_product->getTotalProducts([]);
+
+        foreach ($results as $result) {
+            $image = $result['image']
+                ? $this->model_tool_image->resize(
+                    $result['image'],
+                    $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
+                    $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
+                  )
+                : $this->model_tool_image->resize(
+                    'placeholder.png',
+                    $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
+                    $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
+                  );
+
+            $price = ($this->customer->isLogged() || !$this->config->get('config_customer_price'))
+                ? $this->currency->format(
+                    $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')),
+                    $this->session->data['currency']
+                  )
+                : false;
+
+            $special = (!is_null($result['special']) && (float)$result['special'] >= 0)
+                ? $this->currency->format(
+                    $this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')),
+                    $this->session->data['currency']
+                  )
+                : false;
+
+            $data['products'][] = [
+                'product_id' => $result['product_id'],
+                'thumb'      => $image,
+                'name'       => $result['name'],
+                'price'      => $price,
+                'special'    => $special,
+                'href'       => $this->url->link('product/product', 'product_id=' . $result['product_id'])
+            ];
+        }
+
+        $data['filter'] = $this->load->controller('extension/module/filter');
+
+        // ======================
+        // Рекомендовані товари
+        // ======================
+        $data['recommended'] = [];
+        $limit_rec = 10;
+        $added_ids = [];
+        $recently_viewed = $this->session->data['recently_viewed'] ?? [];
+
+        $popular_products = $this->model_catalog_product->getProducts([
+            'sort'  => 'p.viewed',
+            'order' => 'DESC',
+            'start' => 0,
+            'limit' => 100
+        ]);
+
+        foreach ($results as $result) {
+            $rec_items = [];
+
+            // Переглянуті
+            if ($recently_viewed) {
+                $rv_ids = array_diff($recently_viewed, $added_ids);
+                if ($rv_ids) {
+                    $rv_products = $this->model_catalog_product->getProducts([
+                        'filter_product_id' => $rv_ids,
+                        'start' => 0,
+                        'limit' => $limit_rec
+                    ]);
+                    foreach ($rv_products as $p) {
+                        if (!in_array($p['product_id'], $added_ids)) {
+                            $added_ids[] = $p['product_id'];
+                            $rec_items[] = $p;
+                        }
+                    }
+                }
+            }
+
+            // Рекомендовані з самого продукту
+            if (!empty($result['recommended'])) {
+                $recommended_ids = is_array($result['recommended'])
+                    ? $result['recommended']
+                    : explode(',', $result['recommended']);
+                $recommended_ids = array_diff($recommended_ids, $added_ids);
+
+                if ($recommended_ids) {
+                    $pr_products = $this->model_catalog_product->getProducts([
+                        'filter_product_id' => $recommended_ids,
+                        'start' => 0,
+                        'limit' => $limit_rec
+                    ]);
+                    foreach ($pr_products as $p) {
+                        if (!in_array($p['product_id'], $added_ids)) {
+                            $added_ids[] = $p['product_id'];
+                            $rec_items[] = $p;
+                        }
+                    }
+                }
+            }
+
+            // Популярні, якщо мало
+            if (count($rec_items) < $limit_rec) {
+                foreach ($popular_products as $p) {
+                    if (!in_array($p['product_id'], $added_ids)) {
+                        $added_ids[] = $p['product_id'];
+                        $rec_items[] = $p;
+                    }
+                    if (count($rec_items) >= $limit_rec) break;
+                }
+            }
+
+            // Форматування
+            foreach ($rec_items as &$rec) {
+                $rec['thumb'] = $rec['image']
+                    ? $this->model_tool_image->resize(
+                        $rec['image'],
+                        $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
+                        $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
+                      )
+                    : $this->model_tool_image->resize(
+                        'placeholder.png',
+                        $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
+                        $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
+                      );
+
+                $rec['price'] = ($this->customer->isLogged() || !$this->config->get('config_customer_price'))
+                    ? $this->currency->format(
+                        $this->tax->calculate($rec['price'], $rec['tax_class_id'], $this->config->get('config_tax')),
+                        $this->session->data['currency']
+                      )
+                    : false;
+
+                $rec['special'] = (!is_null($rec['special']) && (float)$rec['special'] >= 0)
+                    ? $this->currency->format(
+                        $this->tax->calculate($rec['special'], $rec['tax_class_id'], $this->config->get('config_tax')),
+                        $this->session->data['currency']
+                      )
+                    : false;
+
+                $rec['href'] = $this->url->link('product/product', 'product_id=' . $rec['product_id']);
+            }
+            unset($rec);
+
+            // Додаємо у загальний масив
+            $data['recommended'] = array_merge($data['recommended'], array_slice($rec_items, 0, $limit_rec));
+        }
+
+        // ======================
+        // PAGINATION
+        // ======================
+        $pagination = new Pagination();
+        $pagination->total = $product_total;
+        $pagination->page  = $page;
+        $pagination->limit = $limit;
+        $pagination->url   = $this->url->link('product/latest', '&page={page}');
+        $data['pagination'] = $pagination->render();
+
+        $data['sort']  = $sort;
+        $data['order'] = $order;
+        $data['limit'] = $limit;
+
+        // ======================
+        // Layout
+        // ======================
+        $data['column_left']    = $this->load->controller('common/column_left');
+        $data['column_right']   = $this->load->controller('common/column_right');
+        $data['content_top']    = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer']         = $this->load->controller('common/footer');
+        $data['header']         = $this->load->controller('common/header');
+
+        $this->response->setOutput($this->load->view('product/latest', $data));
+    }
+}

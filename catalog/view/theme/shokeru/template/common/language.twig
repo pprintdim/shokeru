@@ -1,0 +1,19 @@
+{% if languages|length > 0 %}
+  <div class="header__lang">
+
+    {# ПОТОЧНА МОВА #}
+    <div class="header__lang-selected">
+      {{ current.name|upper }}
+    </div>
+
+    {# ІНШІ МОВИ #}
+    <div class="header__lang-content">
+      {% for lang in languages %}
+        <a href="index.php?route=common/language/set&code={{ lang.code }}">
+          {{ lang.name|upper }}
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+{% endif %}

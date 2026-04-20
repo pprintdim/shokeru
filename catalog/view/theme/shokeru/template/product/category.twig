@@ -1,0 +1,412 @@
+{{ header }}
+<main class="main">
+	{{ content_top }}
+ <section class="pageContent pageContent-banner">
+    <div class="container">
+        <div class="pageContent__inner">
+            <div class="pageContent__content">
+                 <p class="pageContent__line">//////////</p>
+                 <h1 class="pageContent__title title">
+                 	Финальная распродажа 
+                 	<span>-40% на весь товар “Wei-Shi”</span>
+                 </h1>
+            </div>
+             <div class="pageContent__image">
+                 <img src="img/pageContent/1.png" alt="">
+            </div>
+        </div>
+   </div>
+</section>
+   {{ content_bottom }}
+        <section class="shop">
+            <div class="container">
+                <div class="shop__inner">
+
+                    {#<div class="shop__content">
+                        <form class="shop__filters" action="#">
+                            <div class="shop__filters-top">
+                                <button class="shop__filters-open" type="button">Фильтр</button>
+                                <div class="shop__filters-selected filters-selected">
+                                    <div class="filters-selected-item">
+                                        <p class="filters-selected-title">Standart</p>
+                                        <button class="filters-selected-delete"></button>
+                                    </div>
+                                    <div class="filters-selected-item">
+                                        <p class="filters-selected-title">< 50 (k.volts)</p>
+                                        <button class="filters-selected-delete"></button>
+                                    </div>
+                                </div>
+                                <select class="shop__filters-sort" name="sort">
+                                    <option value="От популярного" selected>От популярного</option>
+                                    <option value="От дешевого">От дешевого</option>
+                                </select>
+                            </div>
+                            <div class="shop__filters-bottom">
+                                <div class="shop__filters-start">
+                                    <div class="container">
+                                        <button class="shop__filters-start--reset" type="reset">Сбросить фильтр</button>
+                                        <p class="shop__filters-start--number">Фильтр (2)</p>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="shop__filters-menu">
+                                        <button class="shop__filters-close" type="button"></button>
+                                        <select class="shop__filters-sort" name="sort">
+                                            <option value="От популярного" selected>От популярного</option>
+                                            <option value="От дешевого">От дешевого</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="shop__filters-info">
+                                        <div class="shop__filters-box">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Класс Wei Shi</h3>
+                                                <div class="shop__filters-select">
+                                                    <label class="checkbox-block">
+                                                        <input type="checkbox" name="wei-shi-class" value="standard" hidden>
+                                                        <span>Standart (167)</span>
+                                                    </label>
+                                                    <label class="checkbox-block">
+                                                        <input type="checkbox" name="wei-shi-class" value="platinum" hidden>
+                                                        <span>Platinum (100)</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="filters-open-mobile">
+                                            <button class="filters-open-title" type="button" data-filter-target="voltage">Напряжение (тыс.вольт.)</button>
+                                            <button class="filters-open-title" type="button" data-filter-target="dimensions">Габариты</button>
+                                            <button class="filters-open-title" type="button" data-filter-target="country">Страна производитель</button>
+                                            <button class="filters-open-title" type="button" data-filter-target="impact-time">Поражение до</button>
+                                            <button class="filters-open-title" type="button" data-filter-target="temperature">Поражение до °C</button>
+                                        </div>
+
+                                        <div class="shop__filters-box" data-filter-id="voltage">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Напряжение (тыс.вольт.)</h3>
+                                                <div class="container">
+                                                    <div class="shop__filters-select">
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="voltage-kv" value="less-than-50" hidden>
+                                                            <span>50 (k.volts)</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="voltage-kv" value="50-99" hidden>
+                                                            <span>50 - 99 (k.volts)</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="voltage-kv" value="100-150" hidden>
+                                                            <span>100 - 150 (k.volts)</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="voltage-kv" value="greater-than-150" hidden>
+                                                            <span>150 (k.volts)</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="shop__filters-end">
+                                                        <button class="shop__filters-send btn-4" type="submit">подтвердить</button>
+                                                        <button class="shop__filters-resets" type="button">Сбросить фильтр</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="shop__filters-box" data-filter-id="dimensions">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Габариты</h3>
+                                                <div class="container">
+                                                    <div class="shop__filters-select">
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="dimensions-cm" value="less-than-12" hidden>
+                                                            <span>12 см</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="dimensions-cm" value="12-20" hidden>
+                                                            <span>12 - 20 см</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="dimensions-cm" value="greater-than-20" hidden>
+                                                            <span>20 см</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="shop__filters-end">
+                                                        <button class="shop__filters-send btn-4" type="submit">подтвердить</button>
+                                                        <button class="shop__filters-resets" type="button">Сбросить фильтр</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="shop__filters-box" data-filter-id="country">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Страна производитель</h3>
+                                                <div class="container">
+                                                    <div class="shop__filters-select">
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="country-of-origin" value="china" hidden>
+                                                            <span>Китай</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="country-of-origin" value="usa" hidden>
+                                                            <span>США</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="country-of-origin" value="south-korea" hidden>
+                                                            <span>Южная Корея</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="country-of-origin" value="taiwan" hidden>
+                                                            <span>Тайвань</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="country-of-origin" value="malaysia" hidden>
+                                                            <span>Малайзия</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="country-of-origin" value="germany" hidden>
+                                                            <span>Германия</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="shop__filters-end">
+                                                        <button class="shop__filters-send btn-4" type="submit">подтвердить</button>
+                                                        <button class="shop__filters-resets" type="button">Сбросить фильтр</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="shop__filters-box" data-filter-id="impact-time">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Время поражения (до)</h3>
+                                                <div class="container">
+                                                    <div class="shop__filters-select">
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="time-to-impact-min" value="5" hidden>
+                                                            <span>5 мин</span>
+                                                        </label>
+                                                        <label class="checkbox-block"> 
+                                                            <input type="checkbox" name="time-to-impact-min" value="10" hidden>
+                                                            <span>10 мин</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="time-to-impact-min" value="20" hidden>
+                                                            <span>20 мин</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="time-to-impact-min" value="30" hidden>
+                                                            <span>30 мин</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="shop__filters-end">
+                                                        <button class="shop__filters-send btn-4" type="submit">подтвердить</button>
+                                                        <button class="shop__filters-resets" type="button">Сбросить фильтр</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="shop__filters-box" data-filter-id="temperature">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Температура (до)</h3>
+                                                <div class="container">
+                                                    <div class="shop__filters-select">
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="temperature-celsius" value="-10" hidden>
+                                                            <span>-10 С</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="temperature-celsius" value="-15" hidden>
+                                                            <span>-15 С</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="temperature-celsius" value="-20" hidden>
+                                                            <span>-20 С</span>
+                                                        </label>
+                                                        <label class="checkbox-block">
+                                                            <input type="checkbox" name="temperature-celsius" value="-30" hidden>
+                                                            <span>-30 С</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="shop__filters-end">
+                                                        <button class="shop__filters-send btn-4" type="submit">подтвердить</button>
+                                                        <button class="shop__filters-resets" type="button">Сбросить фильтр</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="shop__filters-box">
+                                            <div class="shop__filters-block">
+                                                <h3 class="shop__filters-title">Цена Wei Shi</h3>
+                                                <div class="shop__filters-price filters-price">
+                                                    <input type="number" name="price-from" value="100" min="100" max="1999" placeholder="от 100 грн">
+                                                    <input type="number" name="price-to" value="2000" min="101" max="2000" placeholder="до 2000 грн">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="shop__filters-buttons">
+                                        <button class="shop__filters-back btn-3" type="reset">назад</button>
+                                        <button class="shop__filters-reset btn-3" type="reset">сбросить</button>
+                                        <button class="shop__filters-submit btn-4" type="submit">Применить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>#}
+
+                    {% if products %}
+                    	{% set min_slides = 20 %}
+	                    {% set product_count = products|length %} 
+	                    {% set total = product_count < min_slides ? min_slides : product_count %}
+	                    
+                    	<div class="shop__results">
+                    		{% for i in 0..(total-1) %}
+                        		{% set product = products[i % product_count] %}
+
+		                        <div class="shop__item product__item">
+		                            <button class="product__item-fav"></button>
+		                            <a class="product__item-image" href="#">
+		                                <img src="{{ product.thumb }}" alt="">
+		                            </a>
+		                            <div class="product__item-content">
+		                                <div class="product__item-buttons">
+		                                    <button onclick="card.add({{ product.product_id }});" class="product__item-btn btn">
+		                                        В корзину
+		                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+		                                            <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+		                                        </svg>
+		                                    </button>
+		                                    <a class="product__item-btn btn" href="#">
+		                                        Подробнее
+		                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+		                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+		                                        </svg>
+		                                    </a>
+		                                </div>
+		                                <div class="product__item-info">
+		                                    <a class="product__item-title" href="#">
+		                                        <h3>{{ product.name }}</h3>
+		                                    </a>
+		                                    <p class="product__item-price">
+		                                        {% if product.special %}
+		                                            <span>{{ product.price }}</span>
+		                                        {% endif %}
+		                                        {{ product.special ?: product.price }}
+		                                    </p>
+		                                </div>
+		                            </div>
+		                        </div>
+	                    	{% endfor %}
+	                    </div>
+                    {% endif %}
+                    
+                    <div class="shop__bottom">
+                        <button class="shop__more btn-4">
+                        	показать больше товара
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99935 4.66602L7.99935 8.66602L11.9993 4.66602L13.3327 5.99935L7.99935 11.3327L2.66602 5.99935L3.99935 4.66602Z" fill="white"/>
+                            </svg>
+                        </button>
+                        <div class="shop__pages">
+                            <p class="shop__pages-title">Стараница</p>
+                            <div class="shop__pages-content">
+                                <a class="active" href="#">1</a>
+                                <a href="#">2</a>
+                                <a class="shop__pages-next" href="#"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="infoBlock">
+            <div class="container">
+                <div class="infoBlock__inner">
+                    <h3 class="infoBlock__title">Интернет магазин <mark>shokeru.in.ua</mark><br><span>- портал, на котором размещен огромный ассортимент электрошокирующих приборов. Данный сайт является наилучшим выбором, при покупке электрошокера!</span></h3>
+                    <p class="infoBlock__descr">Для того чтобы избежать приобретения нелицензионного или бракованного товара, мы настоятельно рекомендуем при покупке электрошокера, руководствоваться несколькими основными условиями, которые помогут Вам отличить оригинальное изделие от подделки.</p>
+                    <p class="infoBlock__descr">Не стоит забывать, что каждая модель электрошокера компании «WeiShi», имеет собственный серийный номер, который вносится в единую базу данных производителя и позволяет проверить оригинальность и соответствие изделия заявленным техническим характеристикам.</p>
+                    <p class="infoBlock__descr">Стоимость <a href="#">оригинального электрошокера</a> изготовленного компанией «WeiShi», не может сильно отличатся от средней стоимости на рынке. Корпорация тщательно контролирует отпускные цены для своих торговых представителей и не допускает разности в цене более чем 15%. Многие крупные магазины, которые реализуют подобные товары в больших объёмах, могут незначительно снизить цену на определённые модели, но такая уценка не может превышать 30% от средней рыночной стоимости. Если скидка на шокер составляет более 30%, то скорее всего Вам попалась поделка, модель с более низкого класса или бракованное изделие.</p>
+                </div>
+            </div>
+        </section>
+        
+
+{% if recommended %}
+    {% set min_slides = 6 %}
+    {% set recommended_count = recommended|length %}
+    {% set total = recommended_count < min_slides ? min_slides : recommended_count %}
+
+    <section class="productSlider">
+        <div class="container">
+            <div class="productSlider__inner">
+                <div class="productSlider__top">
+                    <h2 class="productSlider__title title">{{ text_recommended ?: 'Подобрано Для Вас' }}</h2>
+                    <div class="productSlider__button slider-buttons">
+                        <button class="productSlider-prev slider-btn-prev">
+	                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z" fill="#8A909B"/></svg>
+	                    </button>
+	                    <button class="productSlider-next slider-btn-next">
+	                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.99976 18.0002L12.9998 12.0002L6.99976 6.00024L8.99976 4.00024L16.9998 12.0002L8.99976 20.0002L6.99976 18.0002Z" fill="#8A909B"/></svg>
+	                    </button>
+                    </div>
+                </div>
+                <div class="productSlider__slider">
+                    <div class="swiper-wrapper">
+                        {% for i in 0..(total-1) %}
+                            {% set product = recommended[i % recommended_count] %}
+                            <div class="productSlider__slide swiper-slide product__item">
+                                <button class="product__item-fav"></button>
+                                <a class="product__item-image" href="{{ product.href }}">
+                                    <img src="{{ product.thumb }}" alt="{{ product.name }}">
+                                </a>
+                                <div class="product__item-content">
+                                    <div class="product__item-buttons">
+	                                   <button onclick="card.add({{ product.product_id }});" class="product__item-btn btn">
+	                                        В корзину
+	                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+	                                            <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+	                                        </svg>
+	                                    </button>
+	                                    <a class="product__item-btn btn" href="#">
+	                                        Подробнее
+	                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+	                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+	                                        </svg>
+	                                    </a>
+	       	                        </div>
+                                    <div class="product__item-info">
+                                        <a class="product__item-title" href="{{ product.href }}">
+                                            <h3>{{ product.name }}</h3>
+                                        </a>
+                                        <p class="product__item-price">
+                                            {% if product.special %}
+                                                <span>{{ product.price }}</span>
+                                                {{ product.special }}
+                                            {% else %}
+                                                {{ product.price }}
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endif %}
+{{ footer }}

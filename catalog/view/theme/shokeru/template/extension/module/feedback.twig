@@ -1,0 +1,62 @@
+<section class="feedback">
+    <div class="container">
+        <div class="feedback__inner">
+            {% if heading_title %}
+                <h2 class="feedback__title title">{{ heading_title }}</h2>
+            {% endif %}
+            <div class="feedback__result"></div>
+            <form class="feedback__form" action="{{ action }}">
+                <input class="feedback__form-input" type="text" name="name" placeholder="{{ entry_name }}" required>
+                <input class="feedback__form-input" type="email" name="email" placeholder="{{ entry_email }}">
+                <input class="feedback__form-input" type="tel" name="telephone" placeholder="{{ entry_telephone }}" required>
+                <textarea class="feedback__form-input" name="message" placeholder="{{ entry_message }}" required></textarea>
+                <button class="feedback__form-btn btn" type="submit">{{ button_submit }}</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('.feedback__form');
+    const resultBlock = document.querySelector('.feedback__result');
+
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        resultBlock.textContent = '';
+
+        const formData = new FormData(form);
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                resultBlock.style.color = 'green';
+                resultBlock.textContent = data.success;
+                form.reset();
+            } else {
+                resultBlock.style.color = 'red';
+                if (data.error) {
+                    // якщо помилки для конкретних полів
+                    if (typeof data.error === 'object') {
+                        resultBlock.innerHTML = Object.values(data.error).join('<br>');
+                    } else {
+                        resultBlock.textContent = data.error;
+                    }
+                } else {
+                    resultBlock.textContent = 'Помилка відправки';
+                }
+            }
+        })
+        .catch(() => {
+            resultBlock.style.color = 'red';
+            resultBlock.textContent = 'Помилка сервера';
+        });
+    });
+});
+</script>

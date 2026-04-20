@@ -1,0 +1,73 @@
+{% if products %}
+    {% set min_slides = 5 %}
+    {% set product_count = products|length %}    
+    <section class="productSlider">
+        <div class="container">
+            <div class="productSlider__inner">
+                <div class="productSlider__top">
+                    <h2 class="productSlider__title title">{{ heading_title }}</h2>
+                    <div class="productSlider__button slider-buttons">
+                        <button class="productSlider-prev slider-btn-prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z" fill="#8A909B"/>
+                            </svg>
+                        </button>
+                        <button class="productSlider-next slider-btn-next">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.99976 18.0002L12.9998 12.0002L6.99976 6.00024L8.99976 4.00024L16.9998 12.0002L8.99976 20.0002L6.99976 18.0002Z" fill="#8A909B"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="productSlider__slider">
+                    <div class="swiper-wrapper">
+                        {% set total = product_count < min_slides ? min_slides : product_count %}
+                        {% for i in 0..(total-1) %}
+                            {% set product = products[i % product_count] %}
+                            
+                            <div class="productSlider__slide swiper-slide product__item">
+                                <button class="product__item-fav"></button>
+                                <a class="product__item-image" href="{{ product.href }}">
+                                    <img src="{{ product.thumb }}" alt="{{ product.name }}">
+                                </a>
+                                <div class="product__item-content">
+                                    <div class="product__item-buttons">
+                                        <button class="product__item-btn btn" onclick="cart.add('{{ product.product_id }}');">
+                                            В корзину
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+                                            </svg>
+                                        </button>
+                                        <a class="product__item-btn btn" href="{{ product.href }}">
+                                            Подробнее
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div class="product__item-info">
+                                        <a class="product__item-title" href="{{ product.href }}">
+                                            <h3>{{ product.name }}</h3>
+                                        </a>
+                                        <p class="product__item-price">
+                                            {% if product.special %}
+                                                <span>{{ product.price }}</span>
+                                            {% endif %}
+                                            {{ product.special ?: product.price }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <a class="productSlider__btn btn-3" href="{{ catalog_href }}">
+                    Перейти В КАТАЛОГ
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.6665 12.0002L8.6665 8.00016L4.6665 4.00016L5.99984 2.66683L11.3332 8.00016L5.99984 13.3335L4.6665 12.0002Z" fill="#202222"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endif %}
