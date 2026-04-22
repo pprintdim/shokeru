@@ -5551,6 +5551,11 @@ a.shop__pages-next:not(:hover){
 .shop__more{
     gap: 8px;
 }
+.shop__more:disabled,
+.shop__more.loading{
+    pointer-events: none;
+    opacity: .65;
+}
 @media (max-width: 1279px) {
     .shop{
         padding-bottom: 80px;

@@ -7,7 +7,15 @@ class ControllerProductLatest extends Controller {
         $this->load->model('tool/image');
 
         $filter_category_id = $this->request->get['category_id'] ?? 0;
-        $filter_filter      = $this->request->get['filter'] ?? '';
+        $filter_filter = '';
+        if (!empty($this->request->get['filter'])) {
+            $filter_filter = is_array($this->request->get['filter'])
+                ? implode(',', $this->request->get['filter'])
+                : $this->request->get['filter'];
+        }
+
+        $price_from = isset($this->request->get['price_from']) ? $this->request->get['price_from'] : ($this->request->get['price-from'] ?? '');
+        $price_to = isset($this->request->get['price_to']) ? $this->request->get['price_to'] : ($this->request->get['price-to'] ?? '');
         $filter_option      = $this->request->get['option'] ?? [];
         $filter_attribute   = $this->request->get['attribute'] ?? [];
 
@@ -21,14 +29,15 @@ class ControllerProductLatest extends Controller {
         $page  = isset($this->request->get['page']) ? (int)$this->request->get['page'] : 1;
         $limit = isset($this->request->get['limit']) && (int)$this->request->get['limit'] > 0
             ? (int)$this->request->get['limit']
-            : $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
+            : 8;
 
 
         $url = '';
 
-        if (isset($this->request->get['filter'])) {
-            $url .= '&filter=' . $this->request->get['filter'];
-        }
+        if ($filter_filter !== '') $url .= '&filter=' . $filter_filter;
+        if ($price_from !== '') $url .= '&price_from=' . $price_from;
+        if ($price_to !== '') $url .= '&price_to=' . $price_to;
+
         if (isset($this->request->get['limit'])) {
             $url .= '&limit=' . $this->request->get['limit'];
         }
@@ -48,19 +57,19 @@ class ControllerProductLatest extends Controller {
         $data['sorts'][] = [
             'text'  => $this->language->get('text_date_asc'), // старіші спочатку
             'value' => 'p.date_added-ASC',
-            'href'  => $this->url->link('product/shop', 'sort=p.date_added&order=ASC' . $url)
+            'href'  => $this->url->link('product/latest', 'sort=p.date_added&order=ASC' . $url)
         ];
 
         $data['sorts'][] = array(
             'text'  => $this->language->get('text_model_asc'),
             'value' => 'p.model-ASC',
-            'href'  => $this->url->link('product/shop', 'sort=p.model&order=ASC' . $url)
+            'href'  => $this->url->link('product/latest', 'sort=p.model&order=ASC' . $url)
         );
 
         $data['sorts'][] = array(
             'text'  => $this->language->get('text_model_desc'),
             'value' => 'p.model-DESC',
-            'href'  => $this->url->link('product/shop', 'sort=p.model&order=DESC' . $url)
+            'href'  => $this->url->link('product/latest', 'sort=p.model&order=DESC' . $url)
         );
         if ($this->config->get('config_review_status')) {
 
@@ -123,6 +132,8 @@ class ControllerProductLatest extends Controller {
         $filter_data = [
             'filter_category_id' => $filter_category_id,
             'filter_filter'      => $filter_filter,
+            'filter_price_from'  => $price_from,
+            'filter_price_to'    => $price_to,
             'filter_option'      => $filter_option,
             'filter_attribute'   => $filter_attribute,
             'sort'  => $sort,
@@ -132,7 +143,7 @@ class ControllerProductLatest extends Controller {
         ];
 
         $results = $this->model_catalog_product->getProducts($filter_data);
-        $product_total = $this->model_catalog_product->getTotalProducts([]);
+        $product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
         foreach ($results as $result) {
             $image = $result['image']
@@ -285,12 +296,32 @@ class ControllerProductLatest extends Controller {
         $pagination->total = $product_total;
         $pagination->page  = $page;
         $pagination->limit = $limit;
-        $pagination->url   = $this->url->link('product/latest', '&page={page}');
+        $pagination->url   = $this->url->link('product/latest', $url . '&page={page}');
         $data['pagination'] = $pagination->render();
+        $data['current_page'] = $page;
+        $data['total_pages'] = $limit ? (int)ceil($product_total / $limit) : 1;
+        $data['pagination_pages'] = [];
+
+        $pagination_url = $this->url->link('product/latest', $url . '&page={page}');
+        $first_page_url = str_replace(['&amp;page={page}', '?page={page}', '&page={page}'], '', $pagination_url);
+
+        for ($i = 1; $i <= $data['total_pages']; $i++) {
+            $data['pagination_pages'][] = [
+                'text'   => $i,
+                'href'   => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
+                'active' => ($i == $page)
+            ];
+        }
+
+        $data['next_page_url'] = ($page < $data['total_pages'])
+            ? str_replace('{page}', $page + 1, $pagination_url)
+            : '';
 
         $data['sort']  = $sort;
         $data['order'] = $order;
         $data['limit'] = $limit;
+        $data['home']  = $this->url->link('common/home');
+        $data['latest'] = $this->url->link('product/latest');
 
         // ======================
         // Layout

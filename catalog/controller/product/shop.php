@@ -8,12 +8,15 @@ class ControllerProductShop extends Controller {
         $this->load->model('tool/image');
         $this->load->model('catalog/filter');
 
-        $filter = [];
+        $filter = '';
         if (!empty($this->request->get['filter'])) {
             $filter = is_array($this->request->get['filter'])
-                ? $this->request->get['filter']
-                : explode(',', $this->request->get['filter']);
+                ? implode(',', $this->request->get['filter'])
+                : $this->request->get['filter'];
         }
+
+        $price_from = isset($this->request->get['price_from']) ? $this->request->get['price_from'] : ($this->request->get['price-from'] ?? '');
+        $price_to = isset($this->request->get['price_to']) ? $this->request->get['price_to'] : ($this->request->get['price-to'] ?? '');
 
         $sort   = $this->request->get['sort'] ?? 'p.sort_order';
         $order  = $this->request->get['order'] ?? 'ASC';
@@ -22,7 +25,7 @@ class ControllerProductShop extends Controller {
         if (isset($this->request->get['limit']) && (int)$this->request->get['limit'] > 0) {
             $limit = (int)$this->request->get['limit'];
         } else {
-            $limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
+            $limit = 8;
         }
 
         // ======================
@@ -46,6 +49,8 @@ class ControllerProductShop extends Controller {
         $filter_data = [
             'filter_category_id' => 0,
             'filter_filter'      => $filter,
+            'filter_price_from'  => $price_from,
+            'filter_price_to'    => $price_to,
             'sort'               => $sort,
             'order'              => $order,
             'start'              => ($page - 1) * $limit,
@@ -193,13 +198,9 @@ class ControllerProductShop extends Controller {
         // ======================
         $url = '';
 
-        if (!empty($this->request->get['filter'])) {
-            if (is_array($this->request->get['filter'])) {
-                $url .= '&filter=' . implode(',', $this->request->get['filter']);
-            } else {
-                $url .= '&filter=' . $this->request->get['filter'];
-            }
-        }
+        if ($filter !== '') $url .= '&filter=' . $filter;
+        if ($price_from !== '') $url .= '&price_from=' . $price_from;
+        if ($price_to !== '') $url .= '&price_to=' . $price_to;
 
         if (isset($this->request->get['sort']))  $url .= '&sort='  . $this->request->get['sort'];
         if (isset($this->request->get['order'])) $url .= '&order=' . $this->request->get['order'];
@@ -212,6 +213,24 @@ class ControllerProductShop extends Controller {
         $pagination->url   = $this->url->link('product/shop', $url . '&page={page}');
 
         $data['pagination'] = $pagination->render();
+        $data['current_page'] = $page;
+        $data['total_pages'] = $limit ? (int)ceil($product_total / $limit) : 1;
+        $data['pagination_pages'] = [];
+
+        $pagination_url = $this->url->link('product/shop', $url . '&page={page}');
+        $first_page_url = str_replace(['&amp;page={page}', '?page={page}', '&page={page}'], '', $pagination_url);
+
+        for ($i = 1; $i <= $data['total_pages']; $i++) {
+            $data['pagination_pages'][] = [
+                'text'   => $i,
+                'href'   => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
+                'active' => ($i == $page)
+            ];
+        }
+
+        $data['next_page_url'] = ($page < $data['total_pages'])
+            ? str_replace('{page}', $page + 1, $pagination_url)
+            : '';
 
         $data['results'] = sprintf(
             $this->language->get('text_pagination'),

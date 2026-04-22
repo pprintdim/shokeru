@@ -159,28 +159,22 @@ class ControllerProductProduct extends Controller {
 			$product_id = 0;
 		}
 
-		// ======================
-		// Додаємо поточний продукт у recently viewed
-		// ======================
-		if (!isset($this->session->data['recently_viewed'])) {
-		    $this->session->data['recently_viewed'] = [];
-		}
-
-		$product_id = (int)$this->request->get['product_id'];
-
-		// Додаємо продукт тільки якщо його ще немає у масиві
-		if (!in_array($product_id, $this->session->data['recently_viewed'])) {
-		    array_unshift($this->session->data['recently_viewed'], $product_id);
-
-		    // Обмежуємо масив останніми 20 переглянутими
-		    $this->session->data['recently_viewed'] = array_slice($this->session->data['recently_viewed'], 0, 20);
-		}
-
-
-
 		$this->load->model('catalog/product');
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
+
+		// ======================
+		// Додаємо поточний продукт у recently viewed
+		// ======================
+		if ($product_info) {
+			if (!isset($this->session->data['recently_viewed']) || !is_array($this->session->data['recently_viewed'])) {
+				$this->session->data['recently_viewed'] = array();
+			}
+
+			$this->session->data['recently_viewed'] = array_diff($this->session->data['recently_viewed'], array($product_id));
+			array_unshift($this->session->data['recently_viewed'], $product_id);
+			$this->session->data['recently_viewed'] = array_slice($this->session->data['recently_viewed'], 0, 20);
+		}
 
 		//check product page open from cateory page
 		if (isset($this->request->get['path'])) {

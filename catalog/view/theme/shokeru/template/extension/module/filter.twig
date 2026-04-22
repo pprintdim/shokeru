@@ -9,12 +9,18 @@
                     {% for filter in group.filter %}
                         {% if filter.selected %}
                             <div class="filters-selected-item">
-                                <p class="filters-selected-title">{{ filter.name }}</p>
+                                <p class="filters-selected-title">{{ filter.title }}</p>
                                 <button class="filters-selected-delete" type="button" data-filter-id="{{ filter.filter_id }}"></button>
                             </div>
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
+                {% if price_label %}
+                    <div class="filters-selected-item">
+                        <p class="filters-selected-title">{{ price_label }}</p>
+                        <button class="filters-selected-delete" type="button" data-price-filter="1"></button>
+                    </div>
+                {% endif %}
             </div>
 
             {# Сортування #}
@@ -39,7 +45,7 @@
                                 <div class="shop__filters-select">
                                     {% for filter in group.filter %}
                                         <label class="checkbox-block">
-                                            <input type="checkbox" name="filter[]" value="{{ filter.filter_id }}" hidden
+                                            <input type="checkbox" name="filter" value="{{ filter.filter_id }}" hidden
                                                 {% if filter.selected %}checked{% endif %}>
                                             <span>{{ filter.name }}</span>
                                         </label>
@@ -58,8 +64,8 @@
                         <div class="shop__filters-block">
                             <h3 class="shop__filters-title">Ціна</h3>
                             <div class="shop__filters-price filters-price">
-                                <input type="number" name="price-from" value="{{ price_from|default('') }}" min="0" placeholder="від">
-                                <input type="number" name="price-to" value="{{ price_to|default('') }}" min="0" placeholder="до">
+                                <input type="number" name="price_from" value="{{ price_from|default('') }}" min="0" placeholder="від">
+                                <input type="number" name="price_to" value="{{ price_to|default('') }}" min="0" placeholder="до">
                             </div>
                         </div>
                     </div>
@@ -83,6 +89,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const baseUrl = document.querySelector('base')?.getAttribute('href') || '';
 
+    function buildQuery(params) {
+        const query = [];
+
+        params.forEach((value, key) => {
+            const encodedKey = encodeURIComponent(key);
+            let encodedValue = encodeURIComponent(value);
+
+            if (key === 'route') {
+                encodedValue = encodedValue.replace(/%2F/gi, '/');
+            }
+
+            query.push(encodedKey + '=' + encodedValue);
+        });
+
+        return query.join('&');
+    }
+
+    function redirectWithParams(params) {
+        const query = buildQuery(params);
+        window.location.href = baseUrl + 'index.php' + (query ? '?' + query : '');
+    }
+
     // Відкриття / закриття фільтрів
     const toggleBtn = document.querySelector(".shop__filters-open");
     if (toggleBtn) toggleBtn.addEventListener("click", () => filterForm.classList.toggle("active"));
@@ -99,6 +127,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Видалення конкретного фільтра
     document.querySelectorAll(".filters-selected-delete").forEach(btn => {
         btn.addEventListener("click", () => {
+            if (btn.dataset.priceFilter) {
+                const priceFrom = filterForm.querySelector('input[name="price_from"]');
+                const priceTo = filterForm.querySelector('input[name="price_to"]');
+
+                if (priceFrom) priceFrom.value = '';
+                if (priceTo) priceTo.value = '';
+
+                submitFilters();
+                return;
+            }
+
             const filterId = btn.dataset.filterId;
             document.querySelectorAll(`input[type="checkbox"][value="${filterId}"]`)
                 .forEach(cb => cb.checked = false);
@@ -126,8 +165,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const currentParams = new URLSearchParams(window.location.search);
             const params = new URLSearchParams();
             if (currentParams.has('route')) params.set('route', currentParams.get('route'));
+            if (currentParams.has('path')) params.set('path', currentParams.get('path'));
             if (currentParams.has('search')) params.set('search', currentParams.get('search'));
-            window.location.href = baseUrl + 'index.php?' + params.toString();
+            redirectWithParams(params);
         });
     }
 
@@ -140,6 +180,10 @@ document.addEventListener("DOMContentLoaded", function () {
             params.set('route', currentParams.get('route'));
         }
 
+        if (currentParams.has('path')) {
+            params.set('path', currentParams.get('path'));
+        }
+
         // Search
         const searchInput = filterForm.querySelector('input[name="search"]');
         if (searchInput && searchInput.value.trim() !== '') {
@@ -149,14 +193,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Фільтри — беремо з чекбоксів форми (Twig вже відмітив потрібні)
-        filterForm.querySelectorAll('input[name="filter[]"]:checked')
-            .forEach(input => params.append('filter[]', input.value));
+        const selectedFilters = Array.from(filterForm.querySelectorAll('input[name="filter"]:checked'))
+            .map(input => input.value)
+            .filter(Boolean);
+
+        if (selectedFilters.length) {
+            params.set('filter', selectedFilters.join(','));
+        }
 
         // Ціна
-        const priceFrom = filterForm.querySelector('input[name="price-from"]');
-        const priceTo   = filterForm.querySelector('input[name="price-to"]');
-        if (priceFrom?.value) params.set('price-from', priceFrom.value);
-        if (priceTo?.value)   params.set('price-to', priceTo.value);
+        const priceFrom = filterForm.querySelector('input[name="price_from"]');
+        const priceTo   = filterForm.querySelector('input[name="price_to"]');
+        if (priceFrom?.value) params.set('price_from', priceFrom.value);
+        if (priceTo?.value)   params.set('price_to', priceTo.value);
 
         // Сортування — беремо з select (без name, тому не потрапляє у нативний submit)
         const sortValue = sortSelect?.value;
@@ -171,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        window.location.href = baseUrl + 'index.php?' + params.toString();
+        redirectWithParams(params);
     }
 });
 </script>

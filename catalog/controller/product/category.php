@@ -11,11 +11,16 @@ class ControllerProductCategory extends Controller {
 
 		$this->load->model('catalog/filter');
 
-		if (isset($this->request->get['filter'])) {
-			$filter = $this->request->get['filter'];
+		if (!empty($this->request->get['filter'])) {
+			$filter = is_array($this->request->get['filter'])
+				? implode(',', $this->request->get['filter'])
+				: $this->request->get['filter'];
 		} else {
 			$filter = '';
 		}
+
+		$price_from = isset($this->request->get['price_from']) ? $this->request->get['price_from'] : ($this->request->get['price-from'] ?? '');
+		$price_to = isset($this->request->get['price_to']) ? $this->request->get['price_to'] : ($this->request->get['price-to'] ?? '');
 
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
@@ -38,7 +43,7 @@ class ControllerProductCategory extends Controller {
 		if (isset($this->request->get['limit']) && (int)$this->request->get['limit'] > 0) {
 			$limit = (int)$this->request->get['limit'];
 		} else {
-			$limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
+			$limit = 8;
 		}
 
 		$data['breadcrumbs'] = array();
@@ -91,118 +96,6 @@ class ControllerProductCategory extends Controller {
 			$category_id = 0;
 		}
 
-
-
-		// ======================
-		// "Підібрано для Вас" для всіх продуктів у категорії
-		// ======================
-		$data['recommended'] = [];
-		$limit_rec = 10;
-
-		// Масив product_id, які вже додані (для уникнення повторів)
-		$added_ids = [];
-
-		// Переглянуті товари з сесії
-		$recently_viewed = $this->session->data['recently_viewed'] ?? [];
-
-		// Популярні товари
-		$popular_products = $this->model_catalog_product->getProducts([
-		    'sort'  => 'p.viewed',
-		    'order' => 'DESC',
-		    'start' => 0,
-		    'limit' => 100,
-		]);
-
-		foreach ($results as $result) {
-		    $rec_items = [];
-
-		    // 1️⃣ Переглянуті товари
-		    if ($recently_viewed) {
-		        $rv_ids = array_diff($recently_viewed, $added_ids);
-		        if ($rv_ids) {
-		            $rv_products = $this->model_catalog_product->getProducts([
-		                'filter_product_id' => $rv_ids,
-		                'start'             => 0,
-		                'limit'             => $limit_rec,
-		            ]);
-		            foreach ($rv_products as $p) {
-		                if (!in_array($p['product_id'], $added_ids)) {
-		                    $added_ids[] = $p['product_id'];
-		                    $rec_items[] = $p;
-		                }
-		            }
-		        }
-		    }
-
-		    // 2️⃣ Рекомендовані з поточного продукту
-		    if (!empty($result['recommended'])) {
-		        $recommended_ids = is_array($result['recommended'])
-		            ? $result['recommended']
-		            : explode(',', $result['recommended']);
-
-		        $recommended_ids = array_diff($recommended_ids, $added_ids);
-		        if ($recommended_ids) {
-		            $pr_products = $this->model_catalog_product->getProducts([
-		                'filter_product_id' => $recommended_ids,
-		                'start'             => 0,
-		                'limit'             => $limit_rec,
-		            ]);
-		            foreach ($pr_products as $p) {
-		                if (!in_array($p['product_id'], $added_ids)) {
-		                    $added_ids[] = $p['product_id'];
-		                    $rec_items[] = $p;
-		                }
-		            }
-		        }
-		    }
-
-		    // 3️⃣ Популярні, якщо ще мало
-		    if (count($rec_items) < $limit_rec && $popular_products) {
-		        foreach ($popular_products as $p) {
-		            if (!in_array($p['product_id'], $added_ids)) {
-		                $added_ids[] = $p['product_id'];
-		                $rec_items[] = $p;
-		            }
-		            if (count($rec_items) >= $limit_rec) break;
-		        }
-		    }
-
-		    // 4️⃣ Форматування для шаблону
-		    foreach ($rec_items as &$rec) {
-		        $rec['thumb'] = $rec['image']
-		            ? $this->model_tool_image->resize(
-		                $rec['image'],
-		                $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
-		                $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
-		              )
-		            : $this->model_tool_image->resize(
-		                'placeholder.png',
-		                $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
-		                $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
-		              );
-
-		        $rec['price'] = ($this->customer->isLogged() || !$this->config->get('config_customer_price'))
-		            ? $this->currency->format(
-		                $this->tax->calculate($rec['price'], $rec['tax_class_id'], $this->config->get('config_tax')),
-		                $this->session->data['currency']
-		              )
-		            : false;
-
-		        $rec['special'] = (!is_null($rec['special']) && (float)$rec['special'] >= 0)
-		            ? $this->currency->format(
-		                $this->tax->calculate($rec['special'], $rec['tax_class_id'], $this->config->get('config_tax')),
-		                $this->session->data['currency']
-		              )
-		            : false;
-
-		        $rec['href'] = $this->url->link('product/product', 'product_id=' . $rec['product_id']);
-		    }
-		    unset($rec);
-
-		    // Додаємо у загальний масив
-		    $data['recommended'][] = array_slice($rec_items, 0, $limit_rec);
-		}
-
 		$category_info = $this->model_catalog_category->getCategory($category_id);
 
 		if ($category_info) {
@@ -232,7 +125,15 @@ class ControllerProductCategory extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+				$url .= '&filter=' . $filter;
+			}
+
+			if ($price_from !== '') {
+				$url .= '&price_from=' . $price_from;
+			}
+
+			if ($price_to !== '') {
+				$url .= '&price_to=' . $price_to;
 			}
 
 			if (isset($this->request->get['sort'])) {
@@ -268,6 +169,8 @@ class ControllerProductCategory extends Controller {
 			$filter_data = array(
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
+				'filter_price_from'  => $price_from,
+				'filter_price_to'    => $price_to,
 				'sort'               => $sort,
 				'order'              => $order,
 				'start'              => ($page - 1) * $limit,
@@ -278,6 +181,71 @@ class ControllerProductCategory extends Controller {
 
 			$results = $this->model_catalog_product->getProducts($filter_data);
 			$data['filter'] = $this->load->controller('extension/module/filter');
+
+			$data['recommended'] = array();
+			$limit_rec = 10;
+			$added_ids = array();
+			$recently_viewed = $this->session->data['recently_viewed'] ?? array();
+
+			$popular_products = $this->model_catalog_product->getProducts(array(
+				'sort'  => 'p.viewed',
+				'order' => 'DESC',
+				'start' => 0,
+				'limit' => 100
+			));
+
+			$rec_items = array();
+
+			if ($recently_viewed) {
+				$rv_ids = array_diff($recently_viewed, $added_ids);
+
+				if ($rv_ids) {
+					$rv_products = $this->model_catalog_product->getProducts(array(
+						'filter_product_id' => $rv_ids,
+						'start' => 0,
+						'limit' => $limit_rec
+					));
+
+					foreach ($rv_products as $p) {
+						if (!in_array($p['product_id'], $added_ids)) {
+							$added_ids[] = $p['product_id'];
+							$rec_items[] = $p;
+						}
+					}
+				}
+			}
+
+			if (count($rec_items) < $limit_rec) {
+				foreach ($popular_products as $p) {
+					if (!in_array($p['product_id'], $added_ids)) {
+						$added_ids[] = $p['product_id'];
+						$rec_items[] = $p;
+					}
+
+					if (count($rec_items) >= $limit_rec) {
+						break;
+					}
+				}
+			}
+
+			foreach ($rec_items as &$rec) {
+				$rec['thumb'] = $rec['image']
+					? $this->model_tool_image->resize(
+						$rec['image'],
+						$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
+						$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
+					)
+					: $this->model_tool_image->resize(
+						'placeholder.png',
+						$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'),
+						$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height')
+					);
+
+				$rec['href'] = $this->url->link('product/product', 'product_id=' . $rec['product_id']);
+			}
+			unset($rec);
+
+			$data['recommended'] = array_slice($rec_items, 0, $limit_rec);
 			foreach ($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
@@ -328,7 +296,15 @@ class ControllerProductCategory extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+				$url .= '&filter=' . $filter;
+			}
+
+			if ($price_from !== '') {
+				$url .= '&price_from=' . $price_from;
+			}
+
+			if ($price_to !== '') {
+				$url .= '&price_to=' . $price_to;
 			}
 
 			if (isset($this->request->get['limit'])) {
@@ -396,7 +372,15 @@ class ControllerProductCategory extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+				$url .= '&filter=' . $filter;
+			}
+
+			if ($price_from !== '') {
+				$url .= '&price_from=' . $price_from;
+			}
+
+			if ($price_to !== '') {
+				$url .= '&price_to=' . $price_to;
 			}
 
 			if (isset($this->request->get['sort'])) {
@@ -424,7 +408,15 @@ class ControllerProductCategory extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+				$url .= '&filter=' . $filter;
+			}
+
+			if ($price_from !== '') {
+				$url .= '&price_from=' . $price_from;
+			}
+
+			if ($price_to !== '') {
+				$url .= '&price_to=' . $price_to;
 			}
 
 			if (isset($this->request->get['sort'])) {
@@ -446,6 +438,24 @@ class ControllerProductCategory extends Controller {
 			$pagination->url = $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&page={page}');
 
 			$data['pagination'] = $pagination->render();
+			$data['current_page'] = $page;
+			$data['total_pages'] = $limit ? (int)ceil($product_total / $limit) : 1;
+			$data['pagination_pages'] = array();
+
+			$pagination_url = $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&page={page}');
+			$first_page_url = str_replace(array('&amp;page={page}', '?page={page}', '&page={page}'), '', $pagination_url);
+
+			for ($i = 1; $i <= $data['total_pages']; $i++) {
+				$data['pagination_pages'][] = array(
+					'text'   => $i,
+					'href'   => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
+					'active' => ($i == $page)
+				);
+			}
+
+			$data['next_page_url'] = ($page < $data['total_pages'])
+				? str_replace('{page}', $page + 1, $pagination_url)
+				: '';
 
 			$data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
 
@@ -488,7 +498,15 @@ class ControllerProductCategory extends Controller {
 			}
 
 			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+				$url .= '&filter=' . $filter;
+			}
+
+			if ($price_from !== '') {
+				$url .= '&price_from=' . $price_from;
+			}
+
+			if ($price_to !== '') {
+				$url .= '&price_to=' . $price_to;
 			}
 
 			if (isset($this->request->get['sort'])) {

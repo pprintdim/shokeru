@@ -1,6 +1,4 @@
 {% if products %}
-    {% set min_slides = 5 %}
-    {% set product_count = products|length %}    
     <section class="productSlider">
         <div class="container">
             <div class="productSlider__inner">
@@ -21,10 +19,7 @@
                 </div>
                 <div class="productSlider__slider">
                     <div class="swiper-wrapper">
-                        {% set total = product_count < min_slides ? min_slides : product_count %}
-                        {% for i in 0..(total-1) %}
-                            {% set product = products[i % product_count] %}
-                            
+                        {% for product in products %}
                             <div class="productSlider__slide swiper-slide product__item">
                                 <button class="product__item-fav"></button>
                                 <a class="product__item-image" href="{{ product.href }}">

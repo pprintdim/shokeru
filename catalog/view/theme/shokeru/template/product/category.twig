@@ -266,19 +266,15 @@
                         </form>
                     </div>#}
 
-                    {% if products %}
-                    	{% set min_slides = 20 %}
-	                    {% set product_count = products|length %} 
-	                    {% set total = product_count < min_slides ? min_slides : product_count %}
-	                    
-                    	<div class="shop__results">
-                    		{% for i in 0..(total-1) %}
-                        		{% set product = products[i % product_count] %}
+                    {{ filter }}
 
+                    {% if products %}
+                    	<div class="shop__results">
+                    		{% for product in products %}
 		                        <div class="shop__item product__item">
 		                            <button class="product__item-fav"></button>
-		                            <a class="product__item-image" href="#">
-		                                <img src="{{ product.thumb }}" alt="">
+		                            <a class="product__item-image" href="{{ product.href }}">
+		                                <img src="{{ product.thumb }}" alt="{{ product.name }}">
 		                            </a>
 		                            <div class="product__item-content">
 		                                <div class="product__item-buttons">
@@ -288,7 +284,7 @@
 		                                            <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
 		                                        </svg>
 		                                    </button>
-		                                    <a class="product__item-btn btn" href="#">
+		                                    <a class="product__item-btn btn" href="{{ product.href }}">
 		                                        Подробнее
 		                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
 		                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
@@ -296,7 +292,7 @@
 		                                    </a>
 		                                </div>
 		                                <div class="product__item-info">
-		                                    <a class="product__item-title" href="#">
+		                                    <a class="product__item-title" href="{{ product.href }}">
 		                                        <h3>{{ product.name }}</h3>
 		                                    </a>
 		                                    <p class="product__item-price">
@@ -312,22 +308,29 @@
 	                    </div>
                     {% endif %}
                     
-                    <div class="shop__bottom">
-                        <button class="shop__more btn-4">
-                        	показать больше товара
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99935 4.66602L7.99935 8.66602L11.9993 4.66602L13.3327 5.99935L7.99935 11.3327L2.66602 5.99935L3.99935 4.66602Z" fill="white"/>
-                            </svg>
-                        </button>
-                        <div class="shop__pages">
-                            <p class="shop__pages-title">Стараница</p>
-                            <div class="shop__pages-content">
-                                <a class="active" href="#">1</a>
-                                <a href="#">2</a>
-                                <a class="shop__pages-next" href="#"></a>
+                    {% if total_pages > 1 %}
+                        <div class="shop__bottom">
+                            {% if next_page_url %}
+                                <button class="shop__more btn-4" type="button" data-next-url="{{ next_page_url }}">
+                                	показать больше товара
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99935 4.66602L7.99935 8.66602L11.9993 4.66602L13.3327 5.99935L7.99935 11.3327L2.66602 5.99935L3.99935 4.66602Z" fill="white"/>
+                                    </svg>
+                                </button>
+                            {% endif %}
+                            <div class="shop__pages">
+                                <p class="shop__pages-title">Стараница</p>
+                                <div class="shop__pages-content">
+                                    {% for pagination_page in pagination_pages %}
+                                        <a {% if pagination_page.active %}class="active"{% endif %} href="{{ pagination_page.href }}">{{ pagination_page.text }}</a>
+                                    {% endfor %}
+                                    {% if next_page_url %}
+                                        <a class="shop__pages-next" href="{{ next_page_url }}"></a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </section>
@@ -345,15 +348,11 @@
         
 
 {% if recommended %}
-    {% set min_slides = 6 %}
-    {% set recommended_count = recommended|length %}
-    {% set total = recommended_count < min_slides ? min_slides : recommended_count %}
-
     <section class="productSlider">
         <div class="container">
             <div class="productSlider__inner">
                 <div class="productSlider__top">
-                    <h2 class="productSlider__title title">{{ text_recommended ?: 'Подобрано Для Вас' }}</h2>
+                    <h2 class="productSlider__title title">{{ text_recommended ?: 'Ви нещодавно переглядали' }}</h2>
                     <div class="productSlider__button slider-buttons">
                         <button class="productSlider-prev slider-btn-prev">
 	                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z" fill="#8A909B"/></svg>
@@ -365,8 +364,7 @@
                 </div>
                 <div class="productSlider__slider">
                     <div class="swiper-wrapper">
-                        {% for i in 0..(total-1) %}
-                            {% set product = recommended[i % recommended_count] %}
+                        {% for product in recommended %}
                             <div class="productSlider__slide swiper-slide product__item">
                                 <button class="product__item-fav"></button>
                                 <a class="product__item-image" href="{{ product.href }}">
@@ -380,7 +378,7 @@
 	                                            <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
 	                                        </svg>
 	                                    </button>
-	                                    <a class="product__item-btn btn" href="#">
+	                                    <a class="product__item-btn btn" href="{{ product.href }}">
 	                                        Подробнее
 	                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
 	                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>

@@ -40,13 +40,37 @@ class ControllerExtensionModuleFilter extends Controller {
             }
         }
 
+        $data['price_from'] = isset($this->request->get['price_from']) ? $this->request->get['price_from'] : ($this->request->get['price-from'] ?? '');
+        $data['price_to'] = isset($this->request->get['price_to']) ? $this->request->get['price_to'] : ($this->request->get['price-to'] ?? '');
+        $data['price_label'] = '';
+
+        if ($data['price_from'] !== '' || $data['price_to'] !== '') {
+            if ($data['price_from'] !== '' && $data['price_to'] !== '') {
+                $data['price_label'] = 'Ціна: ' . $data['price_from'] . ' - ' . $data['price_to'];
+            } elseif ($data['price_from'] !== '') {
+                $data['price_label'] = 'Ціна від ' . $data['price_from'];
+            } else {
+                $data['price_label'] = 'Ціна до ' . $data['price_to'];
+            }
+        }
+
+        if ($data['price_from'] !== '') $url_params['price_from'] = $data['price_from'];
+        if ($data['price_to'] !== '') $url_params['price_to'] = $data['price_to'];
+
         if (isset($this->request->get['sort']))  $url_params['sort']  = $this->request->get['sort'];
         if (isset($this->request->get['order'])) $url_params['order'] = $this->request->get['order'];
         if (isset($this->request->get['limit'])) $url_params['limit'] = $this->request->get['limit'];
 
         // 3. Формуємо action
         if ($category_id) {
-            $data['action'] = $this->url->link('product/category', 'path=' . $category_id . '&' . http_build_query($url_params));
+            $path = $this->request->get['path'] ?? $category_id;
+            $query = 'path=' . $path;
+
+            if ($url_params) {
+                $query .= '&' . http_build_query($url_params);
+            }
+
+            $data['action'] = $this->url->link('product/category', $query);
         } else {
             $data['action'] = $this->url->link($route, http_build_query($url_params));
         }
@@ -90,11 +114,13 @@ class ControllerExtensionModuleFilter extends Controller {
 
         $route = $this->request->get['route'] ?? 'product/shop';
 
+        $price_sort = ($route == 'product/special') ? 'ps.price' : 'p.price';
+
         $sorts = [
             ['sort' => 'pd.name', 'order' => 'ASC',  'text' => $this->language->get('text_name_asc')],
             ['sort' => 'pd.name', 'order' => 'DESC', 'text' => $this->language->get('text_name_desc')],
-            ['sort' => 'p.price', 'order' => 'ASC',  'text' => $this->language->get('text_price_asc')],
-            ['sort' => 'p.price', 'order' => 'DESC', 'text' => $this->language->get('text_price_desc')],
+            ['sort' => $price_sort, 'order' => 'ASC',  'text' => $this->language->get('text_price_asc')],
+            ['sort' => $price_sort, 'order' => 'DESC', 'text' => $this->language->get('text_price_desc')],
             ['sort' => 'rating',  'order' => 'DESC', 'text' => $this->language->get('text_rating_desc')],
             ['sort' => 'rating',  'order' => 'ASC',  'text' => $this->language->get('text_rating_asc')],
         ];
@@ -103,7 +129,10 @@ class ControllerExtensionModuleFilter extends Controller {
             $data['sort_options'][] = [
                 'text'  => $s['text'],
                 'value' => $s['sort'] . '-' . $s['order'],
-                'href'  => $this->url->link($route, 'sort=' . $s['sort'] . '&order=' . $s['order'])
+                'href'  => $this->url->link($route, http_build_query(array_merge($url_params, [
+                    'sort'  => $s['sort'],
+                    'order' => $s['order']
+                ])))
             ];
         }
 
@@ -124,6 +153,7 @@ class ControllerExtensionModuleFilter extends Controller {
 
                     $childen_data[] = [
                         'filter_id' => $filter['filter_id'],
+                        'title'     => $filter['name'],
                         'name'      => $filter['name'] .
                             ($this->config->get('config_product_count')
                                 ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')'

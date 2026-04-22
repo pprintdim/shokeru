@@ -1,5 +1,68 @@
 <?php
 class ModelCatalogProduct extends Model {
+	private function getFilterIds($filter_filter) {
+		if (is_array($filter_filter)) {
+			$filters = $filter_filter;
+		} else {
+			$filters = explode(',', (string)$filter_filter);
+		}
+
+		$filter_ids = array();
+
+		foreach ($filters as $filter_id) {
+			$filter_id = (int)$filter_id;
+
+			if ($filter_id > 0) {
+				$filter_ids[] = $filter_id;
+			}
+		}
+
+		return array_unique($filter_ids);
+	}
+
+	private function getProductIds($filter_product_id) {
+		if (is_array($filter_product_id)) {
+			$products = $filter_product_id;
+		} else {
+			$products = explode(',', (string)$filter_product_id);
+		}
+
+		$product_ids = array();
+
+		foreach ($products as $product_id) {
+			$product_id = (int)$product_id;
+
+			if ($product_id > 0) {
+				$product_ids[] = $product_id;
+			}
+		}
+
+		return array_unique($product_ids);
+	}
+
+	private function getPriceFilterSql($data, $price_field = 'p.price') {
+		$sql = '';
+
+		if (isset($data['filter_price_from']) && $data['filter_price_from'] !== '') {
+			$sql .= " AND " . $price_field . " >= '" . (float)$data['filter_price_from'] . "'";
+		}
+
+		if (isset($data['filter_price_to']) && $data['filter_price_to'] !== '') {
+			$sql .= " AND " . $price_field . " <= '" . (float)$data['filter_price_to'] . "'";
+		}
+
+		return $sql;
+	}
+
+	private function getEffectivePriceSql() {
+		$customer_group_id = (int)$this->config->get('config_customer_group_id');
+
+		$discount_sql = "(SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . $customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1)";
+		$special_sql = "(SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . $customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1)";
+
+		return "COALESCE(" . $special_sql . ", " . $discount_sql . ", p.price)";
+	}
+
 	public function updateViewed($product_id) {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
@@ -57,6 +120,9 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getProducts($data = array()) {
+		$filter_ids = !empty($data['filter_filter']) ? $this->getFilterIds($data['filter_filter']) : array();
+		$product_ids = !empty($data['filter_product_id']) ? $this->getProductIds($data['filter_product_id']) : array();
+
 		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special";
 
 		if (!empty($data['filter_category_id'])) {
@@ -66,13 +132,17 @@ class ModelCatalogProduct extends Model {
 				$sql .= " FROM " . DB_PREFIX . "product_to_category p2c";
 			}
 
-			if (!empty($data['filter_filter'])) {
+			if ($filter_ids) {
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
 			} else {
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
 			}
 		} else {
 			$sql .= " FROM " . DB_PREFIX . "product p";
+
+			if ($filter_ids) {
+				$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p.product_id = pf.product_id)";
+			}
 		}
 
 		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
@@ -84,17 +154,10 @@ class ModelCatalogProduct extends Model {
 				$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
 			}
 
-			if (!empty($data['filter_filter'])) {
-				$implode = array();
+		}
 
-				$filters = explode(',', $data['filter_filter']);
-
-				foreach ($filters as $filter_id) {
-					$implode[] = (int)$filter_id;
-				}
-
-				$sql .= " AND pf.filter_id IN (" . implode(',', $implode) . ")";
-			}
+		if ($filter_ids) {
+			$sql .= " AND pf.filter_id IN (" . implode(',', $filter_ids) . ")";
 		}
 
 		if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
@@ -153,6 +216,12 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 		}
 
+		if ($product_ids) {
+			$sql .= " AND p.product_id IN (" . implode(',', $product_ids) . ")";
+		}
+
+		$sql .= $this->getPriceFilterSql($data, $this->getEffectivePriceSql());
+
 		$sql .= " GROUP BY p.product_id";
 
 		$sort_data = array(
@@ -162,7 +231,8 @@ class ModelCatalogProduct extends Model {
 			'p.price',
 			'rating',
 			'p.sort_order',
-			'p.date_added'
+			'p.date_added',
+			'p.viewed'
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -173,6 +243,8 @@ class ModelCatalogProduct extends Model {
 			} else {
 				$sql .= " ORDER BY " . $data['sort'];
 			}
+		} elseif ($product_ids) {
+			$sql .= " ORDER BY FIELD(p.product_id, " . implode(',', $product_ids) . ")";
 		} else {
 			$sql .= " ORDER BY p.sort_order";
 		}
@@ -207,7 +279,23 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getProductSpecials($data = array()) {
-		$sql = "SELECT DISTINCT ps.product_id, (SELECT AVG(rating) FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) GROUP BY ps.product_id";
+		$filter_ids = !empty($data['filter_filter']) ? $this->getFilterIds($data['filter_filter']) : array();
+
+		$sql = "SELECT DISTINCT ps.product_id, (SELECT AVG(rating) FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
+
+		if ($filter_ids) {
+			$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (ps.product_id = pf.product_id)";
+		}
+
+		$sql .= " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))";
+
+		if ($filter_ids) {
+			$sql .= " AND pf.filter_id IN (" . implode(',', $filter_ids) . ")";
+		}
+
+		$sql .= $this->getPriceFilterSql($data, 'ps.price');
+
+		$sql .= " GROUP BY ps.product_id";
 
 		$sort_data = array(
 			'pd.name',
@@ -416,6 +504,9 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getTotalProducts($data = array()) {
+		$filter_ids = !empty($data['filter_filter']) ? $this->getFilterIds($data['filter_filter']) : array();
+		$product_ids = !empty($data['filter_product_id']) ? $this->getProductIds($data['filter_product_id']) : array();
+
 		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total";
 
 		if (!empty($data['filter_category_id'])) {
@@ -425,13 +516,17 @@ class ModelCatalogProduct extends Model {
 				$sql .= " FROM " . DB_PREFIX . "product_to_category p2c";
 			}
 
-			if (!empty($data['filter_filter'])) {
+			if ($filter_ids) {
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p2c.product_id = pf.product_id) LEFT JOIN " . DB_PREFIX . "product p ON (pf.product_id = p.product_id)";
 			} else {
 				$sql .= " LEFT JOIN " . DB_PREFIX . "product p ON (p2c.product_id = p.product_id)";
 			}
 		} else {
 			$sql .= " FROM " . DB_PREFIX . "product p";
+
+			if ($filter_ids) {
+				$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (p.product_id = pf.product_id)";
+			}
 		}
 
 		$sql .= " LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
@@ -443,17 +538,10 @@ class ModelCatalogProduct extends Model {
 				$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
 			}
 
-			if (!empty($data['filter_filter'])) {
-				$implode = array();
+		}
 
-				$filters = explode(',', $data['filter_filter']);
-
-				foreach ($filters as $filter_id) {
-					$implode[] = (int)$filter_id;
-				}
-
-				$sql .= " AND pf.filter_id IN (" . implode(',', $implode) . ")";
-			}
+		if ($filter_ids) {
+			$sql .= " AND pf.filter_id IN (" . implode(',', $filter_ids) . ")";
 		}
 
 		if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
@@ -512,6 +600,12 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 		}
 
+		if ($product_ids) {
+			$sql .= " AND p.product_id IN (" . implode(',', $product_ids) . ")";
+		}
+
+		$sql .= $this->getPriceFilterSql($data, $this->getEffectivePriceSql());
+
 		$query = $this->db->query($sql);
 
 		return $query->row['total'];
@@ -529,8 +623,24 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalProductSpecials() {
-		$query = $this->db->query("SELECT COUNT(DISTINCT ps.product_id) AS total FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
+	public function getTotalProductSpecials($data = array()) {
+		$filter_ids = !empty($data['filter_filter']) ? $this->getFilterIds($data['filter_filter']) : array();
+
+		$sql = "SELECT COUNT(DISTINCT ps.product_id) AS total FROM " . DB_PREFIX . "product_special ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
+
+		if ($filter_ids) {
+			$sql .= " LEFT JOIN " . DB_PREFIX . "product_filter pf ON (ps.product_id = pf.product_id)";
+		}
+
+		$sql .= " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))";
+
+		if ($filter_ids) {
+			$sql .= " AND pf.filter_id IN (" . implode(',', $filter_ids) . ")";
+		}
+
+		$sql .= $this->getPriceFilterSql($data, 'ps.price');
+
+		$query = $this->db->query($sql);
 
 		if (isset($query->row['total'])) {
 			return $query->row['total'];
