@@ -33,3 +33,5 @@ $_['text_limit']        = 'Показать:';
 $_['entry_search']      = 'Поиск:';
 $_['entry_description'] = 'Искать в описании товаров';
 
+
+$_['button_catalog'] = 'Перейти в каталог';

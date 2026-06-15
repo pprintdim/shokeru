@@ -35,8 +35,34 @@
         </div>
 
         <div class="shop__filters-bottom">
+            <div class="shop__filters-start">
+                <div class="container">
+                    <button class="shop__filters-start--reset" type="reset">Скинути фільтр</button>
+                    <p class="shop__filters-start--number">Фільтр ({{ selected_total|default(0) }})</p>
+                </div>
+            </div>
             <div class="container">
+                <div class="shop__filters-menu">
+                    <button class="shop__filters-close" type="button"></button>
+                    <select class="shop__filters-sort" name="sort_order_mobile">
+                        {% for option in sort_options %}
+                            <option value="{{ option.value }}"
+                                {% if sort_selected == option.value %}selected{% endif %}>
+                                {{ option.text }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <div class="shop__filters-info">
+                    {% if filter_groups %}
+                        <div class="filters-open-mobile">
+                            {% for group in filter_groups %}
+                                <button class="filters-open-title" type="button" data-filter-target="{{ group.filter_group_id }}">{{ group.name }}</button>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     {# Фільтри по групах #}
                     {% for group in filter_groups %}
                         <div class="shop__filters-box" data-filter-id="{{ group.filter_group_id }}">
@@ -73,6 +99,7 @@
 
                 {# Кнопки застосування / скидання #}
                 <div class="shop__filters-buttons">
+                    <button class="shop__filters-back btn-3" type="button">Назад</button>
                     <button class="shop__filters-reset btn-3" type="reset">Скинути</button>
                     <button class="shop__filters-submit btn-4" type="submit">Застосувати</button>
                 </div>
@@ -115,6 +142,39 @@ document.addEventListener("DOMContentLoaded", function () {
     const toggleBtn = document.querySelector(".shop__filters-open");
     if (toggleBtn) toggleBtn.addEventListener("click", () => filterForm.classList.toggle("active"));
 
+    const closeBtn = document.querySelector(".shop__filters-close");
+    if (closeBtn) closeBtn.addEventListener("click", () => filterForm.classList.remove("active"));
+
+    const backBtn = document.querySelector(".shop__filters-back");
+    if (backBtn) backBtn.addEventListener("click", () => filterForm.classList.remove("active"));
+
+    const filterTabButtons = document.querySelectorAll(".filters-open-title[data-filter-target]");
+    const filterPanels = document.querySelectorAll(".shop__filters-box[data-filter-id]");
+
+    filterTabButtons.forEach(tabBtn => {
+        tabBtn.addEventListener("click", () => {
+            const targetId = tabBtn.dataset.filterTarget;
+
+            filterPanels.forEach(panel => {
+                if (panel.dataset.filterId === targetId) {
+                    panel.classList.add("active");
+                } else {
+                    panel.classList.remove("active");
+                }
+            });
+        });
+    });
+
+    filterPanels.forEach(panel => {
+        const title = panel.querySelector(".shop__filters-title");
+
+        if (title) {
+            title.addEventListener("click", () => {
+                filterPanels.forEach(item => item.classList.remove("active"));
+            });
+        }
+    });
+
     // Скидання чекбоксів конкретної групи
     document.querySelectorAll(".shop__filters-resets").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -146,10 +206,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Сортування — одразу застосовуємо
-    const sortSelect = document.querySelector('.shop__filters-sort');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', () => submitFilters());
-    }
+    const sortSelects = document.querySelectorAll('.shop__filters-sort');
+    sortSelects.forEach(select => {
+        select.addEventListener('change', () => {
+            sortSelects.forEach(otherSelect => {
+                if (otherSelect !== select) {
+                    otherSelect.value = select.value;
+                }
+            });
+
+            submitFilters();
+        });
+    });
 
     // Перехоплюємо ВСІ submit-кнопки форми
     filterForm.addEventListener('submit', function(e) {
@@ -158,8 +226,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Кнопка "Скинути" — очищаємо і редіректимо
-    const resetBtn = filterForm.querySelector('.shop__filters-reset');
-    if (resetBtn) {
+    const resetButtons = filterForm.querySelectorAll('.shop__filters-reset, .shop__filters-start--reset');
+    resetButtons.forEach(resetBtn => {
         resetBtn.addEventListener('click', function(e) {
             e.preventDefault();
             const currentParams = new URLSearchParams(window.location.search);
@@ -169,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentParams.has('search')) params.set('search', currentParams.get('search'));
             redirectWithParams(params);
         });
-    }
+    });
 
     function submitFilters() {
         const currentParams = new URLSearchParams(window.location.search);
@@ -208,6 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (priceTo?.value)   params.set('price_to', priceTo.value);
 
         // Сортування — беремо з select (без name, тому не потрапляє у нативний submit)
+        const sortSelect = filterForm.querySelector('.shop__filters-sort');
         const sortValue = sortSelect?.value;
         if (sortValue) {
             // Якщо value = "p-asc", "p-desc", "name-asc" тощо

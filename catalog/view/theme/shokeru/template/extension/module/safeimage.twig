@@ -1,0 +1,38 @@
+<section class="safeImage">
+    <div class="container">
+        <div class="safeImage__inner">
+
+            {% if title_accent %}
+                <h2 class="safeImage__title title">
+                    {{ title_accent }}
+                    {% if name %}
+                        <span>{{ name }}</span>
+                    {% endif %}
+                </h2>
+            {% endif %}
+
+            {% if description %}
+                <p class="safeImage__descr">{{ description }}</p>
+            {% endif %}
+
+            {% if images %}
+                <div class="safeImage__content">
+                    <div class="safeImage__slider swiper">
+                        <div class="swiper-wrapper">
+
+                            {% for image in images %}
+                                <div class="safeImage__image swiper-slide">
+                                    <div class="safeImage__image-image">
+                                        <img src="{{ image }}" alt="{{ name }}">
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</section>

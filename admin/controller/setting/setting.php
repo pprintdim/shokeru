@@ -184,6 +184,23 @@ class ControllerSettingSetting extends Controller {
 		    ];
 		}
 
+		// OAuth credentials (Google / Facebook)
+		$oauth_fields = [
+		    'google_client_id' => 'Google Client ID (OAuth)',
+		    'facebook_app_id'  => 'Facebook App ID (OAuth)',
+		];
+
+		$data['oauth_fields'] = [];
+
+		foreach ($oauth_fields as $field => $label) {
+		    $key = 'config_' . $field;
+		    $data['oauth_fields'][] = [
+		        'name'  => $field,
+		        'label' => $label,
+		        'value' => isset($this->request->post[$key]) ? $this->request->post[$key] : $this->config->get($key),
+		    ];
+		}
+
 
 
 
@@ -267,6 +284,18 @@ class ControllerSettingSetting extends Controller {
 			$data['config_image'] = $this->config->get('config_image');
 		}
 
+		if (isset($this->request->post['config_about_image'])) {
+			$data['config_about_image'] = $this->request->post['config_about_image'];
+		} else {
+			$data['config_about_image'] = $this->config->get('config_about_image');
+		}
+
+		if (isset($this->request->post['config_about_information_id'])) {
+			$data['config_about_information_id'] = (int)$this->request->post['config_about_information_id'];
+		} else {
+			$data['config_about_information_id'] = (int)$this->config->get('config_about_information_id');
+		}
+
 		$this->load->model('tool/image');
 
 		if (isset($this->request->post['config_image']) && is_file(DIR_IMAGE . $this->request->post['config_image'])) {
@@ -278,6 +307,14 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		$data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+
+		if (isset($this->request->post['config_about_image']) && is_file(DIR_IMAGE . $this->request->post['config_about_image'])) {
+			$data['about_thumb'] = $this->model_tool_image->resize($this->request->post['config_about_image'], 100, 100);
+		} elseif ($this->config->get('config_about_image') && is_file(DIR_IMAGE . $this->config->get('config_about_image'))) {
+			$data['about_thumb'] = $this->model_tool_image->resize($this->config->get('config_about_image'), 100, 100);
+		} else {
+			$data['about_thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+		}
 
 		$this->load->model('localisation/location');
 

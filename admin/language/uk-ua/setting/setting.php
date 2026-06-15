@@ -128,6 +128,8 @@ $_['entry_error_display'] = 'Показувати помилки';
 $_['entry_error_log'] = 'Записувати помилки';
 $_['entry_error_filename'] = 'Файл журналу помилок';
 $_['entry_status'] = 'Статус';
+$_['entry_about_image'] = 'Зображення About';
+$_['entry_about_information'] = 'Сторінка About';
 
 // Help
 $_['help_geocode'] = 'будь Ласка, введіть ваше місцезнаходження як Геокодів.';

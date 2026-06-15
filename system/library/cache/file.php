@@ -6,6 +6,10 @@ class File {
 	public function __construct($expire = 3600) {
 		$this->expire = $expire;
 
+		if (!is_dir(DIR_CACHE)) {
+			@mkdir(DIR_CACHE, 0777, true);
+		}
+
 		$files = glob(DIR_CACHE . 'cache.*');
 
 		if ($files) {
@@ -42,6 +46,10 @@ class File {
 	}
 
 	public function set($key, $value) {
+		if (!is_dir(DIR_CACHE)) {
+			@mkdir(DIR_CACHE, 0777, true);
+		}
+
 		$this->delete($key);
 
 		$file = DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $this->expire);

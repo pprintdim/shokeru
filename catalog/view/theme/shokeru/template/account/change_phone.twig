@@ -19,113 +19,98 @@
                 </div>
                 <div class="userData__info-content">
                     <h2 class="userData__info-title">{{ heading_title }}</h2>
-                    <p class="userData__info-descr">{{ text_code_success }}</p>
+                    <p class="userData__info-descr" id="change-phone-descr">{{ text_descr }}</p>
                 </div>
             </div>
-            <form class="userData__form form-block" action="#">
+            <div class="userData__form-result" id="change-phone-result" style="display:none;"></div>
+            <form class="userData__form form-block" id="change-phone-form">
                 <div class="userData__form-item">
-                    <input class="userData__form-input form-input" type="tel" name="telephone" placeholder="Новый номер" required>
+                    <input class="userData__form-input form-input" type="tel" name="telephone" placeholder="{{ text_new_phone }}*" required>
                 </div>
-                <div class="userData__form-item userData__form-code">
-                    <input class="userData__form-input form-input" type="text" name="code" placeholder="Код с СМС*" required>
+                <div class="userData__form-item userData__form-code" id="change-phone-code-block" style="display:none;">
+                    <input class="userData__form-input form-input" type="text" name="code" placeholder="{{ text_sms_code }}*" inputmode="numeric" maxlength="6">
                 </div>
                 <button class="userData__form-btn btn" type="submit">{{ button_change }}</button>
             </form>
         </div>
     </div>
 </section>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
 
-    const form = document.querySelector('.userData__form');
+<script>
+(function () {
+    const form      = document.getElementById('change-phone-form');
     if (!form) return;
 
-    const phoneInput = form.querySelector('input[name="telephone"]');
-    const codeInput  = form.querySelector('input[name="code"]');
-    const codeBlock  = form.querySelector('.userData__form-code');
-    const phoneView  = document.querySelector('.userData__info-descr');
+    const phoneInput = form.querySelector('[name="telephone"]');
+    const codeInput  = form.querySelector('[name="code"]');
+    const codeBlock  = document.getElementById('change-phone-code-block');
+    const descr      = document.getElementById('change-phone-descr');
+    const resultEl   = document.getElementById('change-phone-result');
 
-    // повідомлення
-    const result = document.createElement('div');
-    result.className = 'form-result';
-    form.prepend(result);
+    function showResult(msg, isError) {
+        resultEl.textContent = msg;
+        resultEl.style.color   = isError ? '#e53935' : '#2e7d32';
+        resultEl.style.display = 'block';
+    }
+    function clearResult() {
+        resultEl.textContent   = '';
+        resultEl.style.display = 'none';
+    }
 
-    // ховаємо поле коду поки не відправили смс
-    if (codeBlock) codeBlock.style.display = 'none';
-
-    form.addEventListener('submit', function(e){
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
+        clearResult();
 
-        result.innerHTML = '';
+        const phone = phoneInput.value.trim();
+        const code  = codeInput.value.trim();
 
-        const phone = phoneInput ? phoneInput.value.trim() : '';
-        const code  = codeInput ? codeInput.value.trim() : '';
-
-        /* =====================================================
-           1. НЕМА КОДУ → відправляємо SMS
-        ===================================================== */
+        /* ── 1. немає коду → відправляємо SMS ── */
         if (!code) {
-
             if (!phone) {
-                result.innerHTML = '<span style="color:red;">Введіть номер</span>';
+                showResult('{{ error_phone }}', true);
                 return;
             }
 
             fetch('index.php?route=account/change_phone/smsSend', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: 'telephone=' + encodeURIComponent(phone)
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'telephone=' + encodeURIComponent(phone),
+                credentials: 'same-origin'
             })
-            .then(r => r.json())
-            .then(data => {
-
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
                 if (data.success) {
-                    // показуємо номер
-                    if (phoneView) phoneView.textContent = data.success;
-
-                    // відкриваємо поле коду
-                    if (codeBlock) codeBlock.style.display = 'block';
-
+                    descr.textContent      = data.success;
+                    codeBlock.style.display = 'block';
                     codeInput.focus();
-
                 } else {
-                    result.innerHTML = '<span style="color:red;">' + (data.error || 'Помилка відправки') + '</span>';
+                    showResult(data.error || 'Помилка відправки', true);
                 }
-
             })
-            .catch(() => {
-                result.innerHTML = '<span style="color:red;">Помилка мережі</span>';
-            });
+            .catch(function () { showResult('Помилка мережі', true); });
 
+            return;
         }
 
-        /* =====================================================
-           2. Є КОД → перевіряємо
-        ===================================================== */
-        else {
-
-            fetch('index.php?route=account/change_phone/verifyCode', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: 'code=' + encodeURIComponent(code)
-            })
-            .then(r => r.json())
-            .then(data => {
-
-                if (data.success) {
-                    result.innerHTML = '<span style="color:green;">' + data.success + '</span>';
-                } else {
-                    result.innerHTML = '<span style="color:red;">' + (data.error) + '</span>';
+        /* ── 2. є код → перевіряємо і змінюємо ── */
+        fetch('index.php?route=account/change_phone/verifyCode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'code=' + encodeURIComponent(code),
+            credentials: 'same-origin'
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.success) {
+                showResult(data.success, false);
+                if (data.redirect) {
+                    setTimeout(function () { window.location.href = data.redirect; }, 1200);
                 }
-
-            })
-            .catch(() => {
-                result.innerHTML = '<span style="color:red;">Помилка сервера</span>';
-            });
-
-        }
-
+            } else {
+                showResult(data.error || 'Невірний код', true);
+            }
+        })
+        .catch(function () { showResult('Помилка сервера', true); });
     });
-});
+})();
 </script>
-

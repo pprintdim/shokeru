@@ -18,6 +18,7 @@ $_['entry_from_email'] = 'Your e-mail';
 $_['entry_theme']      = 'Gift Certificate Theme';
 $_['entry_message']    = 'Message';
 $_['entry_amount']     = 'Amount';
+$_['button_apply']     = 'Apply';
 
 // Help
 $_['help_message']     = 'Optional';

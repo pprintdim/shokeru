@@ -29,3 +29,5 @@ $_['error_password']      = 'Password must be between 4 and 20 characters';
 $_['error_confirm']       = 'Passwords do not match';
 $_['error_agree']         = 'You must agree to the privacy policy';
 $_['error_attempts']      = 'Too many login attempts, please try again later';
+
+$_['text_telephone'] = 'Phone';

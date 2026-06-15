@@ -3,27 +3,69 @@
     <div class="container">
         <div class="profile__inner">
             {{ column_left }}
-            <div class="profile__result profile-files" data-profile-content="files">
-                <div class="profile__result-top">
-                    <h2 class="profile__result-heading">{{ text_files_heading }}</h2>
-                </div>
-
-                {% if downloads %}
-                    <div class="profile__files-block">
-                        {% for file in downloads %}
-                            <div class="profile__files-item">
-                                <h3 class="profile__files-title">{{ file.name }}</h3>
-                                <p class="profile__files-descr">{{ file.description }}</p>
-                                <a class="profile__files-download" href="{{ file.href }}" download></a>
-                            </div>
-                        {% endfor %}
+            <div class="profile__content">
+                <div class="profile__result profile-files" data-profile-content="files">
+                    <div class="profile__result-top">
+                        <h2 class="profile__result-heading">{{ text_files_heading }}</h2>
                     </div>
-                {% else %}
-                    <p class="profile__result-name">{{ text_empty }}</p>
-                {% endif %}
 
+                    {% if downloads %}
+                        <div class="profile__files-block" id="download-list">
+                            {% for file in downloads %}
+                                <div class="profile__files-item{% if loop.index is divisible by(3) %} profile__files-action{% endif %}">
+                                    <h3 class="profile__files-title">{{ file.name }}</h3>
+                                    <p class="profile__files-descr">{{ file.description }}</p>
+                                    <a class="profile__files-download" href="{{ file.href }}" download></a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if next_page_url %}
+                            <div class="profile__more-wrap">
+                                <button class="profile__more btn-4" type="button" data-next-url="{{ next_page_url }}">
+                                    Показати більше
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99935 4.66602L7.99935 8.66602L11.9993 4.66602L13.3327 5.99935L7.99935 11.3327L2.66602 5.99935L3.99935 4.66602Z" fill="white"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="profile__result-name">{{ text_empty }}</p>
+                    {% endif %}
+
+                </div>
             </div>
         </div>
     </div>
 </section>
+<script>
+(function () {
+    var btn = document.querySelector('.profile__more');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+        var nextUrl = btn.dataset.nextUrl;
+        if (!nextUrl) return;
+
+        btn.disabled = true;
+
+        var ajaxUrl = nextUrl + (nextUrl.indexOf('?') !== -1 ? '&' : '?') + 'ajax=1';
+
+        fetch(ajaxUrl)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                document.getElementById('download-list').insertAdjacentHTML('beforeend', data.html);
+                if (data.next_page_url) {
+                    btn.dataset.nextUrl = data.next_page_url;
+                    btn.disabled = false;
+                } else {
+                    btn.closest('.profile__more-wrap').remove();
+
+                }
+                history.pushState(null, '', nextUrl);
+            })
+            .catch(function () { btn.disabled = false; });
+    });
+}());
+</script>
 {{ footer }}

@@ -2,7 +2,7 @@
 <div class="profile__left">
     <div class="profile__left-top">
             <div class="profile__left-image">
-                <img src="img/profile.png" alt="">
+                <img src="{{ avatar }}" alt="{{ heading_title ?: 'Мой профиль' }}">
             </div>
             
                 <div class="profile__left-about">
@@ -36,7 +36,7 @@
                                     <path d="M3.75 12.75C4.04547 12.75 4.33806 12.6918 4.61104 12.5787C4.88402 12.4657 5.13206 12.2999 5.34099 12.091C5.54992 11.8821 5.71566 11.634 5.82873 11.361C5.9418 11.0881 6 10.7955 6 10.5C6 10.2045 5.9418 9.91194 5.82873 9.63896C5.71566 9.36598 5.54992 9.11794 5.34099 8.90901C5.13206 8.70008 4.88402 8.53434 4.61104 8.42127C4.33806 8.3082 4.04547 8.25 3.75 8.25C3.15326 8.25 2.58097 8.48705 2.15901 8.90901C1.73705 9.33097 1.5 9.90326 1.5 10.5C1.5 11.0967 1.73705 11.669 2.15901 12.091C2.58097 12.5129 3.15326 12.75 3.75 12.75V12.75Z" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M6.75 13.5L5.625 12.375" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                {{ text_widhlist ?: 'Отслеживаемы товары' }}<span>3</span>
+                                {{ text_wishlist ?: 'Отслеживаемы товары' }}<span>{{ wishlist_total }}</span>
                             </a>
                             <a href="{{ links.download.href }}" class="profile__left-btn{{ links.download.active }}" data-profile-btn="files">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -44,8 +44,8 @@
                                     <path d="M5.25 7.5L9 11.25L12.75 7.5" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
                                     <path d="M9 11.25V2.25" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
                                 </svg>
-                                {{ text_download ?: 'Отслеживаемы товары' }}
-                            </button>
+                                {{ text_download ?: 'Файли для скачування' }}
+                            </a>
                             <a href="{{ links.logout.href }}" class="profile__left-btn{{ links.logout.active }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                                     <path d="M6.75 15.75H3.75C3.35218 15.75 2.97064 15.592 2.68934 15.3107C2.40804 15.0294 2.25 14.6478 2.25 14.25V3.75C2.25 3.35218 2.40804 2.97064 2.68934 2.68934C2.97064 2.40804 3.35218 2.25 3.75 2.25H6.75" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>

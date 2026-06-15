@@ -50,7 +50,8 @@ class ControllerCommonFooter extends Controller {
 
 		$data['cart'] = $this->load->controller('common/cart');
 		$data['user_popup'] = $this->load->controller('common/user_popup');
-		$data['contact'] = $this->url->link('information/contact');
+		$data['contact'] = $this->url->link('information/contact', '', true);
+		$data['about'] = $this->url->link('information/about', '', true);
 		$data['return'] = $this->url->link('account/return/add', '', true);
 		$data['sitemap'] = $this->url->link('information/sitemap');
 		$data['tracking'] = $this->url->link('information/tracking');

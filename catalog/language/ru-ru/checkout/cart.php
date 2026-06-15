@@ -41,3 +41,7 @@ $_['error_required']           = '%s обязательно!';
 $_['error_product']            = 'В вашей корзине нет товаров!';
 $_['error_recurring_required'] = 'Пожалуйста, выберите периодичность платежа!';
 
+
+$_['text_until_cancelled']                    = 'до отмены';
+$_['text_length']                             = 'Количество платежей: %s';
+$_['text_payment_until_canceled_description'] = ': %s; Периодичность: %d %s; Количество платежей: до отмены';

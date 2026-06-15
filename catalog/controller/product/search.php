@@ -175,6 +175,7 @@ class ControllerProductSearch extends Controller {
 		}
 
 		$data['products'] = array();
+		$data['text_results'] = sprintf($this->language->get('text_search'), 0);
 
 		if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
 			$filter_data = array(
@@ -193,7 +194,7 @@ class ControllerProductSearch extends Controller {
 
 			$results = $this->model_catalog_product->getProducts($filter_data);
 
-			$data['text_results'] = sprintf($this->language->get('text_search'), count($results) ?? 0);
+			$data['text_results'] = sprintf($this->language->get('text_search'), $product_total);
 
 			foreach ($results as $result) {
 				if ($result['image']) {

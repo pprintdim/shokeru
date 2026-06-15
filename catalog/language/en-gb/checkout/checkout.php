@@ -91,3 +91,7 @@ $_['error_no_shipping']              = 'Warning: No Shipping options are availab
 $_['error_payment']                  = 'Warning: Payment method required!';
 $_['error_no_payment']               = 'Warning: No Payment options are available. Please <a href="%s">contact us</a> for assistance!';
 $_['error_custom_field']             = '%s required!';
+$_['entry_fax']                              = 'Fax';
+$_['text_recurring']                         = 'Recurring payments';
+$_['text_payment_until_canceled_description'] = ': %s; Period: %d %s; Number of Payments: until cancelled';
+$_['error_custom_field_validate']            = '%s is not valid!';

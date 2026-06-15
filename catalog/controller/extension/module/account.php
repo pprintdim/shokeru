@@ -42,15 +42,25 @@ class ControllerExtensionModuleAccount extends Controller {
         // ==============================
         if ($data['logged']) {
             $this->load->model('account/customer');
+            $this->load->model('account/wishlist');
+            $this->load->model('tool/image');
 
             $customer_id = $this->customer->getId();
             $customer_info = $this->model_account_customer->getCustomer($customer_id);
 
             $data['email'] = $customer_info['email'] ?? '';
-            $data['avatar'] = $customer_info['avatar'] ?? ''; // поле avatar із бази
+            $data['wishlist_total'] = (int)$this->model_account_wishlist->getTotalWishlist();
+            $avatar = $customer_info['avatar'] ?? '';
+
+            if ($avatar && is_file(DIR_IMAGE . $avatar)) {
+                $data['avatar'] = $this->model_tool_image->resize($avatar, 100, 100);
+            } else {
+                $data['avatar'] = $this->model_tool_image->resize('profile.png', 100, 100);
+            }
         } else {
             $data['email'] = '';
-            $data['avatar'] = '';
+            $data['avatar'] = 'image/profile.png';
+            $data['wishlist_total'] = isset($this->session->data['wishlist']) && is_array($this->session->data['wishlist']) ? count(array_unique($this->session->data['wishlist'])) : 0;
         }
 
         return $this->load->view('extension/module/account', $data);

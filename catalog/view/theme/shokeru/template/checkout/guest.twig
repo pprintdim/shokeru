@@ -1,0 +1,47 @@
+{% if customer_groups|length > 1 %}
+    <div class="order__client checkout-toggle" style="margin-bottom:24px">
+        {% for customer_group in customer_groups %}
+            <label class="checkbox-block">
+                <input type="radio" name="customer_group_id" value="{{ customer_group.customer_group_id }}" hidden {% if customer_group.customer_group_id == customer_group_id %}checked="checked"{% endif %}>
+                <span>{{ customer_group.name }}</span>
+            </label>
+        {% endfor %}
+    </div>
+{% else %}
+    <input type="hidden" name="customer_group_id" value="{{ customer_group_id }}">
+{% endif %}
+
+<div class="order__form-inputs checkout-order-inputs">
+    <div class="checkout-field"><input type="text" name="firstname" value="{{ firstname }}" placeholder="Ваше Ім'я" id="input-payment-firstname" class="form-input"></div>
+    <div class="checkout-field"><input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-payment-lastname" class="form-input"></div>
+    <span></span>
+    <div class="checkout-field"><input type="text" name="patronymic" value="" placeholder="По-батькові" class="form-input"></div>
+    <div class="checkout-field"><input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-payment-telephone" class="form-input"></div>
+    <span></span>
+    <div class="checkout-field"><input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-payment-email" class="form-input"></div>
+    <span></span>
+    <span></span>
+</div>
+
+<input type="checkbox" name="agree" value="1" checked style="display:none">
+<input type="button" value="{{ button_continue }}" id="button-guest" data-loading-text="{{ text_loading }}" style="display:none">
+
+<div style="display:none">
+    <input type="hidden" name="company" value="">
+    <input type="hidden" name="address_1" value="---">
+    <input type="hidden" name="address_2" value="">
+    <input type="hidden" name="city" value="---">
+    <input type="hidden" name="postcode" value="00000">
+    <select name="country_id" id="input-payment-country">
+        {% for country in countries %}
+            <option value="{{ country.country_id }}" {% if country.country_id == country_id %}selected="selected"{% endif %}>{{ country.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="zone_id" id="input-payment-zone"><option value="0" selected="selected">-</option></select>
+    {% if shipping_required %}
+        <input type="checkbox" name="shipping_address" value="1" {% if shipping_address %}checked="checked"{% endif %}>
+    {% endif %}
+</div>
+<script type="text/javascript"><!--
+$('#collapse-payment-address select[name=\'country_id\']').trigger('change');
+//--></script>

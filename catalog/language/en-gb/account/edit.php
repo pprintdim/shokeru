@@ -21,3 +21,5 @@ $_['error_lastname']     = 'Last Name must be between 1 and 32 characters!';
 $_['error_email']        = 'E-Mail Address does not appear to be valid!';
 $_['error_telephone']    = 'Telephone must be between 3 and 32 characters!';
 $_['error_custom_field'] = '%s required!';
+$_['entry_fax']                  = 'Fax';
+$_['error_custom_field_validate'] = '%s is not valid!';

@@ -1,0 +1,11 @@
+{% if not redirect %}
+    <div class="checkout-confirm">
+        <div class="checkout-payment-module">
+            {{ payment }}
+        </div>
+    </div>
+{% else %}
+<script type="text/javascript"><!--
+location = '{{ redirect }}';
+//--></script>
+{% endif %}

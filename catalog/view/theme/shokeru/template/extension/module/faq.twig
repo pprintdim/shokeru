@@ -1,0 +1,33 @@
+<section class="faq">
+    <div class="container">
+        <div class="faq__inner">
+            {% if heading or heading_accent %}
+                <h2 class="faq__title title">{{ heading }}<span>{{ heading_accent }}</span></h2>
+            {% endif %}
+            <div class="faq__block">
+                {% for item in items %}
+                    <div class="faq__item">
+                        <h3 class="faq__item-title">{{ item.question }}</h3>
+                        <div class="faq__item-content">
+                            {{ item.content|raw }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+document.querySelectorAll('.faq__item-title').forEach(title => {
+    title.addEventListener('click', () => {
+        const item = title.closest('.faq__item');
+        const isActive = item.classList.contains('active');
+
+        document.querySelectorAll('.faq__item').forEach(i => i.classList.remove('active'));
+
+        if (!isActive) {
+            item.classList.add('active');
+        }
+    });
+});
+</script>

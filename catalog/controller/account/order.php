@@ -40,38 +40,129 @@ class ControllerAccountOrder extends Controller {
 			$page = 1;
 		}
 
+		if (isset($this->request->get['year'])) {
+			$filter_year = (int)$this->request->get['year'];
+		} else {
+			$filter_year = 0;
+		}
+
+		if (isset($this->request->get['order_status_id'])) {
+			$filter_order_status_id = (int)$this->request->get['order_status_id'];
+		} else {
+			$filter_order_status_id = 0;
+		}
+
 		$limit = 10;
 
 		$data['orders'] = array();
 
 		$this->load->model('account/order');
+		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
 
-		$order_total = $this->model_account_order->getTotalOrders();
+		$filter_data = array(
+			'filter_year'            => $filter_year,
+			'filter_order_status_id' => $filter_order_status_id
+		);
 
-		$results = $this->model_account_order->getOrders(($page - 1) * $limit, $limit);
+		$order_total = $this->model_account_order->getTotalOrders($filter_data);
+
+		$results = $this->model_account_order->getOrders(($page - 1) * $limit, $limit, $filter_data);
 
 		foreach ($results as $result) {
-			$product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
+			$order_info = $this->model_account_order->getOrder($result['order_id']);
+			$order_products = $this->model_account_order->getOrderProducts($result['order_id']);
 			$voucher_total = $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);
+			$product_data = array();
+			$product_total = 0;
+
+			foreach ($order_products as $product) {
+				$product_total += (int)$product['quantity'];
+				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
+
+				if ($product_info && $product_info['image']) {
+					$thumb = $this->model_tool_image->resize($product_info['image'], 120, 120);
+				} else {
+					$thumb = $this->model_tool_image->resize('placeholder.png', 120, 120);
+				}
+
+				$product_data[] = array(
+					'name'     => $product['name'],
+					'quantity' => $product['quantity'],
+					'price'    => $this->currency->format($product['price'], $result['currency_code'], $result['currency_value']),
+					'total'    => $this->currency->format($product['total'], $result['currency_code'], $result['currency_value']),
+					'thumb'    => $thumb,
+					'href'     => $this->url->link('product/product', 'product_id=' . $product['product_id'])
+				);
+			}
+
+			$payment_status = 'Очікує оплату';
+
+			if (in_array((int)$result['order_status_id'], array(3, 5, 15))) {
+				$payment_status = 'Оплачено';
+			} elseif (in_array((int)$result['order_status_id'], array(7, 8, 10, 11, 12, 13, 16))) {
+				$payment_status = 'Скасовано';
+			}
+
+			$shipping_address = trim($order_info['shipping_address_1'] . ', ' . $order_info['shipping_city'] . ', ' . $order_info['shipping_zone']);
 
 			$data['orders'][] = array(
-				'order_id'   => $result['order_id'],
-				'name'       => $result['firstname'] . ' ' . $result['lastname'],
-				'status'     => $result['status'],
-				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-				'products'   => ($product_total + $voucher_total),
-				'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
-				'view'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], true),
+				'order_id'       => $result['order_id'],
+				'name'           => $result['firstname'] . ' ' . $result['lastname'],
+				'telephone'      => $order_info['telephone'],
+				'status'         => $result['status'],
+				'payment_status' => $payment_status,
+				'payment_method' => $order_info['payment_method'],
+				'shipping_method'=> $order_info['shipping_method'],
+				'shipping_address' => $shipping_address,
+				'comment'        => $order_info['comment'],
+				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+				'date_time'      => date('H:i', strtotime($result['date_added'])),
+				'products_count' => ($product_total + $voucher_total),
+				'products'       => $product_data,
+				'total'          => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
+				'view'           => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], true),
 			);
+		}
+
+		$data['filter_year'] = $filter_year;
+		$data['filter_order_status_id'] = $filter_order_status_id;
+		$data['order_statuses'] = $this->model_account_order->getOrderStatuses();
+		$data['years'] = array();
+
+		for ($year = (int)date('Y'); $year >= ((int)date('Y') - 4); $year--) {
+			$data['years'][] = $year;
 		}
 
 		$pagination = new Pagination();
 		$pagination->total = $order_total;
 		$pagination->page = $page;
 		$pagination->limit = $limit;
-		$pagination->url = $this->url->link('account/order', 'page={page}', true);
+		$url = '';
+
+		if ($filter_year) {
+			$url .= '&year=' . $filter_year;
+		}
+
+		if ($filter_order_status_id) {
+			$url .= '&order_status_id=' . $filter_order_status_id;
+		}
+
+		$pagination->url = $this->url->link('account/order', $url . '&page={page}', true);
 
 		$data['pagination'] = $pagination->render();
+		$data['order_pages'] = array();
+		$total_pages = (int)ceil($order_total / $limit);
+
+		for ($i = 1; $i <= $total_pages; $i++) {
+			$data['order_pages'][] = array(
+				'page'   => $i,
+				'active' => ($i == $page),
+				'href'   => $this->url->link('account/order', $url . '&page=' . $i, true)
+			);
+		}
+
+		$data['next_page'] = ($page < $total_pages) ? $this->url->link('account/order', $url . '&page=' . ($page + 1), true) : '';
 
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($order_total - $limit)) ? $order_total : ((($page - 1) * $limit) + $limit), $order_total, ceil($order_total / $limit));
 
@@ -84,7 +175,7 @@ class ControllerAccountOrder extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
-		$this->response->setOutput($this->load->view('account/order_list', $data));
+		$this->response->setOutput($this->load->view('account/order', $data));
 	}
 
 	public function info() {

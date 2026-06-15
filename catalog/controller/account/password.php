@@ -8,8 +8,12 @@ class ControllerAccountPassword extends Controller {
 
 	    $this->load->language('account/password');
 
-	    $data = [];
-	    $data['back'] = $this->url->link('account/account', '', true);
+	    $data['heading_title']      = $this->language->get('heading_title');
+	    $data['entry_old_password'] = $this->language->get('entry_old_password');
+	    $data['entry_password']     = $this->language->get('entry_password');
+	    $data['entry_confirm']      = $this->language->get('entry_confirm');
+	    $data['text_success']       = $this->language->get('text_success');
+	    $data['button_close']       = $this->language->get('button_close') ?: 'Закрити';
 
 	    return $this->load->view('account/password', $data);
 	}

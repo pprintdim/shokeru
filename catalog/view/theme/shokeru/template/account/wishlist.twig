@@ -3,48 +3,51 @@
     <div class="container">
         <div class="profile__inner">
             {{ column_left }}
-            <div class="profile__result profile-products" data-profile-content="tracked-products">
-                <div class="profile__result-top">
-                    <h2 class="profile__result-heading">Отслеживаемые товары</h2>
-                    <button class="profile__products-reset">Очистить список товаров</button>
-                </div>
-                {% if products %}
-                    <div class="profile__products-block">
-                        {% for product in products %}
-                            <div class="product__item">
-                                <button class="product__item-delete" data-product-id="{{ product.product_id }}"></button>
-                                <button class="product__item-fav{% if product.fav %} active{% endif %}" data-product-id="{{ product.product_id }}"></button>
-                                <a class="product__item-image" href="{{ product.href }}">
-                                    <img src="{{ product.thumb }}" alt="{{ product.name }}">
-                                </a>
-                                <div class="product__item-content">
-                                    <div class="product__item-buttons">
-                                        <button class="product__item-btn btn" data-cart="{{ product.product_id }}">
-                                            {{ button_cart }}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                                <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
-                                            </svg>
-                                        </button>
-                                        <a class="product__item-btn btn" href="{{ product.href }}">
-                                            {{ button_details }}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                    <div class="product__item-info">
-                                        <a class="product__item-title" href="{{ product.href }}">
-                                            <h3>{{ product.name }}</h3>
-                                        </a>
-                                        <p class="product__item-price">{{ product.price }}</p>
+
+            <div class="profile__content">
+                <div class="profile__result profile-products" data-profile-content="tracked-products" data-empty-text="{{ text_empty|e('html_attr') }}">
+                    <div class="profile__result-top">
+                        <h2 class="profile__result-heading">Отслеживаемые товары</h2>
+                        <button class="profile__products-reset" type="button">Очистить список товаров</button>
+                    </div>
+                    {% if products %}
+                        <div class="profile__products-block">
+                            {% for product in products %}
+                                <div class="product__item">
+                                    <button class="product__item-delete" type="button" data-product-id="{{ product.product_id }}"></button>
+                                    <button class="product__item-fav{% if product.fav %} active{% endif %}" type="button" data-product-id="{{ product.product_id }}"></button>
+                                    <a class="product__item-image" href="{{ product.href }}">
+                                        <img src="{{ product.thumb }}" alt="{{ product.name }}">
+                                    </a>
+                                    <div class="product__item-content">
+                                        <div class="product__item-buttons">
+                                            <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
+                                                {{ button_cart }}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+                                                </svg>
+                                            </button>
+                                            <a class="product__item-btn btn" href="{{ product.href }}">
+                                                {{ button_details }}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="product__item-info">
+                                            <a class="product__item-title" href="{{ product.href }}">
+                                                <h3>{{ product.name }}</h3>
+                                            </a>
+                                            <p class="product__item-price">{{ product.price }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="profile__result-name">{{ text_empty }}</p>
-                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="profile__result-name">{{ text_empty }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

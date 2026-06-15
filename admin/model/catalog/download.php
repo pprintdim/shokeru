@@ -23,8 +23,10 @@ class ModelCatalogDownload extends Model {
 	}
 
 	public function deleteDownload($download_id) {
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "customer_to_download` (`customer_id` int(11) NOT NULL, `download_id` int(11) NOT NULL, `date_added` datetime NOT NULL, PRIMARY KEY (`customer_id`,`download_id`), KEY `download_id` (`download_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_to_download WHERE download_id = '" . (int)$download_id . "'");
 	}
 
 	public function getDownload($download_id) {

@@ -24,7 +24,7 @@ class ControllerExtensionModuleFilter extends Controller {
         $route = $this->request->get['route'] ?? 'product/shop';
 
         // Дозволені маршрути
-        $allowed_routes = ['product/shop', 'product/latest', 'product/special', 'product/category'];
+        $allowed_routes = ['product/shop', 'product/latest', 'product/special', 'product/category', 'product/search', 'account/wishlist'];
         if (!in_array($route, $allowed_routes)) {
             $route = 'product/shop';
         }
@@ -60,6 +60,7 @@ class ControllerExtensionModuleFilter extends Controller {
         if (isset($this->request->get['sort']))  $url_params['sort']  = $this->request->get['sort'];
         if (isset($this->request->get['order'])) $url_params['order'] = $this->request->get['order'];
         if (isset($this->request->get['limit'])) $url_params['limit'] = $this->request->get['limit'];
+        if (isset($this->request->get['search'])) $url_params['search'] = $this->request->get['search'];
 
         // 3. Формуємо action
         if ($category_id) {
@@ -138,6 +139,7 @@ class ControllerExtensionModuleFilter extends Controller {
 
 
         $data['filter_groups'] = [];
+        $data['selected_total'] = $data['price_label'] ? 1 : 0;
 
         if ($filter_groups) {
             foreach ($filter_groups as $filter_group) {
@@ -161,6 +163,10 @@ class ControllerExtensionModuleFilter extends Controller {
                         'selected'  => in_array($filter['filter_id'], $data['filter_category']) // <-- ось тут
                     ];
 
+                    if (in_array($filter['filter_id'], $data['filter_category'])) {
+                        $data['selected_total']++;
+                    }
+
                 }
 
                 $data['filter_groups'][] = [
@@ -169,10 +175,8 @@ class ControllerExtensionModuleFilter extends Controller {
                     'filter'          => $childen_data
                 ];
             }
-
-            return $this->load->view('extension/module/filter', $data);
         }
 
-        return '';
+        return $this->load->view('extension/module/filter', $data);
     }
 }

@@ -3,7 +3,42 @@ class ControllerCheckoutPaymentMethod extends Controller {
 	public function index() {
 		$this->load->language('checkout/checkout');
 
+		$payment_address = array();
+
 		if (isset($this->session->data['payment_address'])) {
+			$payment_address = $this->session->data['payment_address'];
+		} elseif (isset($this->session->data['shipping_address'])) {
+			$payment_address = $this->session->data['shipping_address'];
+		} else {
+			$this->load->model('localisation/country');
+			$this->load->model('localisation/zone');
+
+			$country_id = (int)$this->config->get('config_country_id');
+			$zone_id = (int)$this->config->get('config_zone_id');
+			$country_info = $this->model_localisation_country->getCountry($country_id);
+			$zone_info = $this->model_localisation_zone->getZone($zone_id);
+
+			$payment_address = array(
+				'country_id'     => $country_id,
+				'zone_id'        => $zone_id,
+				'country'        => $country_info ? $country_info['name'] : '',
+				'iso_code_2'     => $country_info ? $country_info['iso_code_2'] : '',
+				'iso_code_3'     => $country_info ? $country_info['iso_code_3'] : '',
+				'address_format' => $country_info ? $country_info['address_format'] : '',
+				'zone'           => $zone_info ? $zone_info['name'] : '',
+				'zone_code'      => $zone_info ? $zone_info['code'] : '',
+				'postcode'       => '',
+				'city'           => '',
+				'address_1'      => '',
+				'address_2'      => '',
+				'company'        => '',
+				'firstname'      => '',
+				'lastname'       => '',
+				'custom_field'   => array()
+			);
+		}
+
+		if ($payment_address) {
 			// Totals
 			$totals = array();
 			$taxes = $this->cart->getTaxes();
@@ -50,7 +85,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 				if ($this->config->get('payment_' . $result['code'] . '_status')) {
 					$this->load->model('extension/payment/' . $result['code']);
 
-					$method = $this->{'model_extension_payment_' . $result['code']}->getMethod($this->session->data['payment_address'], $total);
+					$method = $this->{'model_extension_payment_' . $result['code']}->getMethod($payment_address, $total);
 
 					if ($method) {
 						if ($recurring) {
@@ -164,20 +199,13 @@ class ControllerCheckoutPaymentMethod extends Controller {
 			$json['error']['warning'] = $this->language->get('error_payment');
 		}
 
-		if ($this->config->get('config_checkout_id')) {
-			$this->load->model('catalog/information');
-
-			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_checkout_id'));
-
-			if ($information_info && !isset($this->request->post['agree'])) {
-				$json['error']['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
-			}
-		}
+		// agree is validated at UI level via #checkout-agree checkbox in the summary panel
 
 		if (!$json) {
 			$this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
 
 			$this->session->data['comment'] = strip_tags($this->request->post['comment']);
+			$this->session->data['agree'] = !empty($this->request->post['agree']) ? 1 : 0;
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

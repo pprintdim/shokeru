@@ -1,0 +1,91 @@
+{{ header }}
+<main class="main">
+{{ content_top }}
+    <section class="sertificate">
+        <div class="container">
+            <div class="sertificate__inner">
+                <div class="sertificate__content">
+                    <h1 class="sertificate__title main-title">{{ heading_title }}</h1>
+                    <p class="sertificate__descr">{{ text_description }}</p>
+
+                    <form class="sertificate__form" action="{{ action }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="voucher_theme_id" value="{{ voucher_theme_id }}">
+
+                        {% if error_warning %}
+                            <div class="alert alert-danger alert-dismissible">
+                                {{ error_warning }}
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        {% endif %}
+
+                        <div class="sertificate__form-block form-block">
+                            <div class="sertificate__form-box form-box">
+                                <div class="form-item">
+                                    <input class="sertificate__form-input form-input" type="text" name="to_name" value="{{ to_name }}" placeholder="{{ entry_to_name }}*" required>
+                                    {% if error_to_name %}
+                                        <div class="text-danger">{{ error_to_name }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-item">
+                                    <input class="sertificate__form-input form-input" type="email" name="to_email" value="{{ to_email }}" placeholder="{{ entry_to_email }}*" required>
+                                    {% if error_to_email %}
+                                        <div class="text-danger">{{ error_to_email }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-item">
+                                    <input class="sertificate__form-input form-input" type="text" name="from_name" value="{{ from_name }}" placeholder="{{ entry_from_name }}*" required>
+                                    {% if error_from_name %}
+                                        <div class="text-danger">{{ error_from_name }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-item">
+                                    <input class="sertificate__form-input form-input" type="email" name="from_email" value="{{ from_email }}" placeholder="{{ entry_from_email }}*" required>
+                                    {% if error_from_email %}
+                                        <div class="text-danger">{{ error_from_email }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <textarea class="sertificate__form-textarea form-input" name="message" placeholder="{{ entry_message }}">{{ message }}</textarea>
+                        </div>
+
+                        <div class="sertificate__form-price">
+                            <p class="sertificate__price-title">{{ entry_amount }}*</p>
+                            <div class="sertificate__price-select">
+                                {% for voucher_amount in voucher_amounts %}
+                                    <label>
+                                        <input type="radio" name="amount" value="{{ voucher_amount }}" hidden {% if amount == voucher_amount or amount == voucher_amount|number_format(0, '.', '') %}checked{% endif %}>
+                                        <span>{{ voucher_amount }} <span>грн</span></span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            {% if error_amount %}
+                                <div class="text-danger">{{ error_amount }}</div>
+                            {% endif %}
+                        </div>
+
+                        <label class="sertificate__form-checkbox checkbox-block">
+                            <input type="checkbox" name="agree" value="1" class="visually-hidden" {% if agree %}checked{% endif %} required>
+                            <span>{{ text_agree }}</span>
+                        </label>
+
+                        {% if error_theme %}
+                            <div class="text-danger">{{ error_theme }}</div>
+                        {% endif %}
+
+                        <button class="sertificate__form-btn btn" type="submit">{{ button_apply }}</button>
+                    </form>
+                </div>
+
+                <div class="sertificate__image">
+                    <img src="{{ voucher_image }}" alt="{{ heading_title }}">
+                </div>
+            </div>
+        </div>
+    </section>
+{{ content_bottom }}
+</main>
+{{ footer }}

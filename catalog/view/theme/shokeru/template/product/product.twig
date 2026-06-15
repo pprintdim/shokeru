@@ -75,19 +75,20 @@
                                 </p>
                                 <p class="prod__about-avaliable" data-product-avaliable="yes">Есть в наличии</p>
                                 <div class="prod__about-quantity">
-                                    <button class="quantity-minus"></button>
-                                    <input class="quantity-count" type="number" value="1" min="1" max="999">
-                                    <button class="quantity-plus"></button>
+                                    <button class="quantity-minus" type="button"></button>
+                                    <input class="quantity-count" type="number" name="quantity" value="{{ minimum ?: 1 }}" min="{{ minimum ?: 1 }}" max="999">
+                                    <button class="quantity-plus" type="button"></button>
                                 </div>
                             </div>
                             <div class="prod__buttons">
-                                <button class="prod__add btn-4">
-                                    {{ text_product_add }}
+                                <input type="hidden" name="product_id" value="{{ product_id }}">
+                                <button class="prod__add btn-4" type="button" data-product-id="{{ product_id }}">
+                                    <span>{{ text_product_add }}</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                         <path d="M9.33496 6.66675H13.335V9.33374H9.33496V13.3337H6.66797V9.33374H2.66797V6.66675H6.66797V2.66675H9.33496V6.66675Z" fill="white"/>
                                     </svg>
                                 </button>
-                                <button class="prod__fav"></button>
+                                <button class="prod__fav" type="button" data-product-id="{{ product_id }}"></button>
                             </div>
                         </div>
                         <div class="prod__block">
@@ -126,6 +127,68 @@
                 </div>
             </div>
     </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const quantityInput = document.querySelector('.prod__about-quantity .quantity-count');
+    const quantityMinus = document.querySelector('.prod__about-quantity .quantity-minus');
+    const quantityPlus = document.querySelector('.prod__about-quantity .quantity-plus');
+    const addButton = document.querySelector('.prod__add[data-product-id]');
+
+    const normalizeQuantity = () => {
+        if (!quantityInput) {
+            return 1;
+        }
+
+        const min = parseInt(quantityInput.getAttribute('min'), 10) || 1;
+        const max = parseInt(quantityInput.getAttribute('max'), 10) || 999;
+        let value = parseInt(quantityInput.value, 10);
+
+        if (Number.isNaN(value) || value < min) {
+            value = min;
+        }
+
+        if (value > max) {
+            value = max;
+        }
+
+        quantityInput.value = value;
+
+        return value;
+    };
+
+    if (quantityMinus && quantityInput) {
+        quantityMinus.addEventListener('click', () => {
+            quantityInput.value = normalizeQuantity() - 1;
+            normalizeQuantity();
+        });
+    }
+
+    if (quantityPlus && quantityInput) {
+        quantityPlus.addEventListener('click', () => {
+            quantityInput.value = normalizeQuantity() + 1;
+            normalizeQuantity();
+        });
+    }
+
+    if (quantityInput) {
+        quantityInput.addEventListener('change', normalizeQuantity);
+    }
+
+    if (addButton) {
+        addButton.addEventListener('click', () => {
+            const productId = addButton.dataset.productId;
+            const quantity = normalizeQuantity();
+
+            if (window.cart && typeof window.cart.add === 'function') {
+                window.cart.add(productId, quantity, () => {
+                    window.openThemeCart();
+                });
+            }
+        });
+    }
+});
+</script>
         
 
 
@@ -150,13 +213,13 @@
                 <div class="swiper-wrapper">
                     {% for product in products %}
                         <div class="productSlider__slide swiper-slide product__item">
-                            <button class="product__item-fav"></button>
+                            <button class="product__item-fav" type="button" data-product-id="{{ product.product_id }}"></button>
                             <a class="product__item-image" href="{{ product.href }}">
                                 <img src="{{ product.thumb }}" alt="{{ product.name }}">
                             </a>
                             <div class="product__item-content">
                                 <div class="product__item-buttons">
-                                    <button class="product__item-btn btn">
+                                    <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
                                         {{ button_cart }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/></svg>
                                     </button>

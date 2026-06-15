@@ -1,2 +1,17 @@
-{{header}}
-{{footer}}
+{{ header }}
+
+<section class="pageBlockTop">
+    <div class="container">
+        <div class="pageBlockTop__inner">
+            <div class="pageBlockTop__image">
+                <img src="{{ about_image }}" alt="{{ heading_title }}">
+            </div>
+            <h1 class="pageBlockTop__title title">{{ about_page_title|raw }}</h1>
+            <p class="pageBlockTop__descr">{{ text_about_page_descr }}</p>
+        </div>
+    </div>
+</section>
+
+{{ content_top }}
+{{ content_bottom }}
+{{ footer }}

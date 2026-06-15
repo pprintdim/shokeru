@@ -3,8 +3,6 @@ class ControllerInformationAbout extends Controller {
 	public function index() {
 		$this->load->language('information/information');
 
-		$this->load->model('catalog/information');
-
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -12,69 +10,46 @@ class ControllerInformationAbout extends Controller {
 			'href' => $this->url->link('common/home')
 		);
 
-		if (isset($this->request->get['information_id'])) {
-			$information_id = (int)$this->request->get['information_id'];
+		$default_title = 'Про нас';
+
+		$this->document->setTitle($default_title);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $default_title,
+			'href' => $this->url->link('information/about', '', true)
+		);
+
+		$data['heading_title'] = $default_title;
+		$data['description'] = '';
+
+		$about_domain_name = parse_url($this->config->get('config_url'), PHP_URL_HOST);
+
+		if (!$about_domain_name) {
+			$about_domain_name = parse_url(HTTP_SERVER, PHP_URL_HOST);
+		}
+
+		if (!$about_domain_name) {
+			$about_domain_name = $this->config->get('config_name');
+		}
+
+		$data['about_domain_name'] = preg_replace('/^www\./i', '', (string)$about_domain_name);
+		$data['about_page_title'] = sprintf($this->language->get('text_about_page_title'), $data['about_domain_name']);
+		$data['text_about_page_descr'] = $this->language->get('text_about_page_descr');
+
+		if ($this->config->get('config_about_image') && is_file(DIR_IMAGE . $this->config->get('config_about_image'))) {
+			$server = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url');
+			$data['about_image'] = $server . 'image/' . $this->config->get('config_about_image');
 		} else {
-			$information_id = 0;
+			$data['about_image'] = '';
 		}
 
-		$data['slug'] = 'default';
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
 
-		if ($this->config->get('config_account_id') == $information_id) {
-		    $data['slug'] = 'privacy';
-		}
-
-		$information_info = $this->model_catalog_information->getInformation($information_id);
-
-		if ($information_info) {
-			$this->document->setTitle($information_info['meta_title']);
-			$this->document->setDescription($information_info['meta_description']);
-			$this->document->setKeywords($information_info['meta_keyword']);
-
-			$data['breadcrumbs'][] = array(
-				'text' => $information_info['title'],
-				'href' => $this->url->link('information/information', 'information_id=' .  $information_id)
-			);
-
-			$data['heading_title'] = $information_info['title'];
-
-			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
-
-			$data['continue'] = $this->url->link('common/home');
-
-			$data['column_left'] = $this->load->controller('common/column_left');
-			$data['column_right'] = $this->load->controller('common/column_right');
-			$data['content_top'] = $this->load->controller('common/content_top');
-			$data['content_bottom'] = $this->load->controller('common/content_bottom');
-			$data['footer'] = $this->load->controller('common/footer');
-			$data['header'] = $this->load->controller('common/header');
-
-			$this->response->setOutput($this->load->view('information/about', $data));
-		} 
-        else {
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_error'),
-				'href' => $this->url->link('information/information', 'information_id=' . $information_id)
-			);
-
-			$this->document->setTitle($this->language->get('text_error'));
-
-			$data['heading_title'] = $this->language->get('text_error');
-
-			$data['text_error'] = $this->language->get('text_error');
-
-			$data['continue'] = $this->url->link('common/home');
-
-			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
-
-			$data['column_left'] = $this->load->controller('common/column_left');
-			$data['column_right'] = $this->load->controller('common/column_right');
-			$data['content_top'] = $this->load->controller('common/content_top');
-			$data['content_bottom'] = $this->load->controller('common/content_bottom');
-			$data['footer'] = $this->load->controller('common/footer');
-			$data['header'] = $this->load->controller('common/header');
-
-			$this->response->setOutput($this->load->view('error/not_found', $data));
-		}
+		$this->response->setOutput($this->load->view('information/about', $data));
 	}
 }

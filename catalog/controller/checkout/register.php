@@ -1,5 +1,11 @@
 <?php
 class ControllerCheckoutRegister extends Controller {
+	private function isValidPhone($value) {
+		$digits = preg_replace('/\D+/', '', (string)$value);
+
+		return utf8_strlen($digits) >= 10 && utf8_strlen($digits) <= 15;
+	}
+
 	public function index() {
 		$this->load->language('checkout/checkout');
 		
@@ -78,6 +84,21 @@ class ControllerCheckoutRegister extends Controller {
 		$this->load->language('checkout/checkout');
 
 		$json = array();
+		$generated_password = token(10);
+		$post = array_merge(array(
+			'firstname' => '',
+			'lastname' => '',
+			'email' => '',
+			'telephone' => '',
+			'address_1' => '---',
+			'address_2' => '',
+			'city' => '---',
+			'postcode' => '00000',
+			'country_id' => (string)$this->config->get('config_country_id'),
+			'zone_id' => '0',
+			'company' => '',
+			'custom_field' => array()
+		), $this->request->post);
 
 		// Validate if customer is already logged out.
 		if ($this->customer->isLogged()) {
@@ -111,56 +132,48 @@ class ControllerCheckoutRegister extends Controller {
 		if (!$json) {
 			$this->load->model('account/customer');
 
-			if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+			if ((utf8_strlen($post['firstname']) < 1) || (utf8_strlen($post['firstname']) > 32)) {
 				$json['error']['firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+			if ((utf8_strlen($post['lastname']) < 1) || (utf8_strlen($post['lastname']) > 32)) {
 				$json['error']['lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+			if ((utf8_strlen($post['email']) > 96) || !filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
 				$json['error']['email'] = $this->language->get('error_email');
 			}
 
-			if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+			if ($this->model_account_customer->getTotalCustomersByEmail($post['email'])) {
 				$json['error']['warning'] = $this->language->get('error_exists');
 			}
 
-			if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+			if (!$this->isValidPhone($post['telephone'])) {
 				$json['error']['telephone'] = $this->language->get('error_telephone');
 			}
 
-			if ((utf8_strlen($this->request->post['address_1']) < 3) || (utf8_strlen($this->request->post['address_1']) > 128)) {
+			if ((utf8_strlen($post['address_1']) < 3) || (utf8_strlen($post['address_1']) > 128)) {
 				$json['error']['address_1'] = $this->language->get('error_address_1');
 			}
 
-			if ((utf8_strlen($this->request->post['city']) < 2) || (utf8_strlen($this->request->post['city']) > 128)) {
+			if ((utf8_strlen($post['city']) < 2) || (utf8_strlen($post['city']) > 128)) {
 				$json['error']['city'] = $this->language->get('error_city');
 			}
 
 			$this->load->model('localisation/country');
 
-			$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
+			$country_info = $this->model_localisation_country->getCountry($post['country_id']);
 
-			if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['postcode']) < 2 || utf8_strlen($this->request->post['postcode']) > 10)) {
+			if ($country_info && $country_info['postcode_required'] && (utf8_strlen($post['postcode']) < 2 || utf8_strlen($post['postcode']) > 10)) {
 				$json['error']['postcode'] = $this->language->get('error_postcode');
 			}
 
-			if ($this->request->post['country_id'] == '') {
+			if ($post['country_id'] == '') {
 				$json['error']['country'] = $this->language->get('error_country');
 			}
 
-			if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
+			if (!isset($post['zone_id']) || $post['zone_id'] == '' || !is_numeric($post['zone_id'])) {
 				$json['error']['zone'] = $this->language->get('error_zone');
-			}
-
-			if ((utf8_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) < 4) || (utf8_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) > 40)) {
-				$json['error']['password'] = $this->language->get('error_password');
-			}
-
-			if ($this->request->post['confirm'] != $this->request->post['password']) {
-				$json['error']['confirm'] = $this->language->get('error_confirm');
 			}
 
 			if ($this->config->get('config_account_id')) {
@@ -174,8 +187,8 @@ class ControllerCheckoutRegister extends Controller {
 			}
 
 			// Customer Group
-			if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
-				$customer_group_id = $this->request->post['customer_group_id'];
+			if (isset($post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+				$customer_group_id = $post['customer_group_id'];
 			} else {
 				$customer_group_id = $this->config->get('config_customer_group_id');
 			}
@@ -190,9 +203,9 @@ class ControllerCheckoutRegister extends Controller {
 					continue;
 				}
 
-				if ($custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['location']][$custom_field['custom_field_id']])) {
+				if ($custom_field['required'] && empty($post['custom_field'][$custom_field['location']][$custom_field['custom_field_id']])) {
 					$json['error']['custom_field' . $custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
-				} elseif (($custom_field['type'] == 'text') && !empty($custom_field['validation']) && !filter_var($this->request->post['custom_field'][$custom_field['location']][$custom_field['custom_field_id']], FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $custom_field['validation'])))) {
+				} elseif (($custom_field['type'] == 'text') && !empty($custom_field['validation']) && !filter_var($post['custom_field'][$custom_field['location']][$custom_field['custom_field_id']], FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $custom_field['validation'])))) {
 					$json['error']['custom_field' . $custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
 				}
 			}
@@ -208,6 +221,11 @@ class ControllerCheckoutRegister extends Controller {
 		}
 
 		if (!$json) {
+			$post['password'] = $generated_password;
+			$post['confirm'] = $generated_password;
+			$post['auto_generated_password'] = $generated_password;
+			$this->request->post = $post;
+
 			$customer_id = $this->model_account_customer->addCustomer($this->request->post);
 
 			// Default Payment Address
@@ -228,7 +246,7 @@ class ControllerCheckoutRegister extends Controller {
 			$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 
 			if ($customer_group_info && !$customer_group_info['approval']) {
-				$this->customer->login($this->request->post['email'], $this->request->post['password']);
+				$this->customer->login($this->request->post['email'], $generated_password);
 
 				$this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
 

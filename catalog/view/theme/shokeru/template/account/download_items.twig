@@ -1,0 +1,7 @@
+{% for file in downloads %}
+    <div class="profile__files-item{% if loop.index is divisible by(3) %} profile__files-action{% endif %}">
+        <h3 class="profile__files-title">{{ file.name }}</h3>
+        <p class="profile__files-descr">{{ file.description }}</p>
+        <a class="profile__files-download" href="{{ file.href }}" download></a>
+    </div>
+{% endfor %}

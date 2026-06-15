@@ -3,15 +3,27 @@ class ControllerCheckoutShippingAddress extends Controller {
 	public function index() {
 		$this->load->language('checkout/checkout');
 
+		$this->load->model('account/address');
+
+		$current_address = array();
+
+		if ($this->customer->getAddressId()) {
+			$current_address = $this->model_account_address->getAddress($this->customer->getAddressId());
+		}
+
 		if (isset($this->session->data['shipping_address']['address_id'])) {
 			$data['address_id'] = $this->session->data['shipping_address']['address_id'];
 		} else {
 			$data['address_id'] = $this->customer->getAddressId();
 		}
 
-		$this->load->model('account/address');
-
 		$data['addresses'] = $this->model_account_address->getAddresses();
+		$data['firstname'] = isset($this->session->data['shipping_address']['firstname']) ? $this->session->data['shipping_address']['firstname'] : (!empty($current_address['firstname']) ? $current_address['firstname'] : $this->customer->getFirstName());
+		$data['lastname'] = isset($this->session->data['shipping_address']['lastname']) ? $this->session->data['shipping_address']['lastname'] : (!empty($current_address['lastname']) ? $current_address['lastname'] : $this->customer->getLastName());
+		$data['company'] = isset($this->session->data['shipping_address']['company']) ? $this->session->data['shipping_address']['company'] : (!empty($current_address['company']) ? $current_address['company'] : '');
+		$data['address_1'] = isset($this->session->data['shipping_address']['address_1']) ? $this->session->data['shipping_address']['address_1'] : (!empty($current_address['address_1']) ? $current_address['address_1'] : '');
+		$data['address_2'] = isset($this->session->data['shipping_address']['address_2']) ? $this->session->data['shipping_address']['address_2'] : (!empty($current_address['address_2']) ? $current_address['address_2'] : '');
+		$data['city'] = isset($this->session->data['shipping_address']['city']) ? $this->session->data['shipping_address']['city'] : (!empty($current_address['city']) ? $current_address['city'] : '');
 
 		if (isset($this->session->data['shipping_address']['postcode'])) {
 			$data['postcode'] = $this->session->data['shipping_address']['postcode'];
@@ -161,17 +173,32 @@ class ControllerCheckoutShippingAddress extends Controller {
 				}
 
 				if (!$json) {
-					$address_id = $this->model_account_address->addAddress($this->customer->getId(), $this->request->post);
+					$this->load->model('localisation/country');
+					$this->load->model('localisation/zone');
 
-					$this->session->data['shipping_address'] = $this->model_account_address->getAddress($address_id);
+					$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
+					$zone_info = $this->model_localisation_zone->getZone($this->request->post['zone_id']);
 
-					// If no default address ID set we use the last address
-					if (!$this->customer->getAddressId()) {
-						$this->load->model('account/customer');
-						
-						$this->model_account_customer->editAddressId($this->customer->getId(), $address_id);
-					}
-					
+					$this->session->data['shipping_address'] = array(
+						'address_id'      => $this->customer->getAddressId(),
+						'firstname'       => $this->request->post['firstname'],
+						'lastname'        => $this->request->post['lastname'],
+						'company'         => $this->request->post['company'],
+						'address_1'       => $this->request->post['address_1'],
+						'address_2'       => $this->request->post['address_2'],
+						'city'            => $this->request->post['city'],
+						'postcode'        => $this->request->post['postcode'],
+						'country_id'      => $this->request->post['country_id'],
+						'zone_id'         => $this->request->post['zone_id'],
+						'country'         => $country_info ? $country_info['name'] : '',
+						'iso_code_2'      => $country_info ? $country_info['iso_code_2'] : '',
+						'iso_code_3'      => $country_info ? $country_info['iso_code_3'] : '',
+						'address_format'  => $country_info ? $country_info['address_format'] : '',
+						'zone'            => $zone_info ? $zone_info['name'] : '',
+						'zone_code'       => $zone_info ? $zone_info['code'] : '',
+						'custom_field'    => isset($this->request->post['custom_field']['address']) ? $this->request->post['custom_field']['address'] : array()
+					);
+
 					unset($this->session->data['shipping_method']);
 					unset($this->session->data['shipping_methods']);
 				}

@@ -38,3 +38,7 @@ $_['error_minimum']            = 'Minimum order amount for %s is %s!';
 $_['error_required']           = '%s required!';
 $_['error_product']            = 'Warning: There are no products in your cart!';
 $_['error_recurring_required'] = 'Please select a payment recurring!';
+
+$_['text_until_cancelled']                    = 'until cancelled';
+$_['text_length']                             = 'Number of Payments: %s';
+$_['text_payment_until_canceled_description'] = ': %s; Period: %d %s; Number of Payments: until cancelled';

@@ -1,0 +1,55 @@
+<div class="checkout-login">
+    <div class="order__client">
+        <label>
+            <input type="radio" name="client_tab" value="returning" hidden {% if account == 'login' %}checked{% endif %}>
+            <span>Постійний клієнт</span>
+        </label>
+        <span class="order__client-line"></span>
+        <label>
+            <input type="radio" name="client_tab" value="new" hidden {% if account != 'login' %}checked{% endif %}>
+            <span>Новий покупець</span>
+        </label>
+    </div>
+
+    <div class="checkout-login__panel" data-panel="returning" {% if account != 'login' %}style="display:none"{% endif %}>
+        <div class="order__form-inputs checkout-order-inputs checkout-order-inputs--single">
+            <div class="checkout-field checkout-field--full">
+                <input type="text" name="email" value="" placeholder="{{ entry_email }}" id="input-email" class="form-input">
+            </div>
+            <div class="checkout-field checkout-field--full">
+                <input type="password" name="password" value="" placeholder="{{ entry_password }}" id="input-password" class="form-input">
+            </div>
+        </div>
+        <a class="checkout-pane__descr" href="{{ forgotten }}">{{ text_forgotten }}</a>
+        <div class="checkout-actions">
+            <input type="button" value="{{ button_login }}" id="button-login" data-loading-text="{{ text_loading }}" class="btn-4">
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    var radios = document.querySelectorAll('input[name="client_tab"]');
+    var loginPanel = document.querySelector('.checkout-login__panel[data-panel="returning"]');
+    var paymentAddr = document.getElementById('collapse-payment-address');
+
+    function syncCheckoutMode(value) {
+        if (value === 'returning') {
+            if (loginPanel) loginPanel.style.display = '';
+            if (paymentAddr) paymentAddr.style.display = 'none';
+        } else {
+            if (loginPanel) loginPanel.style.display = 'none';
+            if (paymentAddr) paymentAddr.style.display = '';
+        }
+    }
+
+    radios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            syncCheckoutMode(radio.value);
+        });
+
+        if (radio.checked) {
+            syncCheckoutMode(radio.value);
+        }
+    });
+}());
+</script>

@@ -56,6 +56,14 @@
                     bottomContainer.remove();
                 }
 
+                if (typeof window.syncProductCartButtons === "function") {
+                    window.syncProductCartButtons();
+                }
+
+                if (typeof window.syncWishlistButtons === "function") {
+                    window.syncWishlistButtons();
+                }
+
                 window.history.replaceState({}, "", url);
             })
             .catch(() => {

@@ -136,6 +136,8 @@ class ControllerCheckoutConfirm extends Controller {
 				$order_data['custom_field'] = $this->session->data['guest']['custom_field'];
 			}
 
+			$recipient_comment = '';
+
 			$order_data['payment_firstname'] = $this->session->data['payment_address']['firstname'];
 			$order_data['payment_lastname'] = $this->session->data['payment_address']['lastname'];
 			$order_data['payment_company'] = $this->session->data['payment_address']['company'];
@@ -160,6 +162,19 @@ class ControllerCheckoutConfirm extends Controller {
 				$order_data['payment_code'] = $this->session->data['payment_method']['code'];
 			} else {
 				$order_data['payment_code'] = '';
+			}
+
+			if (
+				$order_data['payment_code'] === 'cod' &&
+				!empty($this->session->data['np_delivery']['type']) &&
+				in_array($this->session->data['np_delivery']['type'], array('np_branch', 'np_courier'))
+			) {
+				$np_payment_titles = array(
+					'np_branch'  => 'Наложений платіж (Нова Пошта, відділення)',
+					'np_courier' => 'Наложений платіж (Нова Пошта, кур\'єр)'
+				);
+
+				$order_data['payment_method'] = $np_payment_titles[$this->session->data['np_delivery']['type']];
 			}
 
 			if ($this->cart->hasShipping()) {
@@ -188,6 +203,40 @@ class ControllerCheckoutConfirm extends Controller {
 				} else {
 					$order_data['shipping_code'] = '';
 				}
+
+				if (!empty($this->session->data['np_delivery'])) {
+					$np = $this->session->data['np_delivery'];
+					$labels = array(
+						'np_branch'     => 'Самовивіз з відділення Нової Пошти',
+						'np_courier'    => 'Кур\'єром Нової Пошти',
+						'store_courier' => 'Кур\'єром магазину',
+						'other'         => 'Інша служба доставки'
+					);
+					$parts = array();
+					$parts[] = isset($labels[$np['type']]) ? $labels[$np['type']] : '';
+					if (!empty($np['city_name'])) {
+						$parts[] = $np['city_name'];
+					}
+					if (!empty($np['warehouse_name'])) {
+						$parts[] = $np['warehouse_name'];
+					}
+					if (!empty($np['courier_city_name'])) {
+						$parts[] = $np['courier_city_name'];
+					}
+					if (!empty($np['street'])) {
+						$parts[] = trim($np['street'] . (!empty($np['house']) ? ', ' . $np['house'] : ''));
+					}
+					if (!empty($np['sc_city'])) {
+						$parts[] = $np['sc_city'];
+					}
+					if (!empty($np['sc_address'])) {
+						$parts[] = $np['sc_address'];
+					}
+					$np_summary = implode(' - ', array_filter($parts));
+					if ($np_summary) {
+						$order_data['shipping_method'] = trim($order_data['shipping_method'] . ' / ' . $np_summary, ' /');
+					}
+				}
 			} else {
 				$order_data['shipping_firstname'] = '';
 				$order_data['shipping_lastname'] = '';
@@ -204,6 +253,23 @@ class ControllerCheckoutConfirm extends Controller {
 				$order_data['shipping_custom_field'] = array();
 				$order_data['shipping_method'] = '';
 				$order_data['shipping_code'] = '';
+			}
+
+			if (isset($this->session->data['recipient_data']) && $this->session->data['recipient_data']['type'] === 'other') {
+				$recipient = $this->session->data['recipient_data'];
+
+				$recipient_lines = array(
+					'Отримувач: інша людина',
+					'Ім\'я: ' . $recipient['firstname'],
+					'Прізвище: ' . $recipient['lastname']
+				);
+
+				if (!empty($recipient['patronymic'])) {
+					$recipient_lines[] = 'По батькові: ' . $recipient['patronymic'];
+				}
+
+				$recipient_lines[] = 'Телефон: ' . $recipient['telephone'];
+				$recipient_comment = implode("\n", $recipient_lines);
 			}
 
 			$order_data['products'] = array();
@@ -257,7 +323,10 @@ class ControllerCheckoutConfirm extends Controller {
 				}
 			}
 
-			$order_data['comment'] = $this->session->data['comment'];
+			$order_data['comment'] = isset($this->session->data['comment']) ? $this->session->data['comment'] : '';
+			if ($recipient_comment) {
+				$order_data['comment'] = trim($order_data['comment'] . "\n" . $recipient_comment);
+			}
 			$order_data['total'] = $total_data['total'];
 
 			if (isset($this->request->cookie['tracking'])) {

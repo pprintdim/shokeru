@@ -1,0 +1,31 @@
+/* ==========================================================================
+   animations.css — окремий файл анімацій (не чіпає основну структуру style.css)
+   Логіка: .js-anim вішається на <html> через animations.js.
+   Без JS блоки лишаються видимими (graceful fallback).
+   Анімуються тільки opacity + transform (GPU, без reflow).
+   ========================================================================== */
+
+/* --- Базовий пресет появи знизу (fade-up) --- */
+.js-anim .aboutus,
+.js-anim .safemode {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+}
+
+.js-anim .aboutus.anim-in,
+.js-anim .safemode.anim-in {
+    opacity: 1;
+    transform: none;
+}
+
+/* Доступність: вимикаємо анімації за бажанням користувача */
+@media (prefers-reduced-motion: reduce) {
+    .js-anim .aboutus,
+    .js-anim .safemode {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}

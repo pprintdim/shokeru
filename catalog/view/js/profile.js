@@ -2,15 +2,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const profileLeftBtns = document.querySelectorAll('.profile__left-btn:not(:last-child)');
         const profileResults = document.querySelectorAll('.profile__result');
         profileLeftBtns.forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (event) => {
+                const targetContent = button.dataset.profileBtn;
+                const activeContentBlock = document.querySelector(`.profile__result[data-profile-content="${targetContent}"]`);
+
+                if (!activeContentBlock) {
+                    return;
+                }
+
+                event.preventDefault();
+
                 profileLeftBtns.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                const targetContent = button.dataset.profileBtn;
                 profileResults.forEach(result => result.classList.remove('active'));
-                const activeContentBlock = document.querySelector(`.profile__result[data-profile-content="${targetContent}"]`);
-                if (activeContentBlock) {
-                    activeContentBlock.classList.add('active');
-                }
+                activeContentBlock.classList.add('active');
+
                 if (targetContent === 'user-data') {
                     const profileUserBtns = activeContentBlock.querySelectorAll('.profile__user-btn');
                     const profileUserResults = activeContentBlock.querySelectorAll('.profile__user-result');

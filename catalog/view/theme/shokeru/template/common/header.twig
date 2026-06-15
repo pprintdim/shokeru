@@ -16,11 +16,16 @@
 {% if keywords %}
 <meta name="keywords" content="{{ keywords }}" />
 {% endif %}
+<script src="catalog/view/javascript/jquery/jquery-3.7.1.min.js" type="text/javascript"></script>
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="stylesheet" href="catalog/view/css/style.css">
+<link rel="stylesheet" href="catalog/view/css/style.css?v=20260423">
+<link rel="stylesheet" href="catalog/view/css/animations.css?v=20260615">
 
 {% for style in styles %}
 <link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
@@ -28,6 +33,7 @@
 {% for script in scripts %}
 <script src="{{ script }}" type="text/javascript"></script>
 {% endfor %}
+<script src="catalog/view/js/common.js?v=20260423"></script>
 
 {% for link in links %}
 <link href="{{ link.href }}" rel="{{ link.rel }}" />
@@ -36,7 +42,7 @@
 {{ analytic }}
 {% endfor %}
 </head>
-<body class="body"> 
+<body class="body" data-wishlist-products="{{ wishlist_product_ids|json_encode|e('html_attr') }}" data-wishlist-url="{{ wishlist }}" data-wishlist-total="{{ wishlist_total }}">
     <header class="header">
         <div class="container">
             <div class="header__inner">
@@ -63,7 +69,7 @@
                             {{ language }}
                             <span class="header__box-line"></span>
                             <div class="header__user">
-                                <button class="header__favourite"><span>{{ wishlist_total }}</span></button>
+                                <a class="header__favourite" href="{{ wishlist }}"><span>{{ wishlist_total }}</span></a>
                                 <button class="header__cart cart-open"><span>{{ cart_total }}</span></button>
                             </div>
                             <span class="header__box-line"></span>
@@ -88,11 +94,11 @@
                 <div class="container">
                     <div class="header__menu-inner">
                         <div class="header__menu-top">
-                            <a class="header__menu-logo" href="index.html">
+                            <a class="header__menu-logo" href="{{ home }}">
                                 <img src="{{ logo }}" alt="{{ name }}">
                             </a>
                             <button class="header__login">{{ text_login }}</button>
-                            <button class="header__menu-close menu-close">{{text_close ?: 'Закрыть'}}</button>
+                            <button class="header__menu-close menu-close">{{ text_close }}</button>
                         </div>
                         <div class="header__menu-content">
                             <div class="header__menu-image">
@@ -103,19 +109,19 @@
                             <nav class="header__menu-list">
                                 <ul>
                                     <li>
-                                        <a class="active" href="#">{{ text_home ?: 'Головна'}}</a>
+                                        <a href="{{ home }}">{{ text_menu_home }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ about }}">{{ text_about ?: 'Про нас'}}</a>
+                                        <a href="{{ about }}">{{ text_menu_about }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ shop }}">{{ text_shop ?: 'Магазин'}}</a>
+                                        <a href="{{ shop }}">{{ text_menu_shop }}</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{ text_customers_info ?: 'Информация покупателям'}}</a>
+                                        <a href="{{ customers }}">{{ text_menu_customers }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ contact }}">{{ text_contact ?: 'Контакты'}}</a>
+                                        <a href="{{ contact }}">{{ text_menu_contact }}</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -165,6 +171,3 @@
         </div>
     </header>
     <main class="main">
-
-
-

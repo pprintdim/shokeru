@@ -36,3 +36,6 @@ $_['error_city']         = 'City must be between 2 and 128 characters!';
 $_['error_country']      = 'Please select a country!';
 $_['error_zone']         = 'Please select a region / state!';
 $_['error_custom_field'] = '%s required!';
+$_['text_edit_address']           = 'Edit Address';
+$_['error_vat']                   = 'Invalid post code!';
+$_['error_custom_field_validate'] = '%s is not valid!';

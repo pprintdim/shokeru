@@ -92,3 +92,8 @@ $_['error_payment']                  = 'Необходимо указать сп
 $_['error_no_payment']               = 'Нет доступных способов оплаты. Пожалуйста <a href="%s">свяжитесь с администрацией</a>!';
 $_['error_custom_field']             = '%s обязательно!';
 
+
+$_['entry_fax']                              = 'Факс';
+$_['text_recurring']                         = 'Периодические платежи';
+$_['text_payment_until_canceled_description'] = ': %s; Периодичность: %d %s; Количество платежей: до отмены';
+$_['error_custom_field_validate']            = '%s некорректно!';

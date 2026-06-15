@@ -1,24 +1,16 @@
 <?php
 class ModelAccountDownload extends Model {
 	public function getDownload($download_id) {
-		$implode = array();
+		$this->ensureCustomerDownloadTable();
 
-		$order_statuses = $this->config->get('config_complete_status');
+		$query = $this->db->query("SELECT d.filename, d.mask FROM " . DB_PREFIX . "customer_to_download c2d LEFT JOIN " . DB_PREFIX . "download d ON (c2d.download_id = d.download_id) WHERE c2d.customer_id = '" . (int)$this->customer->getId() . "' AND d.download_id = '" . (int)$download_id . "'");
 
-		foreach ($order_statuses as $order_status_id) {
-			$implode[] = "o.order_status_id = '" . (int)$order_status_id . "'";
-		}
-
-		if ($implode) {
-			$query = $this->db->query("SELECT d.filename, d.mask FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) LEFT JOIN " . DB_PREFIX . "product_to_download p2d ON (op.product_id = p2d.product_id) LEFT JOIN " . DB_PREFIX . "download d ON (p2d.download_id = d.download_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND (" . implode(" OR ", $implode) . ") AND d.download_id = '" . (int)$download_id . "'");
-
-			return $query->row;
-		} else {
-			return;
-		}
+		return $query->row;
 	}
 
 	public function getDownloads($start = 0, $limit = 20) {
+		$this->ensureCustomerDownloadTable();
+
 		if ($start < 0) {
 			$start = 0;
 		}
@@ -27,38 +19,20 @@ class ModelAccountDownload extends Model {
 			$limit = 20;
 		}
 
-		$implode = array();
+		$query = $this->db->query("SELECT c2d.download_id, c2d.date_added, dd.name, d.filename FROM " . DB_PREFIX . "customer_to_download c2d LEFT JOIN " . DB_PREFIX . "download d ON (c2d.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE c2d.customer_id = '" . (int)$this->customer->getId() . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c2d.date_added DESC LIMIT " . (int)$start . "," . (int)$limit);
 
-		$order_statuses = $this->config->get('config_complete_status');
-
-		foreach ($order_statuses as $order_status_id) {
-			$implode[] = "o.order_status_id = '" . (int)$order_status_id . "'";
-		}
-
-		if ($implode) {
-			$query = $this->db->query("SELECT DISTINCT op.order_product_id, d.download_id, o.order_id, o.date_added, dd.name, d.filename FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) LEFT JOIN " . DB_PREFIX . "product_to_download p2d ON (op.product_id = p2d.product_id) LEFT JOIN " . DB_PREFIX . "download d ON (p2d.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND (" . implode(" OR ", $implode) . ") ORDER BY o.date_added DESC LIMIT " . (int)$start . "," . (int)$limit);
-
-			return $query->rows;
-		} else {
-			return array();
-		}
+		return $query->rows;
 	}
 
 	public function getTotalDownloads() {
-		$implode = array();
+		$this->ensureCustomerDownloadTable();
 
-		$order_statuses = $this->config->get('config_complete_status');
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer_to_download WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
-		foreach ($order_statuses as $order_status_id) {
-			$implode[] = "o.order_status_id = '" . (int)$order_status_id . "'";
-		}
+		return $query->row['total'];
+	}
 
-		if ($implode) {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) LEFT JOIN " . DB_PREFIX . "product_to_download p2d ON (op.product_id = p2d.product_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND (" . implode(" OR ", $implode) . ")");
-
-			return $query->row['total'];
-		} else {
-			return 0;
-		}
+	private function ensureCustomerDownloadTable() {
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "customer_to_download` (`customer_id` int(11) NOT NULL, `download_id` int(11) NOT NULL, `date_added` datetime NOT NULL, PRIMARY KEY (`customer_id`,`download_id`), KEY `download_id` (`download_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 	}
 }

@@ -1,16 +1,20 @@
 <?php
-$_['button_change_en'] = 'Change';
-$_['button_close_en'] = 'Close';
-$_['text_title_en'] = "Change phone number";
-$_['text_code_success_en'] = 'The confirmation code will be sent to number %s';
-$_['text_sms_message_en'] = 'Your code: %s';
-$_['text_login_success_en'] = 'Login successful!';
-$_['text_register_success_en'] = 'Registration successful!';
+$_['text_heading']        = "Change phone\nnumber";
+$_['text_descr']          = 'An SMS confirmation code will be sent to the new number';
+$_['text_new_phone']      = 'New phone number';
+$_['text_sms_code']       = 'SMS code';
+$_['text_sms_message']    = 'Your Shokeru confirmation code: %s';
+$_['text_code_success']   = 'Code sent to %s';
+$_['text_change_success'] = 'Phone number changed successfully';
 
-$_['error_phone_en'] = 'Enter a valid phone number';
-$_['error_code_en'] = 'Invalid code';
-$_['error_send_en'] = 'SMS sending error';
-$_['error_token_en'] = 'SMS API token is not set';
-$_['error_attempts_en'] = 'Maximum number of attempts exceeded. Request a new code.';
-$_['error_daily_limit_en'] = 'Daily SMS limit reached.';
-$_['error_cooldown_en'] = 'Wait %s seconds before sending again.';
+$_['button_change']       = 'Change';
+$_['button_close']        = 'Close';
+
+$_['error_phone']         = 'Enter a valid phone number';
+$_['error_code']          = 'Invalid confirmation code';
+$_['error_send']          = 'SMS sending error';
+$_['error_token']         = 'SMS API token is not configured';
+$_['error_attempts']      = 'Too many attempts. Please request a new code.';
+$_['error_daily_limit']   = 'Daily SMS limit reached. Try again tomorrow.';
+$_['error_cooldown']      = 'Wait %s seconds before sending again.';
+$_['error_not_logged']    = 'Authorization required';

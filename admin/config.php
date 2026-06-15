@@ -1,21 +1,25 @@
 <?php
-// HTTP
-define('HTTP_SERVER', 'http://localhost:8888/shokeru/admin/');
-define('HTTP_CATALOG', 'http://localhost:8888/shokeru/');
+$settings = require dirname(__DIR__) . '/app_config.php';
 
-// HTTPS (локально просто HTTP)
-define('HTTPS_SERVER', 'http://localhost:8888/shokeru/admin/');
-define('HTTPS_CATALOG', 'http://localhost:8888/shokeru/');
+// Root
+define('DIR_ROOT', $settings['root']);
+
+// HTTP
+define('HTTP_SERVER', $settings['http_catalog'] . $settings['admin_path'] . '/');
+define('HTTP_CATALOG', $settings['http_catalog']);
+
+// HTTPS
+define('HTTPS_SERVER', $settings['https_catalog'] . $settings['admin_path'] . '/');
+define('HTTPS_CATALOG', $settings['https_catalog']);
 
 // DIR
-define('DIR_APPLICATION', '/Applications/MAMP/htdocs/shokeru/admin/');
-define('DIR_SYSTEM', '/Applications/MAMP/htdocs/shokeru/system/');
-define('DIR_IMAGE', '/Applications/MAMP/htdocs/shokeru/image/');
+define('DIR_APPLICATION', DIR_ROOT . $settings['admin_path'] . '/');
+define('DIR_SYSTEM', DIR_ROOT . 'system/');
+define('DIR_IMAGE', DIR_ROOT . 'image/');
 
-// Якщо у тебе storage в корені
-define('DIR_STORAGE', '/Applications/MAMP/htdocs/shokeru/system/storage/');
+define('DIR_STORAGE', $settings['storage']);
 
-define('DIR_CATALOG', '/Applications/MAMP/htdocs/shokeru/catalog/');
+define('DIR_CATALOG', DIR_ROOT . 'catalog/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
@@ -27,13 +31,13 @@ define('DIR_SESSION', DIR_STORAGE . 'session/');
 define('DIR_UPLOAD', DIR_STORAGE . 'upload/');
 
 // DB
-define('DB_DRIVER', 'mysqli');
-define('DB_HOSTNAME', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', 'root'); // дефолт MAMP
-define('DB_DATABASE', 'shokeru');
-define('DB_PORT', '8889'); // MAMP MySQL порт за замовчуванням
-define('DB_PREFIX', 'oc_');
+define('DB_DRIVER', $settings['db']['driver']);
+define('DB_HOSTNAME', $settings['db']['hostname']);
+define('DB_USERNAME', $settings['db']['username']);
+define('DB_PASSWORD', $settings['db']['password']);
+define('DB_DATABASE', $settings['db']['database']);
+define('DB_PORT', $settings['db']['port']);
+define('DB_PREFIX', $settings['db']['prefix']);
 
 // OpenCart API
 define('OPENCART_SERVER', 'https://www.opencart.com/');

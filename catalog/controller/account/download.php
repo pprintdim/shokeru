@@ -30,6 +30,9 @@ class ControllerAccountDownload extends Controller {
 
 		$this->load->model('account/download');
 
+		$data['text_files_heading'] = $this->language->get('text_downloads');
+		$data['text_empty'] = $this->language->get('text_empty');
+
 		if (isset($this->request->get['page'])) {
 			$page = (int)$this->request->get['page'];
 		} else {
@@ -68,20 +71,39 @@ class ControllerAccountDownload extends Controller {
 				}
 
 				$data['downloads'][] = array(
-					'order_id'   => $result['order_id'],
 					'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 					'name'       => $result['name'],
 					'size'       => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
+					'description' => sprintf('%s · %s', date($this->language->get('date_format_short'), strtotime($result['date_added'])), round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i]),
 					'href'       => $this->url->link('account/download/download', 'download_id=' . $result['download_id'], true)
 				);
 			}
+		}
+
+		$pagination_url = $this->url->link('account/download', 'page={page}', true);
+
+		$data['current_page'] = $page;
+		$data['total_pages']  = $limit ? (int)ceil($download_total / $limit) : 1;
+		$data['next_page_url'] = ($page < $data['total_pages'])
+			? str_replace('{page}', $page + 1, $pagination_url)
+			: '';
+
+		if (!empty($this->request->get['ajax'])) {
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode([
+				'html'  => $this->load->view('account/download_items', ['downloads' => $data['downloads']]),
+				'page'  => $page,
+				'pages' => $data['total_pages'],
+				'next_page_url' => $data['next_page_url'],
+			]));
+			return;
 		}
 
 		$pagination = new Pagination();
 		$pagination->total = $download_total;
 		$pagination->page = $page;
 		$pagination->limit = $limit;
-		$pagination->url = $this->url->link('account/download', 'page={page}', true);
+		$pagination->url = $pagination_url;
 
 		$data['pagination'] = $pagination->render();
 

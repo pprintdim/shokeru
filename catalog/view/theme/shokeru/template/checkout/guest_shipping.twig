@@ -1,0 +1,31 @@
+<div class="checkout-pane">
+    <div class="checkout-pane__block">
+        <div class="order__form-inputs checkout-order-inputs">
+            <div class="checkout-field"><input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-shipping-firstname" class="form-input"></div>
+            <div class="checkout-field"><input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-shipping-lastname" class="form-input"></div>
+            <span></span>
+            <div class="checkout-field"><input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-shipping-telephone" class="form-input"></div>
+            <span></span>
+            <span></span>
+        </div>
+
+        <input type="button" value="{{ button_continue }}" id="button-guest-shipping" data-loading-text="{{ text_loading }}" style="display:none">
+    </div>
+
+    <div style="display:none">
+        <input type="hidden" name="company" value="">
+        <input type="hidden" name="address_1" value="---">
+        <input type="hidden" name="address_2" value="">
+        <input type="hidden" name="city" value="---">
+        <input type="hidden" name="postcode" value="00000">
+        <select name="country_id" id="input-shipping-country">
+            {% for country in countries %}
+                <option value="{{ country.country_id }}" {% if country.country_id == country_id %}selected="selected"{% endif %}>{{ country.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="zone_id" id="input-shipping-zone"><option value="0" selected="selected">-</option></select>
+    </div>
+</div>
+<script type="text/javascript"><!--
+$('#collapse-shipping-address select[name=\'country_id\']').trigger('change');
+//--></script>

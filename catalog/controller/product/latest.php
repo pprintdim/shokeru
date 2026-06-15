@@ -178,6 +178,7 @@ class ControllerProductLatest extends Controller {
                 'name'       => $result['name'],
                 'price'      => $price,
                 'special'    => $special,
+                'minimum'    => $result['minimum'] > 0 ? $result['minimum'] : 1,
                 'href'       => $this->url->link('product/product', 'product_id=' . $result['product_id'])
             ];
         }

@@ -73,6 +73,9 @@ class ControllerCommonUserPopup extends Controller {
             ];
         }
 
+        $data['google_client_id'] = (string)$this->config->get('config_google_client_id');
+        $data['facebook_app_id']  = (string)$this->config->get('config_facebook_app_id');
+
         return $this->load->view('common/user_popup', $data);
     }
 
@@ -139,7 +142,8 @@ class ControllerCommonUserPopup extends Controller {
 
                 $this->customer->login($email, $password);
 
-                $json['success'] = $this->language->get('text_success');
+                $json['success']  = true;
+                $json['redirect'] = $this->url->link('account/account', '', true);
             }
         }
 
@@ -192,5 +196,100 @@ class ControllerCommonUserPopup extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function googleLogin() {
+        $this->load->language('common/user_popup');
+        $this->load->model('account/customer');
+        $json = [];
+
+        $credential = trim($this->request->post['credential'] ?? '');
+
+        if (!$credential) {
+            $json['error'] = 'Помилка авторизації Google';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+        $response = @file_get_contents('https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($credential));
+        $payload  = $response ? json_decode($response, true) : null;
+
+        if (!$payload || empty($payload['email'])) {
+            $json['error'] = 'Невірний токен Google';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+        $email     = $payload['email'];
+        $firstname = $payload['given_name']  ?? '';
+        $lastname  = $payload['family_name'] ?? '';
+
+        if (!$this->model_account_customer->getCustomerByEmail($email)) {
+            $this->model_account_customer->addCustomer([
+                'firstname'  => $firstname ?: $email,
+                'lastname'   => $lastname,
+                'email'      => $email,
+                'telephone'  => '',
+                'password'   => token(32),
+                'newsletter' => 0,
+            ]);
+        }
+
+        $this->customer->login($email, '', true);
+
+        $json['success']  = true;
+        $json['redirect'] = $this->url->link('account/account', '', true);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function facebookLogin() {
+        $this->load->language('common/user_popup');
+        $this->load->model('account/customer');
+        $json = [];
+
+        $access_token = trim($this->request->post['access_token'] ?? '');
+
+        if (!$access_token) {
+            $json['error'] = 'Помилка авторизації Facebook';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+        $response = @file_get_contents('https://graph.facebook.com/me?fields=name,email,first_name,last_name&access_token=' . urlencode($access_token));
+        $profile  = $response ? json_decode($response, true) : null;
+
+        if (!$profile || empty($profile['email'])) {
+            $json['error'] = 'Не вдалось отримати email з Facebook';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+        $email     = $profile['email'];
+        $firstname = $profile['first_name'] ?? '';
+        $lastname  = $profile['last_name']  ?? '';
+
+        if (!$this->model_account_customer->getCustomerByEmail($email)) {
+            $this->model_account_customer->addCustomer([
+                'firstname'  => $firstname ?: $email,
+                'lastname'   => $lastname,
+                'email'      => $email,
+                'telephone'  => '',
+                'password'   => token(32),
+                'newsletter' => 0,
+            ]);
+        }
+
+        $this->customer->login($email, '', true);
+
+        $json['success']  = true;
+        $json['redirect'] = $this->url->link('account/account', '', true);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
 }

@@ -1,0 +1,10 @@
+app_config.local.php
+system/storage/cache/*
+system/storage/logs/*
+system/storage/session/*
+system/storage/modification/*
+
+!system/storage/cache/index.html
+!system/storage/logs/index.html
+!system/storage/session/index.html
+!system/storage/modification/index.html

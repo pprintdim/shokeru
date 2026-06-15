@@ -63,12 +63,23 @@ class ControllerCommonHeader extends Controller {
 		if ($this->customer->isLogged()) {
 			$this->load->model('account/wishlist');
 
-			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), $this->model_account_wishlist->getTotalWishlist());
+			$wishlist_rows = $this->model_account_wishlist->getWishlist();
+			$wishlist_total = (int)$this->model_account_wishlist->getTotalWishlist();
+			$wishlist_product_ids = array();
+
+			foreach ($wishlist_rows as $wishlist_product) {
+				$wishlist_product_ids[] = (int)$wishlist_product['product_id'];
+			}
+
+			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), $wishlist_total);
 		} else {
-			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
+			$wishlist_product_ids = isset($this->session->data['wishlist']) && is_array($this->session->data['wishlist']) ? array_values(array_unique(array_map('intval', $this->session->data['wishlist']))) : array();
+			$wishlist_total = count($wishlist_product_ids);
+			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), $wishlist_total);
 		}
 
-		$data['wishlist_total'] = $this->cart->getTotalWishlist();
+		$data['wishlist_total'] = $wishlist_total;
+		$data['wishlist_product_ids'] = $wishlist_product_ids;
 		$data['cart_total']     = $this->cart->countProducts();
 
 
@@ -90,6 +101,8 @@ class ControllerCommonHeader extends Controller {
 		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
 		$data['contact'] = $this->url->link('information/contact');
 		$data['special'] = $this->url->link('product/special');
+		$data['about'] = $this->url->link('information/about');
+		$data['customers'] = $this->url->link('information/customer');
 		
 		$data['language'] = $this->load->controller('common/language');
 		$data['currency'] = $this->load->controller('common/currency');

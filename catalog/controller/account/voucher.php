@@ -88,6 +88,7 @@ class ControllerAccountVoucher extends Controller {
 		}
 
 		$data['action'] = $this->url->link('account/voucher', '', true);
+		$data['button_apply'] = $this->language->get('button_apply');
 
 		if (isset($this->request->post['to_name'])) {
 			$data['to_name'] = $this->request->post['to_name'];
@@ -123,6 +124,8 @@ class ControllerAccountVoucher extends Controller {
 
 		if (isset($this->request->post['voucher_theme_id'])) {
 			$data['voucher_theme_id'] = $this->request->post['voucher_theme_id'];
+		} elseif (!empty($data['voucher_themes'])) {
+			$data['voucher_theme_id'] = (int)$data['voucher_themes'][0]['voucher_theme_id'];
 		} else {
 			$data['voucher_theme_id'] = '';
 		}
@@ -136,8 +139,17 @@ class ControllerAccountVoucher extends Controller {
 		if (isset($this->request->post['amount'])) {
 			$data['amount'] = $this->request->post['amount'];
 		} else {
-			$data['amount'] = $this->currency->format($this->config->get('config_voucher_min'), $this->config->get('config_currency'), false, false);
+			$default_amount = 500;
+
+			if ($default_amount < (float)$this->config->get('config_voucher_min') || $default_amount > (float)$this->config->get('config_voucher_max')) {
+				$default_amount = (float)$this->config->get('config_voucher_min');
+			}
+
+			$data['amount'] = $this->currency->format($default_amount, $this->config->get('config_currency'), false, false);
 		}
+
+		$data['voucher_amounts'] = array(100, 500, 1000);
+		$data['voucher_image'] = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') . 'html/img/sertificate.png' : $this->config->get('config_url') . 'html/img/sertificate.png';
 
 		if (isset($this->request->post['agree'])) {
 			$data['agree'] = $this->request->post['agree'];
@@ -215,12 +227,6 @@ class ControllerAccountVoucher extends Controller {
 			}
 		} else {
 			$this->error['from_email'] = $this->language->get('error_email');
-		}
-
-		// currently not checked and no text for it ..
-		if ( !$this->error && empty($this->request->post['message'])) {
-			// because we have no further checks and text of/for this
-			$this->error = true;
 		}
 
 		if (!isset($this->request->post['voucher_theme_id'])) {

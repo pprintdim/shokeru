@@ -36,23 +36,34 @@
                                     <button class="profile__user-btn" data-profile-user-btn="delivery-adress">Адреса доставки</button>
                                 </div>
                                 {{ edit }}
-                                {{ address }}
-                                <form class="profile__user-result profile__form" data-profile-user-result="delivery-adress">
+                                <div class="profile__user-result profile__form" data-profile-user-result="delivery-adress">
                                     <div class="profile__form-inputs">
-                                        <div class="profile__form-item">
-                                            <label class="profile__form-label" for="profile-address">Адрес</label>
-                                            <div class="profile__form-input">
-                                                <input type="text" name="address" id="profile-address" required value="Аресса 1234">
-                                            </div>
-                                        </div>
+                                        {% if addresses %}
+                                            {% for address in addresses %}
+                                                <div class="profile__form-item">
+                                                    <label class="profile__form-label" for="profile-address-{{ address.address_id }}">Адрес</label>
+                                                    <div class="profile__form-input">
+                                                        <input type="text" id="profile-address-{{ address.address_id }}" readonly value="{{ address.address_plain }}">
+                                                    </div>
+                                                    <div class="profile__form-bottom">
+                                                        <a class="profile__form-password btn-5" href="{{ address.update }}">{{ button_edit }}</a>
+                                                        <span></span>
+                                                        <a class="profile__form-submit btn" href="{{ address.delete }}" onclick="return confirm('{{ text_confirm }}')">{{ button_delete }}</a>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p class="profile__result-name">{{ text_address_empty }}</p>
+                                        {% endif %}
                                     </div>
                                     <div class="profile__form-bottom">
-                                        <button class="profile__form-submit btn" type="submit">Сохранить изменения</button>
+                                        <a class="profile__form-submit btn" href="{{ address_add }}">{{ button_new_address }}</a>
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
+
                 </div>
             </div>
 </section>

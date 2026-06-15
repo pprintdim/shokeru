@@ -1,0 +1,30 @@
+<div class="order__form-inputs checkout-order-inputs">
+    <div class="checkout-field"><input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-payment-firstname" class="form-input"></div>
+    <div class="checkout-field"><input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-payment-lastname" class="form-input"></div>
+    <span></span>
+    <div class="checkout-field"><input type="text" name="patronymic" value="" placeholder="По-батькові" id="input-payment-patronymic" class="form-input"></div>
+    <div class="checkout-field"><input type="tel" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-payment-telephone" class="form-input" readonly></div>
+    <span></span>
+    <div class="checkout-field"><input type="text" name="email" value="{{ email }}" placeholder="Email" id="input-payment-email" class="form-input" readonly></div>
+    <span></span>
+</div>
+
+<input type="button" value="{{ button_continue }}" id="button-payment-address" data-loading-text="{{ text_loading }}" style="display:none">
+
+<div style="display:none">
+    <input type="hidden" name="company" value="{{ company }}">
+    <input type="hidden" name="address_1" value="{{ address_1 }}">
+    <input type="hidden" name="address_2" value="{{ address_2 }}">
+    <input type="hidden" name="city" value="{{ city }}">
+    <input type="hidden" name="postcode" value="{{ postcode }}">
+    <select name="country_id" id="input-payment-country">
+        <option value="">{{ text_select }}</option>
+        {% for country in countries %}
+            <option value="{{ country.country_id }}" {% if country.country_id == country_id %}selected="selected"{% endif %}>{{ country.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="zone_id" id="input-payment-zone"><option value="0" selected="selected">-</option></select>
+</div>
+<script type="text/javascript"><!--
+$('#collapse-payment-address select[name=\'country_id\']').trigger('change');
+//--></script>

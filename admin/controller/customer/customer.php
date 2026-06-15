@@ -737,6 +737,43 @@ class ControllerCustomerCustomer extends Controller {
 			$data['telephone'] = '';
 		}
 
+		if (isset($this->request->post['avatar'])) {
+			$data['avatar'] = $this->request->post['avatar'];
+		} elseif (!empty($customer_info) && isset($customer_info['avatar'])) {
+			$data['avatar'] = $customer_info['avatar'];
+		} else {
+			$data['avatar'] = '';
+		}
+
+		$this->load->model('tool/image');
+
+		if ($data['avatar'] && is_file(DIR_IMAGE . $data['avatar'])) {
+			$data['avatar_thumb'] = $this->model_tool_image->resize($data['avatar'], 100, 100);
+		} else {
+			$data['avatar_thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+		}
+
+		$data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+
+		$this->load->model('catalog/download');
+
+		$data['customer_downloads'] = array();
+
+		if (isset($this->request->post['customer_download'])) {
+			foreach ($this->request->post['customer_download'] as $download_id) {
+				$download_info = $this->model_catalog_download->getDownload($download_id);
+
+				if ($download_info) {
+					$data['customer_downloads'][] = array(
+						'download_id' => $download_info['download_id'],
+						'name'        => $download_info['name']
+					);
+				}
+			}
+		} elseif (isset($this->request->get['customer_id'])) {
+			$data['customer_downloads'] = $this->model_customer_customer->getCustomerDownloads($this->request->get['customer_id']);
+		}
+
 		if (isset($this->request->post['custom_field'])) {
 			$data['account_custom_field'] = $this->request->post['custom_field'];
 		} elseif (!empty($customer_info)) {

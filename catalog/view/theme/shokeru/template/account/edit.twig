@@ -24,8 +24,8 @@
         <div class="profile__form-item">
             <label class="profile__form-label" for="profile-email">E-mail</label>
             <div class="profile__form-input">
-                <input type="email" name="email" id="profile-email" required value="{{ email }}">
                 <button class="change-email" type="button"></button>
+                <input type="email" name="email" id="profile-email" required value="{{ email }}" readonly>
                 {% if error_email %}
                     <p class="text-danger">{{ error_email }}</p>
                 {% endif %}
@@ -35,8 +35,8 @@
         <div class="profile__form-item">
             <label class="profile__form-label" for="profile-phone">Телефон</label>
             <div class="profile__form-input">
-                <input type="text" name="telephone" id="profile-phone" required value="{{ telephone }}">
                 <button class="change-phone" type="button"></button>
+                <input type="text" name="telephone" id="profile-phone" required value="{{ telephone }}" readonly>
                 {% if error_telephone %}
                     <p class="text-danger">{{ error_telephone }}</p>
                 {% endif %}
@@ -47,8 +47,8 @@
             <label class="profile__form-label" for="profile-password">Пароль</label>
 
             <div class="profile__form-input">
-                <input type="password" name="password" id="profile-password" placeholder="Введите новый пароль">
                 <button class="change-password" type="button"></button>
+                <input type="text" id="profile-password" value="********" readonly>
                 {% if error_password %}
                     <p class="text-danger">{{ error_password }}</p>
                 {% endif %}

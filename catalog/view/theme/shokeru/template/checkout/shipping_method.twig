@@ -1,0 +1,273 @@
+{% set default_code = '' %}
+{% set novaposhta_code = '' %}
+{% for sm in shipping_methods %}
+    {% if not sm.error %}
+        {% for q in sm.quote %}
+            {% if default_code == '' %}{% set default_code = q.code %}{% endif %}
+            {% if q.code starts with 'novaposhta.' %}{% set novaposhta_code = q.code %}{% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+<div class="checkout-methods">
+    {% if error_warning %}
+        <div class="checkout-methods__error">{{ error_warning }}</div>
+    {% endif %}
+
+    <input type="hidden" name="shipping_method" value="{{ novaposhta_code ?: default_code ?: code }}">
+
+    <div class="order__form-delivery">
+        <h3 class="order__delivery-title">Виберіть зручний спосіб доставки</h3>
+        <div class="order__delivery-box" id="np-delivery-box">
+
+            <div class="order__delivery-block{% if np_delivery.type == 'np_branch' or not np_delivery.type %} active{% endif %}" data-np-block="np_branch">
+                <label class="checkbox-block">
+                    <input type="radio" value="np_branch" name="np_delivery_type" hidden {% if np_delivery.type == 'np_branch' or not np_delivery.type %}checked{% endif %}>
+                    <span>Самовивіз з відділення Нової Пошти</span>
+                </label>
+                <div class="order__form-inputs">
+                    <div class="np-city-wrap">
+                        <input type="text" id="np-city-branch" class="form-input np-city-input" placeholder="Місто" autocomplete="off" data-target="np_city_ref" data-warehouse-select="np-warehouse-select" value="{{ np_delivery.city_name }}">
+                        <div class="np-dropdown" id="np-dropdown-branch"></div>
+                    </div>
+                    <input type="hidden" name="np_city_ref" id="np_city_ref" value="{{ np_delivery.city_ref }}">
+                    <input type="hidden" name="np_city_name" id="np_city_name" value="{{ np_delivery.city_name }}">
+                    <div class="np-warehouse-wrap">
+                        <input type="text" id="np-warehouse-input" class="form-input" placeholder="Відділення" autocomplete="off" {% if not np_delivery.city_ref %}disabled{% endif %} value="{{ np_delivery.warehouse_name }}">
+                        <div class="np-dropdown" id="np-dropdown-warehouse"></div>
+                        <input type="hidden" name="np_warehouse_ref" id="np-warehouse-select" value="{{ np_delivery.warehouse_ref }}">
+                        <input type="hidden" name="np_warehouse_name" id="np_warehouse_name" value="{{ np_delivery.warehouse_name }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="order__delivery-block{% if np_delivery.type == 'np_courier' %} active{% endif %}" data-np-block="np_courier">
+                <label class="checkbox-block">
+                    <input type="radio" value="np_courier" name="np_delivery_type" hidden {% if np_delivery.type == 'np_courier' %}checked{% endif %}>
+                    <span>Кур'єром Нової Пошти</span>
+                </label>
+                <div class="order__form-inputs">
+                    <div class="np-city-wrap">
+                        <input type="text" id="np-city-courier" class="form-input np-city-input" placeholder="Місто" autocomplete="off" data-target="np_courier_city_ref" value="{{ np_delivery.courier_city_name }}">
+                        <div class="np-dropdown" id="np-dropdown-courier"></div>
+                    </div>
+                    <input type="hidden" name="np_courier_city_ref" id="np_courier_city_ref" value="{{ np_delivery.courier_city }}">
+                    <input type="hidden" name="np_courier_city_name" id="np_courier_city_name" value="{{ np_delivery.courier_city_name }}">
+                    <input type="text" name="np_street" class="form-input" placeholder="Вулиця" value="{{ np_delivery.street }}">
+                    <input type="text" name="np_house" class="form-input" placeholder="Будинок / квартира" value="{{ np_delivery.house }}">
+                </div>
+            </div>
+
+            <div class="order__delivery-block{% if np_delivery.type == 'store_courier' %} active{% endif %}" data-np-block="store_courier">
+                <label class="checkbox-block">
+                    <input type="radio" value="store_courier" name="np_delivery_type" hidden {% if np_delivery.type == 'store_courier' %}checked{% endif %}>
+                    <span>Кур'єром магазину</span>
+                </label>
+                <div class="order__form-inputs">
+                    <input type="text" name="sc_city" class="form-input" placeholder="Місто" value="{{ np_delivery.sc_city }}">
+                    <input type="text" name="sc_address" class="form-input" placeholder="Адреса" value="{{ np_delivery.sc_address }}">
+                </div>
+            </div>
+
+            <div class="order__delivery-block{% if np_delivery.type == 'other' %} active{% endif %}" data-np-block="other">
+                <label class="checkbox-block">
+                    <input type="radio" value="other" name="np_delivery_type" hidden {% if np_delivery.type == 'other' %}checked{% endif %}>
+                    <span>Інша служба доставки</span>
+                </label>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="hidden" name="comment" value="{{ comment }}">
+
+    <input type="button" value="{{ button_continue }}" id="button-shipping-method" data-loading-text="{{ text_loading }}" style="display:none">
+</div>
+<script>
+(function () {
+    var NP_API = 'index.php?route=checkout/novaposhta&action=';
+    var cityControllers = {};
+    var warehouseController = null;
+
+    // Toggle active delivery block
+    document.querySelectorAll('input[name="np_delivery_type"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('[data-np-block]').forEach(function (b) { b.classList.remove('active'); });
+            var block = this.closest('[data-np-block]');
+            if (block) block.classList.add('active');
+        });
+    });
+
+    // City search helper
+    function setupCitySearch(inputId, dropdownId, hiddenRefId, warehouseSelectId, hiddenWarehouseNameId) {
+        var input      = document.getElementById(inputId);
+        var dropdown   = document.getElementById(dropdownId);
+        var refEl      = document.getElementById(hiddenRefId);
+        var wSelect    = warehouseSelectId ? document.getElementById(warehouseSelectId) : null;
+        var wNameEl    = hiddenWarehouseNameId ? document.getElementById(hiddenWarehouseNameId) : null;
+        var nameEl     = hiddenRefId === 'np_courier_city_ref' ? document.getElementById('np_courier_city_name') : document.getElementById('np_city_name');
+
+        if (!input || !dropdown) return;
+
+        var timer;
+        input.addEventListener('input', function () {
+            clearTimeout(timer);
+            var q = input.value.trim();
+            dropdown.innerHTML = '';
+            if (q.length < 2) return;
+            timer = setTimeout(function () {
+                if (cityControllers[inputId]) {
+                    cityControllers[inputId].abort();
+                }
+                cityControllers[inputId] = new AbortController();
+                fetch(NP_API + 'cities&q=' + encodeURIComponent(q), { signal: cityControllers[inputId].signal })
+                    .then(function (r) { return r.json(); })
+                    .then(function (cities) {
+                        if (wSelect) {
+                            wSelect.value = '';
+                        }
+                        if (wNameEl) {
+                            wNameEl.value = '';
+                        }
+                        if (document.getElementById('np-warehouse-input')) {
+                            document.getElementById('np-warehouse-input').value = '';
+                            document.getElementById('np-warehouse-input').disabled = true;
+                        }
+                        if (document.getElementById('np-dropdown-warehouse')) {
+                            document.getElementById('np-dropdown-warehouse').innerHTML = '';
+                        }
+                        return cities;
+                    })
+                    .then(function (cities) {
+                        dropdown.innerHTML = '';
+                        cities.forEach(function (city) {
+                            var item = document.createElement('div');
+                            item.className = 'np-dropdown__item';
+                            item.textContent = city.label;
+                            item.addEventListener('click', function () {
+                                input.value = city.name;
+                                if (refEl) refEl.value = city.ref;
+                                if (nameEl) nameEl.value = city.name;
+                                dropdown.innerHTML = '';
+                                if (wSelect) {
+                                    wSelect.value = '';
+                                }
+                                if (wNameEl) {
+                                    wNameEl.value = '';
+                                }
+                                var warehouseInput = document.getElementById('np-warehouse-input');
+                                if (warehouseInput) {
+                                    warehouseInput.value = '';
+                                    warehouseInput.disabled = false;
+                                    warehouseInput.focus();
+                                }
+                            });
+                            dropdown.appendChild(item);
+                        });
+                    })
+                    .catch(function (error) {
+                        if (error.name !== 'AbortError') {}
+                    });
+            }, 300);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.innerHTML = '';
+            }
+        });
+    }
+
+    function setupWarehouseSearch() {
+        var input = document.getElementById('np-warehouse-input');
+        var dropdown = document.getElementById('np-dropdown-warehouse');
+        var cityRef = document.getElementById('np_city_ref');
+        var refInput = document.getElementById('np-warehouse-select');
+        var nameInput = document.getElementById('np_warehouse_name');
+
+        if (!input || !dropdown || !cityRef || !refInput || !nameInput) {
+            return;
+        }
+
+        var timer;
+
+        input.addEventListener('input', function () {
+            clearTimeout(timer);
+            refInput.value = '';
+            nameInput.value = '';
+            dropdown.innerHTML = '';
+
+            var q = input.value.trim();
+            if (q.length < 1 || !cityRef.value) {
+                return;
+            }
+
+            timer = setTimeout(function () {
+                if (warehouseController) {
+                    warehouseController.abort();
+                }
+
+                warehouseController = new AbortController();
+                fetch(NP_API + 'warehouses&city_ref=' + encodeURIComponent(cityRef.value) + '&q=' + encodeURIComponent(q), { signal: warehouseController.signal })
+                    .then(function (r) { return r.json(); })
+                    .then(function (warehouses) {
+                        dropdown.innerHTML = '';
+
+                        warehouses.forEach(function (warehouse) {
+                            var item = document.createElement('div');
+                            item.className = 'np-dropdown__item';
+                            item.textContent = warehouse.name;
+                            item.addEventListener('click', function () {
+                                input.value = warehouse.name;
+                                refInput.value = warehouse.ref;
+                                nameInput.value = warehouse.name;
+                                dropdown.innerHTML = '';
+                            });
+                            dropdown.appendChild(item);
+                        });
+                    })
+                    .catch(function (error) {
+                        if (error.name !== 'AbortError') {}
+                    });
+            }, 250);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.innerHTML = '';
+            }
+        });
+    }
+
+    function preloadWarehouseByRef(cityRef, warehouseRef, warehouseInput, nameInput) {
+        if (!cityRef || !warehouseRef || !warehouseInput || !nameInput) {
+            return;
+        }
+
+        fetch(NP_API + 'warehouses&city_ref=' + encodeURIComponent(cityRef) + '&ref=' + encodeURIComponent(warehouseRef))
+            .then(function (r) { return r.json(); })
+            .then(function (warehouses) {
+                if (warehouses.length) {
+                    warehouseInput.value = warehouses[0].name;
+                    nameInput.value = warehouses[0].name;
+                }
+            })
+            .catch(function () {});
+    }
+
+    setupCitySearch('np-city-branch', 'np-dropdown-branch', 'np_city_ref', 'np-warehouse-select', 'np_warehouse_name');
+    setupCitySearch('np-city-courier', 'np-dropdown-courier', 'np_courier_city_ref', null, null);
+    setupWarehouseSearch();
+
+
+    if (document.getElementById('np_city_ref') && document.getElementById('np_city_ref').value && document.getElementById('np-warehouse-input')) {
+        document.getElementById('np-warehouse-input').disabled = false;
+        preloadWarehouseByRef(
+            document.getElementById('np_city_ref').value,
+            document.getElementById('np-warehouse-select').value,
+            document.getElementById('np-warehouse-input'),
+            document.getElementById('np_warehouse_name')
+        );
+    }
+}());
+</script>

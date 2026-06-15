@@ -1,4 +1,4 @@
-<section id="cart" class="busket">
+<section id="cart" class="busket" data-cart-products="{{ cart_product_ids|json_encode|e('html_attr') }}">
     <div class="busket__inner">
         <div class="busket__top">
             <h2 class="busket__title">{{ text_items }}</h2>
@@ -15,7 +15,7 @@
             <div class="busket__block">
 
                 {% for product in products %}
-                    <div class="busket__item">
+                    <div class="busket__item" data-product-id="{{ product.product_id }}">
                         <a class="busket__item-image" href="{{ product.href }}">
                             <img src="{{ product.thumb }}" alt="">
                         </a>

@@ -25,3 +25,7 @@ $_['email_subject']  = 'Enquiry %s';
 $_['error_name']     = 'Name must be between 3 and 32 characters!';
 $_['error_email']    = 'E-Mail Address does not appear to be valid!';
 $_['error_enquiry']  = 'Enquiry must be between 10 and 3000 characters!';
+$_['text_success']  = '<p>Your enquiry has been successfully sent to the store owner!</p>';
+$_['button_submit'] = 'Send Message';
+$_['entry_captcha'] = 'Enter the code in the box below';
+$_['error_captcha'] = 'Warning: Captcha code is incorrect!';

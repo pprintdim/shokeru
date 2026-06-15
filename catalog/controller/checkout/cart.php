@@ -17,6 +17,27 @@ class ControllerCheckoutCart extends Controller {
 			'text' => $this->language->get('heading_title')
 		);
 
+		$data['text_order_details'] = 'Інформація про замовлення';
+		$data['text_clear_cart'] = 'Очистити корзину';
+		$data['text_continue_shopping'] = 'Продовжити покупки';
+		$data['text_free_delivery'] = 'Безкоштовно';
+		$data['text_cart_discount_notice'] = 'При замовленні на суму 1000 грн Ви отримаєте знижку 10% на Ваше замовлення!';
+		$data['text_empty'] = $this->language->get('text_empty');
+		$data['continue'] = $this->url->link('common/home');
+		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
+		$data['products'] = array();
+		$data['totals'] = array();
+		$data['cart_product_ids'] = array();
+		$data['error_warning'] = '';
+		$data['attention'] = '';
+		$data['success'] = '';
+		$data['empty_cart'] = !$this->cart->hasProducts() && empty($this->session->data['vouchers']);
+		$data['cart_subtotal'] = '';
+		$data['cart_special_discount'] = '';
+		$data['cart_shipping_total'] = $data['text_free_delivery'];
+		$data['cart_grand_total'] = '';
+		$data['has_special_discount'] = false;
+
 		if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
 			if (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
 				$data['error_warning'] = $this->language->get('error_stock');
@@ -52,12 +73,16 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->load->model('tool/image');
 			$this->load->model('tool/upload');
-
-			$data['products'] = array();
+			$this->load->model('catalog/product');
 
 			$products = $this->cart->getProducts();
+			$cart_subtotal_value = 0.0;
+			$cart_special_discount_value = 0.0;
+			$cart_products_total_value = 0.0;
+			$shipping_total_value = 0.0;
 
 			foreach ($products as $product) {
+				$data['cart_product_ids'][] = (int)$product['product_id'];
 				$product_total = 0;
 
 				foreach ($products as $product_2) {
@@ -97,15 +122,41 @@ class ControllerCheckoutCart extends Controller {
 					);
 				}
 
+				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
+
 				// Display prices
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
 					$unit_price = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'));
 					
 					$price = $this->currency->format($unit_price, $this->session->data['currency']);
 					$total = $this->currency->format($unit_price * $product['quantity'], $this->session->data['currency']);
+					$original_price = $price;
+					$special_price = '';
+					$special_discount_percent = 0;
+
+					if ($product_info && (float)$product_info['special'] > 0) {
+						$base_price = $this->tax->calculate($product_info['price'], $product['tax_class_id'], $this->config->get('config_tax'));
+						$special_value = $this->tax->calculate($product_info['special'], $product['tax_class_id'], $this->config->get('config_tax'));
+						$special_discount_value = max(0, $base_price - $special_value);
+						$cart_subtotal_value += $base_price * $product['quantity'];
+						$cart_products_total_value += $special_value * $product['quantity'];
+
+						$original_price = $this->currency->format($base_price, $this->session->data['currency']);
+						$special_price = $this->currency->format($special_value, $this->session->data['currency']);
+						$price = $special_price;
+						$total = $this->currency->format($special_value * $product['quantity'], $this->session->data['currency']);
+						$special_discount_percent = $base_price > 0 ? (int)round(($special_discount_value / $base_price) * 100) : 0;
+						$cart_special_discount_value += $special_discount_value * $product['quantity'];
+					} else {
+						$cart_subtotal_value += $unit_price * $product['quantity'];
+						$cart_products_total_value += $unit_price * $product['quantity'];
+					}
 				} else {
 					$price = false;
 					$total = false;
+					$original_price = false;
+					$special_price = false;
+					$special_discount_percent = 0;
 				}
 
 				$recurring = '';
@@ -132,15 +183,20 @@ class ControllerCheckoutCart extends Controller {
 
 				$data['products'][] = array(
 					'cart_id'   => $product['cart_id'],
+					'product_id'=> $product['product_id'],
 					'thumb'     => $image,
 					'name'      => $product['name'],
 					'model'     => $product['model'],
 					'option'    => $option_data,
 					'recurring' => $recurring,
 					'quantity'  => $product['quantity'],
+					'remove_key'=> $product['cart_id'],
 					'stock'     => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
 					'reward'    => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
 					'price'     => $price,
+					'original_price' => $original_price,
+					'special_price'  => $special_price,
+					'special_discount_percent' => $special_discount_percent,
 					'total'     => $total,
 					'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 				);
@@ -204,18 +260,22 @@ class ControllerCheckoutCart extends Controller {
 				array_multisort($sort_order, SORT_ASC, $totals);
 			}
 
-			$data['totals'] = array();
-
 			foreach ($totals as $total) {
 				$data['totals'][] = array(
 					'title' => $total['title'],
 					'text'  => $this->currency->format($total['value'], $this->session->data['currency'])
 				);
+
+				if (isset($total['code']) && $total['code'] == 'shipping') {
+					$data['cart_shipping_total'] = $total['value'] > 0 ? $this->currency->format($total['value'], $this->session->data['currency']) : $data['text_free_delivery'];
+					$shipping_total_value = max(0, (float)$total['value']);
+				}
 			}
 
-			$data['continue'] = $this->url->link('common/home');
-
-			$data['checkout'] = $this->url->link('checkout/checkout', '', true);
+			$data['cart_subtotal'] = $this->currency->format($cart_subtotal_value, $this->session->data['currency']);
+			$data['cart_special_discount'] = $this->currency->format($cart_special_discount_value, $this->session->data['currency']);
+			$data['cart_grand_total'] = $this->currency->format($cart_products_total_value + (isset($shipping_total_value) ? $shipping_total_value : 0), $this->session->data['currency']);
+			$data['has_special_discount'] = $cart_special_discount_value > 0;
 
 			$this->load->model('setting/extension');
 
@@ -239,24 +299,20 @@ class ControllerCheckoutCart extends Controller {
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
-
-			$this->response->setOutput($this->load->view('checkout/cart', $data));
 		} else {
 			$data['text_error'] = $this->language->get('text_empty');
-			
-			$data['continue'] = $this->url->link('common/home');
 
 			unset($this->session->data['success']);
-
-			$data['column_left'] = $this->load->controller('common/column_left');
-			$data['column_right'] = $this->load->controller('common/column_right');
-			$data['content_top'] = $this->load->controller('common/content_top');
-			$data['content_bottom'] = $this->load->controller('common/content_bottom');
-			$data['footer'] = $this->load->controller('common/footer');
-			$data['header'] = $this->load->controller('common/header');
-
-			$this->response->setOutput($this->load->view('error/not_found', $data));
 		}
+
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->setOutput($this->load->view('checkout/cart', $data));
 	}
 
 	public function add() {
@@ -386,6 +442,23 @@ class ControllerCheckoutCart extends Controller {
 
 		$json = array();
 
+		if (isset($this->request->post['key']) && isset($this->request->post['quantity'])) {
+			$this->cart->update($this->request->post['key'], (int)$this->request->post['quantity']);
+
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+			unset($this->session->data['reward']);
+
+			$json['success'] = $this->language->get('text_remove');
+			$json['total'] = $this->cart->countProducts() + ((isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0));
+
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+			return;
+		}
+
 		// Update
 		if (!empty($this->request->post['quantity'])) {
 			foreach ($this->request->post['quantity'] as $key => $value) {
@@ -474,6 +547,28 @@ class ControllerCheckoutCart extends Controller {
 
 
 		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function clear() {
+		$json = array();
+
+		foreach ($this->cart->getProducts() as $product) {
+			$this->cart->remove($product['cart_id']);
+		}
+
+		unset($this->session->data['vouchers']);
+		unset($this->session->data['shipping_method']);
+		unset($this->session->data['shipping_methods']);
+		unset($this->session->data['payment_method']);
+		unset($this->session->data['payment_methods']);
+		unset($this->session->data['reward']);
+
+		$json['success'] = true;
+		$json['total'] = 0;
+		$json['redirect'] = $this->url->link('checkout/cart');
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));

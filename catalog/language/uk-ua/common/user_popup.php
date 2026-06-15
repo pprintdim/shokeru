@@ -11,6 +11,7 @@ $_['text_password']       = 'Пароль';
 $_['text_firstname']      = 'Ім’я';
 $_['text_repeat_password'] = 'Повторіть пароль';
 $_['text_lastname']       = 'Прізвище';
+$_['text_telephone']      = 'Телефон';
 
 // Кнопки
 $_['button_login']        = 'Увійти';

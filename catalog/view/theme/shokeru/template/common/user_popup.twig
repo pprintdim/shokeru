@@ -57,6 +57,8 @@
                     <button class="userPopup__btn active" data-userPopup-select="login">{{ button_login }}</button>
                     <button class="userPopup__btn" data-userPopup-select="register">{{ button_register }}</button>
                 </div>
+
+                {# ===== ЛОГІН ===== #}
                 <div class="userPopup__result active" data-userPopup-result="login">
                     <form id="popup-login-form" class="userPopup__form">
                         <div class="userPopup__form-block">
@@ -76,147 +78,275 @@
                             <span>{{ text_agree }}</span>
                         </label>
 
+                        <div class="userPopup__form-error" id="popup-login-error" style="display:none;"></div>
+
                         <button type="submit" class="userPopup__form-btn btn">{{ text_login }}</button>
 
-                        <div class="userPopup__form-more"><span></span> или <span></span></div>
+                        <div class="userPopup__form-more"><span></span> або <span></span></div>
 
                         <div class="userPopup__form-buttons">
-                            <button type="button" class="userPopup__form-log btn-2">{{ button_google }}</button>
-                            <button type="button" class="userPopup__form-log btn-2">{{ button_facebook }}</button>
+                            {% if google_client_id %}
+                                <button type="button" class="userPopup__form-log btn-2" id="btn-google-login">{{ button_google }}</button>
+                            {% else %}
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="Google OAuth не налаштовано">{{ button_google }}</button>
+                            {% endif %}
+                            {% if facebook_app_id %}
+                                <button type="button" class="userPopup__form-log btn-2" id="btn-facebook-login">{{ button_facebook }}</button>
+                            {% else %}
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="Facebook OAuth не налаштовано">{{ button_facebook }}</button>
+                            {% endif %}
                         </div>
                     </form>
 
                     <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const form = document.getElementById('popup-login-form');
+                    (function() {
+                        const form    = document.getElementById('popup-login-form');
+                        const errorEl = document.getElementById('popup-login-error');
 
-                        form.addEventListener('submit', e => {
+                        function showError(msg) {
+                            errorEl.textContent = msg;
+                            errorEl.style.display = 'block';
+                        }
+                        function clearError() {
+                            errorEl.textContent = '';
+                            errorEl.style.display = 'none';
+                        }
+
+                        form.addEventListener('submit', function(e) {
                             e.preventDefault();
+                            clearError();
 
-                            const email = form.email.value.trim();
-                            const password = form.password.value;
-                            const agree = form.agree.checked;
-
-                            if (!agree) {
-                                alert('{{ error_agree }}');
+                            if (!form.agree.checked) {
+                                showError('{{ error_agree }}');
                                 return;
                             }
 
                             fetch('index.php?route=common/user_popup/login', {
                                 method: 'POST',
-                                body: new URLSearchParams({ email, password, agree: agree ? 1 : 0 }),
+                                body: new URLSearchParams({
+                                    email:    form.email.value.trim(),
+                                    password: form.password.value,
+                                    agree:    1
+                                }),
                                 credentials: 'same-origin'
                             })
-                            .then(res => res.json())
-                            .then(json => {
+                            .then(function(r) { return r.json(); })
+                            .then(function(json) {
                                 if (json.success) {
-                                    window.location.href = json.redirect; // редірект після успіху
+                                    window.location.href = json.redirect;
                                 } else if (json.error) {
-                                    if (typeof json.error === 'object') {
-                                        alert(Object.values(json.error).join("\n"));
-                                    } else {
-                                        alert(json.error);
-                                    }
+                                    showError(typeof json.error === 'object' ? Object.values(json.error).join(' ') : json.error);
                                 }
                             })
-
-                            .catch(() => alert('Сталася помилка, спробуйте ще раз'));
+                            .catch(function() { showError('Сталася помилка, спробуйте ще раз'); });
                         });
-                    });
+
+                        {% if google_client_id %}
+                        // Google
+                        window.handleGoogleCredential = function(response) {
+                            fetch('index.php?route=common/user_popup/googleLogin', {
+                                method: 'POST',
+                                body: new URLSearchParams({ credential: response.credential }),
+                                credentials: 'same-origin'
+                            })
+                            .then(function(r) { return r.json(); })
+                            .then(function(json) {
+                                if (json.success) window.location.href = json.redirect;
+                                else showError(json.error || 'Помилка входу через Google');
+                            })
+                            .catch(function() { showError('Сталася помилка Google'); });
+                        };
+
+                        document.getElementById('btn-google-login').addEventListener('click', function() {
+                            if (window.google && google.accounts) {
+                                google.accounts.id.prompt();
+                            }
+                        });
+                        {% endif %}
+
+                        {% if facebook_app_id %}
+                        // Facebook
+                        document.getElementById('btn-facebook-login').addEventListener('click', function() {
+                            FB.login(function(response) {
+                                if (response.authResponse) {
+                                    fetch('index.php?route=common/user_popup/facebookLogin', {
+                                        method: 'POST',
+                                        body: new URLSearchParams({ access_token: response.authResponse.accessToken }),
+                                        credentials: 'same-origin'
+                                    })
+                                    .then(function(r) { return r.json(); })
+                                    .then(function(json) {
+                                        if (json.success) window.location.href = json.redirect;
+                                        else showError(json.error || 'Помилка входу через Facebook');
+                                    })
+                                    .catch(function() { showError('Сталася помилка Facebook'); });
+                                }
+                            }, { scope: 'email' });
+                        });
+                        {% endif %}
+                    })();
                     </script>
-
-
                 </div>
+
+                {# ===== РЕЄСТРАЦІЯ ===== #}
                 <div class="userPopup__result" data-userPopup-result="register">
                     <form id="popup-register-form" class="userPopup__form">
                         <div class="userPopup__form-box">
-                                        <div class="userPopup__form-item">
-                                            <input class="userPopup__form-input" type="text" name="firstname" placeholder="{{ text_firstname }}" required>
-                                        </div>
-                                        <div class="userPopup__form-item">
-                                            <input class="userPopup__form-input" type="text" name="lastname" placeholder="{{ text_lastname }}" required>
-                                        </div>
-                                        <div class="userPopup__form-item">
-                                            <input class="userPopup__form-input" type="tel" name="telephone" placeholder="{{ text_telephone }}" required>
-                                        </div>
-                                        <div class="userPopup__form-item">
-                                            <input class="userPopup__form-input" type="email" name="email" placeholder="Email" required>
-                                        </div>
+                            <div class="userPopup__form-item">
+                                <input class="userPopup__form-input" type="text" name="firstname" placeholder="{{ text_firstname }}" required>
+                            </div>
+                            <div class="userPopup__form-item">
+                                <input class="userPopup__form-input" type="text" name="lastname" placeholder="{{ text_lastname }}" required>
+                            </div>
+                            <div class="userPopup__form-item">
+                                <input class="userPopup__form-input" type="tel" name="telephone" placeholder="{{ text_telephone }}" required>
+                            </div>
+                            <div class="userPopup__form-item">
+                                <input class="userPopup__form-input" type="email" name="email" placeholder="Email" required>
+                            </div>
                         </div>
                         <p class="userPopup__form-name">{{ text_create_password }}</p>
                         <div class="userPopup__form-block">
                             <div class="userPopup__form-item">
                                 <button class="userPopup__form-show form-show-password" type="button"></button>
-                                <input class="userPopup__form-input" type="password" name="password" placeholder="Пароль*" required>
+                                <input class="userPopup__form-input" type="password" name="password" placeholder="{{ text_password }}*" required>
                             </div>
                             <div class="userPopup__form-item">
-                                            <button class="userPopup__form-show form-show-password" type="button"></button>
-                                            <input class="userPopup__form-input" name="accept" type="password" name="Повторите-пароль" placeholder="Повторите пароль*" required>
-                                        </div>
-                                    </div>
-                                    <label class="userPopup__form-checkbox checkbox-block">
-                                        <input type="checkbox" name="agree" value="1" class="visually-hidden" checked required>
-                                        <span>{{ text_agree }}</span>
-                                    </label>
-                                    <button class="userPopup__form-btn btn">{{ button_register }}</button>
-                                    <div class="userPopup__form-more"> <span></span> или <span></span></div>
-                                    <div class="userPopup__form-buttons">
-                                        <button class="userPopup__form-log btn-2" type="button">{{ button_google }}</button>
-                                        <button class="userPopup__form-log btn-2" type="button">{{ button_facebook }}</button>
-                                    </div>
-                                </form>
-                                <script>
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        const form = document.getElementById('popup-register-form');
-
-                                        form.addEventListener('submit', function(e) {
-                                            e.preventDefault();
-
-                                            // Очищаємо попередні помилки
-                                            const prevErrors = form.querySelectorAll('.error');
-                                            prevErrors.forEach(err => err.remove());
-
-                                            // Збираємо дані форми
-                                            const formData = new FormData(form);
-
-                                            // Відправка на контролер OpenCart
-                                            fetch('index.php?route=common/user_popup/register', {
-                                                method: 'POST',
-                                                body: formData
-                                            })
-                                            .then(response => response.json())
-                                            .then(json => {
-                                                if (json.error) {
-                                                    for (let key in json.error) {
-                                                        const input = form.querySelector(`[name="${key}"]`);
-                                                        if (input) {
-                                                            const errorDiv = document.createElement('div');
-                                                            errorDiv.className = 'error';
-                                                            errorDiv.textContent = json.error[key];
-                                                            input.insertAdjacentElement('afterend', errorDiv);
-                                                        }
-                                                    }
-                                                }
-
-                                                if (json.success) {
-                                                    alert(json.success);
-                                                    form.reset();
-                                                }
-                                            })
-                                            .catch(err => {
-                                                console.error('Ошибка:', err);
-                                            });
-                                        });
-                                    });
-
-                                </script>
-
+                                <button class="userPopup__form-show form-show-password" type="button"></button>
+                                <input class="userPopup__form-input" type="password" name="accept" placeholder="{{ text_repeat_password }}*" required>
                             </div>
                         </div>
-                    </div>
+                        <label class="userPopup__form-checkbox checkbox-block">
+                            <input type="checkbox" name="agree" value="1" class="visually-hidden" checked required>
+                            <span>{{ text_agree }}</span>
+                        </label>
+
+                        <div class="userPopup__form-error" id="popup-register-error" style="display:none;"></div>
+
+                        <button class="userPopup__form-btn btn" type="submit">{{ button_register }}</button>
+
+                        <div class="userPopup__form-more"><span></span> або <span></span></div>
+
+                        <div class="userPopup__form-buttons">
+                            {% if google_client_id %}
+                                <button type="button" class="userPopup__form-log btn-2" id="btn-google-register">{{ button_google }}</button>
+                            {% else %}
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="Google OAuth не налаштовано">{{ button_google }}</button>
+                            {% endif %}
+                            {% if facebook_app_id %}
+                                <button type="button" class="userPopup__form-log btn-2" id="btn-facebook-register">{{ button_facebook }}</button>
+                            {% else %}
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="Facebook OAuth не налаштовано">{{ button_facebook }}</button>
+                            {% endif %}
+                        </div>
+                    </form>
+
+                    <script>
+                    (function() {
+                        const form    = document.getElementById('popup-register-form');
+                        const errorEl = document.getElementById('popup-register-error');
+
+                        function showError(msg) {
+                            errorEl.textContent = msg;
+                            errorEl.style.display = 'block';
+                        }
+                        function clearErrors() {
+                            errorEl.textContent = '';
+                            errorEl.style.display = 'none';
+                            form.querySelectorAll('.userPopup__form-error-field').forEach(function(el) { el.remove(); });
+                        }
+                        function showFieldError(name, msg) {
+                            var input = form.querySelector('[name="' + name + '"]');
+                            if (input) {
+                                var div = document.createElement('div');
+                                div.className = 'userPopup__form-error-field';
+                                div.textContent = msg;
+                                input.closest('.userPopup__form-item').appendChild(div);
+                            } else {
+                                showError(msg);
+                            }
+                        }
+
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            clearErrors();
+
+                            fetch('index.php?route=common/user_popup/register', {
+                                method: 'POST',
+                                body: new FormData(form),
+                                credentials: 'same-origin'
+                            })
+                            .then(function(r) { return r.json(); })
+                            .then(function(json) {
+                                if (json.success) {
+                                    window.location.href = json.redirect;
+                                } else if (json.error) {
+                                    for (var key in json.error) {
+                                        showFieldError(key, json.error[key]);
+                                    }
+                                }
+                            })
+                            .catch(function() { showError('Сталася помилка, спробуйте ще раз'); });
+                        });
+
+                        {% if google_client_id %}
+                        document.getElementById('btn-google-register').addEventListener('click', function() {
+                            if (window.google && google.accounts) {
+                                google.accounts.id.prompt();
+                            }
+                        });
+                        {% endif %}
+
+                        {% if facebook_app_id %}
+                        document.getElementById('btn-facebook-register').addEventListener('click', function() {
+                            FB.login(function(response) {
+                                if (response.authResponse) {
+                                    fetch('index.php?route=common/user_popup/facebookLogin', {
+                                        method: 'POST',
+                                        body: new URLSearchParams({ access_token: response.authResponse.accessToken }),
+                                        credentials: 'same-origin'
+                                    })
+                                    .then(function(r) { return r.json(); })
+                                    .then(function(json) {
+                                        if (json.success) window.location.href = json.redirect;
+                                        else showError(json.error || 'Помилка входу через Facebook');
+                                    })
+                                    .catch(function() { showError('Сталася помилка Facebook'); });
+                                }
+                            }, { scope: 'email' });
+                        });
+                        {% endif %}
+                    })();
+                    </script>
                 </div>
             </div>
+        </div>
+    </div>
 </section>
+
+{% if google_client_id %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<div id="g_id_onload"
+     data-client_id="{{ google_client_id }}"
+     data-callback="handleGoogleCredential"
+     data-auto_prompt="false">
+</div>
+{% endif %}
+
+{% if facebook_app_id %}
+<script>
+window.fbAsyncInit = function() {
+    FB.init({ appId: '{{ facebook_app_id }}', cookie: true, xfbml: true, version: 'v19.0' });
+};
+(function(d,s,id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/uk_UA/sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+{% endif %}
 
 <section class="userData" data-userData="password-recovery">
     <div class="container">
@@ -224,7 +354,7 @@
             <button class="userData__close">
                 {{ text_close }}
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>                        
+                    <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>
                     <rect x="28.8008" y="31.6274" width="9" height="4" transform="rotate(-135 28.8008 31.6274)" fill="#202222"/>
                     <rect x="11.8281" y="9" width="9" height="4" transform="rotate(45 11.8281 9)" fill="#202222"/>
                 </svg>
@@ -239,7 +369,7 @@
                             </svg>
                         </div>
                         <div class="userData__info-content">
-                            <h2 class="userData__info-title">Восстановление пароля</h2>
+                            <h2 class="userData__info-title">{{ text_forgot }}</h2>
                             <p class="userData__info-descr">Уведомление об изменении пароля будет отправлено Вам на почту</p>
                         </div>
                     </div>
@@ -252,7 +382,7 @@
                     <button class="userData__form-show form-show-password" type="button"></button>
                     <input class="userData__form-input form-input" type="password" name="accept" placeholder="{{ text_repeat_password }}*" required>
                 </div>
-                <button class="userData__form-btn btn" type="submit">Изменить</button>
+                <button class="userData__form-btn btn" type="submit">Змінити</button>
             </form>
        </div>
     </div>

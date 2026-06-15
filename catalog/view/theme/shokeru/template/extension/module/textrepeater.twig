@@ -1,0 +1,32 @@
+<section class="weworks">
+            <div class="container">
+                <div class="weworks__inner">
+                    <div class="weworks__top">
+                        <div class="weworks__content">
+                            {{ content|raw }}
+                            <span class="weworks__line"></span>
+                        </div>
+                        <span class="weworks-vertical-line"></span>
+                        <div class="weworks__block">
+                            {% for item in items %}
+                                <div class="weworks__item">
+                                    <h3 class="weworks__item-title">{{ loop.index }} {{ item.title }}</h3>
+                                    {{ item.text }}
+                                    {% if item.btn_text and item.btn_link %}
+                                        <a class="weworks__item-btn btn-5" href="{{ item.btn_link }}">
+                                            {{ item.btn_text }}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.6665 11.9997L8.6665 7.99967L4.6665 3.99967L5.99984 2.66634L11.3332 7.99967L5.99984 13.333L4.6665 11.9997Z" fill="white"></path>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+

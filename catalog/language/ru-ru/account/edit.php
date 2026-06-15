@@ -22,3 +22,6 @@ $_['error_email']        = 'E-Mail адрес введен неверно!';
 $_['error_telephone']    = 'Номер телефона должен быть от 3 до 32 символов!';
 $_['error_custom_field'] = '%s необходим!';
 
+
+$_['entry_fax']                  = 'Факс';
+$_['error_custom_field_validate'] = ' некорректно!';

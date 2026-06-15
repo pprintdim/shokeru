@@ -2,9 +2,15 @@
 class ControllerAccountChangePhone extends Controller {
 
     public function index() {
-        $this->load->language('account/sms_form');
+        $this->load->language('account/change_phone');
 
         $data['heading_title'] = $this->language->get('text_heading');
+        $data['text_descr']    = $this->language->get('text_descr');
+        $data['text_new_phone']= $this->language->get('text_new_phone');
+        $data['text_sms_code'] = $this->language->get('text_sms_code');
+        $data['button_change'] = $this->language->get('button_change');
+        $data['button_close']  = $this->language->get('button_close');
+
         return $this->load->view('account/change_phone', $data);
     }
 
@@ -13,89 +19,91 @@ class ControllerAccountChangePhone extends Controller {
        ВІДПРАВКА SMS
     ====================================================== */
     public function smsSend() {
-        $this->load->language('account/sms_form');
+        $this->load->language('account/change_phone');
 
         $json = [];
 
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode([]));
+            return;
+        }
 
-            /* --- cooldown --- */
-            $last_send = $this->session->data['sms_last_send'] ?? 0;
-            $cooldown = 60;
+        /* --- cooldown --- */
+        $cooldown  = 60;
+        $last_send = $this->session->data['sms_last_send'] ?? 0;
 
-            if (time() - $last_send < $cooldown) {
-                $json['error'] = sprintf(
-                    $this->language->get('error_cooldown'),
-                    ($cooldown - (time() - $last_send))
-                );
-            }
+        if (time() - $last_send < $cooldown) {
+            $json['error'] = sprintf(
+                $this->language->get('error_cooldown'),
+                $cooldown - (time() - $last_send)
+            );
+        }
 
-            /* --- daily limit --- */
-            $limit_total = 5;
-            $day = date('Y-m-d');
+        /* --- daily limit --- */
+        $day = date('Y-m-d');
 
-            if (!isset($this->session->data['sms_daily']) || $this->session->data['sms_daily']['date'] != $day) {
-                $this->session->data['sms_daily'] = ['date' => $day, 'count' => 0];
-            }
+        if (!isset($this->session->data['sms_daily']) || $this->session->data['sms_daily']['date'] != $day) {
+            $this->session->data['sms_daily'] = ['date' => $day, 'count' => 0];
+        }
 
-            if (empty($json['error']) && $this->session->data['sms_daily']['count'] >= $limit_total) {
-                $json['error'] = $this->language->get('error_daily_limit');
-            }
+        if (empty($json['error']) && $this->session->data['sms_daily']['count'] >= 5) {
+            $json['error'] = $this->language->get('error_daily_limit');
+        }
 
-            /* --- телефон --- */
-            $phone = preg_replace('/\D+/', '', $this->request->post['telephone'] ?? '');
+        /* --- телефон --- */
+        $phone = preg_replace('/\D+/', '', $this->request->post['telephone'] ?? '');
 
-            if (strpos($phone, '380') !== 0 && strpos($phone, '0') === 0) {
-                $phone = '38' . $phone;
-            }
+        if ($phone && strpos($phone, '380') !== 0 && strpos($phone, '0') === 0) {
+            $phone = '38' . $phone;
+        }
 
-            if (empty($json['error']) && (empty($phone) || strlen($phone) < 10)) {
-                $json['error'] = $this->language->get('error_phone');
-            }
+        if (empty($json['error']) && (empty($phone) || strlen($phone) < 10)) {
+            $json['error'] = $this->language->get('error_phone');
+        }
 
-            /* --- якщо все ок --- */
-            if (empty($json['error'])) {
+        /* --- якщо все ок --- */
+        if (empty($json['error'])) {
 
-                $code = rand(100000, 999999);
+            $code = rand(100000, 999999);
 
-                $this->session->data['sms_login_phone'] = $phone;
-                $this->session->data['sms_login_code']  = $code;
+            $this->session->data['sms_phone_change_phone'] = $phone;
+            $this->session->data['sms_phone_change_code']  = $code;
 
-                $token  = $this->config->get('config_turbo_sms_token');
-                $sender = $this->config->get('config_turbo_sms_name');
+            $token  = $this->config->get('config_turbo_sms_token');
+            $sender = $this->config->get('config_turbo_sms_name');
 
-                if (!$token) {
-                    $json['error'] = $this->language->get('error_token');
+            if (!$token) {
+                $json['error'] = $this->language->get('error_token');
+            } else {
+
+                $payload = [
+                    'recipients' => [$phone],
+                    'sms'        => [
+                        'sender' => $sender,
+                        'text'   => sprintf($this->language->get('text_sms_message'), $code),
+                    ],
+                ];
+
+                $ch = curl_init('https://api.turbosms.ua/message/send.json');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $token,
+                ]);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+                $response  = curl_exec($ch);
+                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                if ($http_code == 200) {
+                    $json['success'] = sprintf($this->language->get('text_code_success'), $phone);
+                    $this->session->data['sms_last_send'] = time();
+                    $this->session->data['sms_daily']['count']++;
                 } else {
-
-                    $request = [
-                        "recipients" => [$phone],
-                        "sms" => [
-                            "sender" => $sender,
-                            "text"   => sprintf($this->language->get('text_sms_message'), $code)
-                        ]
-                    ];
-
-                    $ch = curl_init('https://api.turbosms.ua/message/send.json');
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                        "Content-Type: application/json",
-                        "Authorization: Bearer $token"
-                    ]);
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
-
-                    $response = curl_exec($ch);
-                    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    curl_close($ch);
-
-                    if ($http_code == 200) {
-                        $json['success'] = sprintf($this->language->get('text_code_success'), $phone ?? '•(•••) ••• •• 23');
-                        $this->session->data['sms_last_send'] = time();
-                        $this->session->data['sms_daily']['count']++;
-                    } else {
-                        $json['error'] = $this->language->get('error_send');
-                    }
+                    $json['error'] = $this->language->get('error_send');
                 }
             }
         }
@@ -106,70 +114,58 @@ class ControllerAccountChangePhone extends Controller {
 
 
     /* ======================================================
-       ПЕРЕВІРКА КОДУ
+       ПЕРЕВІРКА КОДУ + ОНОВЛЕННЯ ТЕЛЕФОНУ
     ====================================================== */
     public function verifyCode() {
-        $this->load->language('account/sms_form');
+        $this->load->language('account/change_phone');
 
         $json = [];
 
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode([]));
+            return;
+        }
 
-            if (!isset($this->session->data['sms_attempts'])) {
-                $this->session->data['sms_attempts'] = 0;
-            }
+        if (!$this->customer->isLogged()) {
+            $json['error'] = $this->language->get('error_not_logged');
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
 
-            if ($this->session->data['sms_attempts'] >= 10) {
-                $json['error'] = $this->language->get('error_attempts');
-            }
+        if (!isset($this->session->data['sms_attempts'])) {
+            $this->session->data['sms_attempts'] = 0;
+        }
 
-            $code       = $this->request->post['code'] ?? '';
-            $saved_code = $this->session->data['sms_login_code'] ?? '';
-            $phone      = $this->session->data['sms_login_phone'] ?? '';
+        if ($this->session->data['sms_attempts'] >= 10) {
+            $json['error'] = $this->language->get('error_attempts');
+        }
 
-            if (empty($json['error'])) {
+        if (empty($json['error'])) {
 
-                if ($code && $saved_code && $phone && $code == $saved_code) {
+            $code       = trim($this->request->post['code'] ?? '');
+            $saved_code = $this->session->data['sms_phone_change_code']  ?? '';
+            $phone      = $this->session->data['sms_phone_change_phone'] ?? '';
 
-                    unset($this->session->data['sms_attempts']);
+            if ($code && $saved_code && $phone && $code == $saved_code) {
 
-                    $this->load->model('account/sms_form');
+                $this->db->query(
+                    "UPDATE `" . DB_PREFIX . "customer` SET telephone = '" . $this->db->escape($phone) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'"
+                );
 
-                    if (isset($this->event)) {
-                        $this->event->unregister('post.customer.add', 'mail/register');
-                        $this->event->unregister('post.customer.editPassword', 'mail/register');
-                    }
+                unset(
+                    $this->session->data['sms_phone_change_code'],
+                    $this->session->data['sms_phone_change_phone'],
+                    $this->session->data['sms_attempts']
+                );
 
-                    $customer = $this->model_account_sms_form->getCustomerByPhone($phone);
+                $json['success']  = $this->language->get('text_change_success');
+                $json['redirect'] = $this->url->link('account/account', '', true);
 
-                    if ($customer) {
-                        $this->model_account_sms_form->loginByPhoneForce($phone);
-                        $json['success'] = $this->language->get('text_login_success');
-                    } else {
-                        $data = [
-                            'firstname' => 'User ' . time(),
-                            'lastname'  => '',
-                            'email'     => 'user_' . $phone . '@example.com',
-                            'telephone' => $phone,
-                            'password'  => $code,
-                            'customer_group_id' => 3
-                        ];
-
-                        $this->model_account_sms_form->addCustomer($data);
-                        $this->model_account_sms_form->loginByPhoneForce($phone);
-
-                        $json['success'] = $this->language->get('text_register_success');
-                    }
-
-                    unset($this->session->data['sms_login_code']);
-                    unset($this->session->data['sms_login_phone']);
-
-                    $json['redirect'] = $this->url->link('account/account', '', true);
-
-                } else {
-                    $this->session->data['sms_attempts']++;
-                    $json['error'] = $this->language->get('error_code');
-                }
+            } else {
+                $this->session->data['sms_attempts']++;
+                $json['error'] = $this->language->get('error_code');
             }
         }
 

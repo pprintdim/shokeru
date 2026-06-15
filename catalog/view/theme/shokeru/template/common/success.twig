@@ -1,25 +1,20 @@
 {{ header }}
-<div id="common-success" class="container">
-  <ul class="breadcrumb">
-    {% for breadcrumb in breadcrumbs %}
-    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-    {% endfor %}
-  </ul>
-  <div class="row">{{ column_left }}
-    {% if column_left and column_right %}
-    {% set class = 'col-sm-6' %}
-    {% elseif column_left or column_right %}
-    {% set class = 'col-sm-9' %}
-    {% else %}
-    {% set class = 'col-sm-12' %}
-    {% endif %}
-    <div id="content" class="{{ class }}">{{ content_top }}
-      <h1>{{ heading_title }}</h1>
-      {{ text_message }}
-      <div class="buttons">
-        <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
-      </div>
-      {{ content_bottom }}</div>
-    {{ column_right }}</div>
-</div>
+<main class="main">
+    <section class="thanks">
+        <div class="container">
+            <div class="thanks__inner">
+                <h2 class="thanks__title">
+                    Ваше замовлення прийнято.
+                    {% if order_id %}<br>Номер замовлення №{{ order_id }}{% endif %}
+                </h2>
+                <a class="thanks__btn btn" href="{{ continue }}">
+                    На головну
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.66602 12.0002L8.66602 8.00016L4.66602 4.00016L5.99935 2.66683L11.3327 8.00016L5.99935 13.3335L4.66602 12.0002Z" fill="#202222"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
 {{ footer }}

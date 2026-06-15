@@ -14,4 +14,9 @@ $_['text_logout']        = 'Выход';
 $_['text_checkout']      = 'Оформление заказа';
 $_['text_search']        = 'Поиск';
 $_['text_all']           = 'Смотреть Все';
-
+$_['text_close']          = 'Закрыть';
+$_['text_menu_home']      = 'Главная';
+$_['text_menu_about']     = 'О нас';
+$_['text_menu_shop']      = 'Магазин';
+$_['text_menu_customers'] = 'Информация покупателям';
+$_['text_menu_contact']   = 'Контакты';

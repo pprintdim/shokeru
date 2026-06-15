@@ -207,10 +207,24 @@
               </div>#}
               {% for social in social_fields %}
                 <div class="form-group">
-                  
                   <label class="col-sm-2 control-label">{{ social.placeholder }}</label>
                   <div class="col-sm-10">
                     <input type="text" name="config_{{ social.name }}" id="{{ social.name }}" value="{{ social.value }}" placeholder="{{ social.placeholder }}" class="form-control" />
+                  </div>
+                </div>
+              {% endfor %}
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><strong>OAuth авторизація</strong></label>
+                <div class="col-sm-10">
+                  <p class="help-block">Client ID / App ID для кнопок «Увійти через Google/Facebook» у попапі. Якщо порожньо — кнопки вимкнені.</p>
+                </div>
+              </div>
+              {% for oauth in oauth_fields %}
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ oauth.label }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_{{ oauth.name }}" value="{{ oauth.value }}" placeholder="{{ oauth.label }}" class="form-control" />
                   </div>
                 </div>
               {% endfor %}
@@ -379,6 +393,18 @@
             <div class="tab-pane" id="tab-option">
               <fieldset>
                 <legend>{{ text_other ?: 'Інше' }}</legend>
+                
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-about-information">{{ entry_about_information ?: 'Сторінка About' }}</label>
+                  <div class="col-sm-10">
+                    <select name="config_about_information_id" id="input-about-information" class="form-control">
+                      <option value="0">{{ text_none }}</option>
+                      {% for information in informations %}
+                        <option value="{{ information.information_id }}" {{ information.information_id == config_about_information_id ? 'selected' : '' }}>{{ information.title }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="input-turbosms-token">{{ entry_turbo_sms_token ?: 'TurboSms Token' }}</label>
                   <div class="col-sm-10">
@@ -1030,6 +1056,15 @@
               </fieldset>
             </div>
             <div class="tab-pane" id="tab-image">
+              <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-about-image">{{ entry_about_image ?: 'Зображення About' }}</label>
+                  <div class="col-sm-10">
+                    <a href="" id="thumb-about-image" data-toggle="image" class="img-thumbnail">
+                      <img src="{{ about_thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" />
+                    </a>
+                    <input type="hidden" name="config_about_image" value="{{ config_about_image }}" id="input-about-image" />
+                  </div>
+              </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-logo">{{ entry_logo }}</label>
                 <div class="col-sm-10">

@@ -1,11 +1,11 @@
 <div class="productSlider__slide swiper-slide product__item">
-    <button class="product__item-fav"></button>
+    <button class="product__item-fav" type="button" data-product-id="{{ product.product_id }}"></button>
     <a class="product__item-image" href="{{ product.href }}">
         <img src="{{ product.thumb }}" alt="{{ product.name }}">
     </a>
     <div class="product__item-content">
         <div class="product__item-buttons">
-            <button onclick="cart.add({{ product.product_id }})" class="product__item-btn btn">
+            <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
                 {{ button_cart }}
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/></svg>
             </button>
