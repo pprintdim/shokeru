@@ -2,30 +2,55 @@
    Старт: 2 блоки головної — .aboutus та .safemode. Без сторонніх бібліотек. */
 (function () {
     var SELECTOR = '.aboutus, .safemode';
+    var root = document.documentElement;
 
     // позначаємо, що JS працює → CSS вмикає старт-стан (інакше блоки видимі)
-    document.documentElement.classList.add('js-anim');
+    root.classList.add('js-anim');
 
-    var nodes = document.querySelectorAll(SELECTOR);
-    if (!nodes.length) return;
+    function reveal(el) { el.classList.add('anim-in'); }
 
-    var reduceMotion = window.matchMedia &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // фолбек: старий браузер або reduce-motion → одразу показати
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-        nodes.forEach(function (el) { el.classList.add('anim-in'); });
-        return;
+    function inViewport(el) {
+        var r = el.getBoundingClientRect();
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        return r.top < vh && r.bottom > 0;
     }
 
-    var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('anim-in');
-                io.unobserve(entry.target); // анімація один раз
+    function init() {
+        var nodes = document.querySelectorAll(SELECTOR);
+        if (!nodes.length) return;
+
+        var reduce = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // фолбек: reduce-motion або старий браузер → одразу показати
+        if (reduce || !('IntersectionObserver' in window)) {
+            nodes.forEach(reveal);
+            return;
+        }
+
+        // threshold:0 — спрацьовує на будь-який видимий піксель (важливо для високих блоків).
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    reveal(entry.target);
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0, rootMargin: '0px 0px -80px 0px' });
+
+        nodes.forEach(function (el) {
+            // те, що вже на екрані — показуємо одразу (не чекаємо скрол)
+            if (inViewport(el)) {
+                requestAnimationFrame(function () { reveal(el); });
+            } else {
+                io.observe(el);
             }
         });
-    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+    }
 
-    nodes.forEach(function (el) { io.observe(el); });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
