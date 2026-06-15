@@ -1,7 +1,7 @@
 /* animations.js — легкі анімації появи на скролі (нативний IntersectionObserver).
    Старт: 2 блоки головної — .aboutus та .safemode. Без сторонніх бібліотек. */
 (function () {
-    var SELECTOR = '.aboutus, .safemode';
+    var SELECTOR = '.productSlider, .safemode';
     var root = document.documentElement;
 
     // позначаємо, що JS працює → CSS вмикає старт-стан (інакше блоки видимі)

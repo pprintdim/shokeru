@@ -6,7 +6,7 @@
    ========================================================================== */
 
 /* --- Базовий пресет появи знизу (fade-up) --- */
-.js-anim .aboutus,
+.js-anim .productSlider,
 .js-anim .safemode {
     opacity: 0;
     transform: translateY(28px);
@@ -14,7 +14,7 @@
     will-change: opacity, transform;
 }
 
-.js-anim .aboutus.anim-in,
+.js-anim .productSlider.anim-in,
 .js-anim .safemode.anim-in {
     opacity: 1;
     transform: none;
@@ -22,7 +22,7 @@
 
 /* Доступність: вимикаємо анімації за бажанням користувача */
 @media (prefers-reduced-motion: reduce) {
-    .js-anim .aboutus,
+    .js-anim .productSlider,
     .js-anim .safemode {
         opacity: 1 !important;
         transform: none !important;
