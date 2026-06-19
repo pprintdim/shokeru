@@ -61,7 +61,7 @@
                                 <p class="shop__pages-title">Стараница</p>
                                 <div class="shop__pages-content">
                                     {% for pagination_page in pagination_pages %}
-                                        <a {% if pagination_page.active %}class="active"{% endif %} href="{{ pagination_page.href }}">{{ pagination_page.text }}</a>
+                                        {% if pagination_page.ellipsis %}<a class="shop__pages-dots">…</a>{% else %}<a {% if pagination_page.active %}class="active"{% endif %} href="{{ pagination_page.href }}">{{ pagination_page.text }}</a>{% endif %}
                                     {% endfor %}
                                     {% if next_page_url %}
                                         <a class="shop__pages-next" href="{{ next_page_url }}"></a>

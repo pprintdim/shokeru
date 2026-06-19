@@ -40,7 +40,10 @@ class ControllerProductSpecial extends Controller {
 		if (isset($this->request->get['limit']) && (int)$this->request->get['limit'] > 0) {
 			$limit = (int)$this->request->get['limit'];
 		} else {
-			$limit = 8;
+			$limit = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
+			if ($limit < 1) {
+				$limit = 5;
+			}
 		}
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -372,12 +375,23 @@ class ControllerProductSpecial extends Controller {
 		$pagination_url = $this->url->link('product/special', $url . '&page={page}');
 		$first_page_url = str_replace(array('&amp;page={page}', '?page={page}', '&page={page}'), '', $pagination_url);
 
-		for ($i = 1; $i <= $data['total_pages']; $i++) {
+		$tp = (int)$data['total_pages'];
+		$show = array();
+		for ($i = 1; $i <= min(3, $tp); $i++) { $show[$i] = true; }
+		if ($tp >= 1) { $show[$tp] = true; }
+		ksort($show);
+		$prev = 0;
+		foreach (array_keys($show) as $i) {
+			if ($prev && ($i - $prev) > 1) {
+				$data['pagination_pages'][] = array('text' => '...', 'href' => '', 'active' => false, 'ellipsis' => true);
+			}
 			$data['pagination_pages'][] = array(
-				'text'   => $i,
-				'href'   => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
-				'active' => ($i == $page)
+				'text'     => $i,
+				'href'     => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
+				'active'   => ($i == $page),
+				'ellipsis' => false
 			);
+			$prev = $i;
 		}
 
 		$data['next_page_url'] = ($page < $data['total_pages'])

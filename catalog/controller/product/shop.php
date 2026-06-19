@@ -220,12 +220,23 @@ class ControllerProductShop extends Controller {
         $pagination_url = $this->url->link('product/shop', $url . '&page={page}');
         $first_page_url = str_replace(['&amp;page={page}', '?page={page}', '&page={page}'], '', $pagination_url);
 
-        for ($i = 1; $i <= $data['total_pages']; $i++) {
+        $tp = (int)$data['total_pages'];
+        $show = [];
+        for ($i = 1; $i <= min(3, $tp); $i++) { $show[$i] = true; }
+        if ($tp >= 1) { $show[$tp] = true; }
+        ksort($show);
+        $prev = 0;
+        foreach (array_keys($show) as $i) {
+            if ($prev && ($i - $prev) > 1) {
+                $data['pagination_pages'][] = ['text' => '...', 'href' => '', 'active' => false, 'ellipsis' => true];
+            }
             $data['pagination_pages'][] = [
-                'text'   => $i,
-                'href'   => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
-                'active' => ($i == $page)
+                'text'     => $i,
+                'href'     => ($i == 1) ? $first_page_url : str_replace('{page}', $i, $pagination_url),
+                'active'   => ($i == $page),
+                'ellipsis' => false
             ];
+            $prev = $i;
         }
 
         $data['next_page_url'] = ($page < $data['total_pages'])

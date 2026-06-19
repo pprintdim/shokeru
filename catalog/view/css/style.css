@@ -5853,6 +5853,10 @@ main.main{
     background-color: rgba(32, 34, 34, 0.12);
     color: #202222;
 }
+.shop__pages-content a.shop__pages-dots{
+    pointer-events: none;
+    cursor: default;
+}
 a.shop__pages-next{
     content: '';
     background-position: center;

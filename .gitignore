@@ -8,3 +8,19 @@ system/storage/modification/*
 !system/storage/logs/index.html
 !system/storage/session/index.html
 !system/storage/modification/index.html
+
+# --- Парсер: важке / регенероване / секрети (не в git) ---
+shokeruParser/tools/WatermarkRemover-AI/
+shokeruParser/data/images_original/
+shokeruParser/data/shokeru_db_backup.sql
+shokeruParser/data/*.backup.csv
+shokeruParser/logs/*.log
+**/.DS_Store
+
+# Фото товарів (деплой через FTP) + кеш мініатюр — не в git
+image/cache/
+image/catalog/fototovarov/
+image/catalog/uzotpugivateli/
+
+# Секрети (щоб FTP-пароль/локальні креди не потрапили в репо)
+.vscode/sftp.json

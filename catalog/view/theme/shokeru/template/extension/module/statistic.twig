@@ -1,0 +1,39 @@
+<section class="about">
+    <div class="container">
+        <div class="about__inner">
+            <div class="about__content">
+                <h2 class="about__title title">{% if title %}{{ title|raw }}{% else %}Интернет магазин <span>shokeru.in.ua</span>{% endif %}</h2>
+                {% if description %}
+                {{ description|raw }}
+                {% else %}
+                <p class="about__descr">Наш интернет магазин, shokeru.in.ua предлагает вашему вниманию широкий спектр средств самозащиты, которые всегда смогут защитить вас и дорогих вам людей.</p>
+                <p class="about__descr">Это электрошокеры разных классов и видов, предназначенных для различных категорий людей и даже для разных возрастных категорий.</p>
+                {% endif %}
+                <a class="about__btn btn hide-mobile" href="#">
+                    Подробнее
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.1665 12.0002L9.1665 8.00016L5.1665 4.00016L6.49984 2.66683L11.8332 8.00016L6.49984 13.3335L5.1665 12.0002Z" fill="#202222"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="about__block">
+                {% if blocks %}
+                {% for block in blocks %}
+                <p class="about__item">{{ block|raw }}</p>
+                {% endfor %}
+                {% else %}
+                <p class="about__item"><span>>15<span>к</span></span>проданного товара</p>
+                <p class="about__item"><span>320</span>Наименований</p>
+                <p class="about__item"><span>24/7</span>Обслуживание клиентов</p>
+                <p class="about__item"><span>10 <span>лет</span></span>На рынке украины</p>
+                {% endif %}
+            </div>
+            <a class="about__btn btn show-mobile" href="#">
+                Подробнее
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.1665 12.0002L9.1665 8.00016L5.1665 4.00016L6.49984 2.66683L11.8332 8.00016L6.49984 13.3335L5.1665 12.0002Z" fill="#202222"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>

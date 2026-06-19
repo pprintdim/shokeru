@@ -356,6 +356,13 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript" src="view/javascript/jquery/jquery-ui/jquery-ui.min.js"></script>
+  <style>
+    .module-handle { cursor: move; color: #888; }
+    .module-placeholder td, tr.module-placeholder { height: 38px; }
+    .module-placeholder { outline: 1px dashed #ccc; background: #f7f7f7; }
+    .ui-sortable-helper { display: table; }
+  </style>
   <script type="text/javascript"><!--
 var route_row = {{ route_row }};
 
@@ -380,7 +387,7 @@ var module_row = {{ module_row }};
 
 function addModule(type) {
 	html  = '<tr id="module-row' + module_row + '">';
-    html += '  <td class="text-left"><div class="input-group"><select name="layout_module[' + module_row + '][code]" class="form-control input-sm">';
+    html += '  <td class="text-left"><div class="input-group"><span class="input-group-addon module-handle"><i class="fa fa-arrows"></i></span><select name="layout_module[' + module_row + '][code]" class="form-control input-sm">';
 	{% for extension in extensions %}
 	html += '    <optgroup label="{{ extension.name|escape('js') }}">';
 	{% if not extension.module %}
@@ -407,7 +414,9 @@ function addModule(type) {
 	$('#module-' + type + ' tbody input[name*=\'sort_order\']').each(function(i, element) {
 		$(element).val(i);
 	});
-	
+
+	$('#module-' + type + ' tbody').sortable('refresh');
+
 	module_row++;
 }
 
@@ -422,6 +431,38 @@ $('#module-column-left, #module-column-right, #module-content-top, #module-conte
 });
 
 $('#module-column-left, #module-column-right, #module-content-top, #module-content-bottom').trigger('change');
-//--></script> 
+
+// --- Drag & drop порядку модулів у межах позиції ---
+var moduleTbodies = '#module-column-left tbody, #module-content-top tbody, #module-content-bottom tbody, #module-column-right tbody';
+
+// ручка-хват для наявних рядків
+$(moduleTbodies).find('tr').each(function() {
+	var ig = $(this).find('.input-group').first();
+	if (ig.length && !ig.find('.module-handle').length) {
+		ig.prepend('<span class="input-group-addon module-handle"><i class="fa fa-arrows"></i></span>');
+	}
+});
+
+// зберігаємо ширину клітинок під час перетягування
+var sortHelper = function(e, ui) {
+	ui.children().each(function() { $(this).width($(this).width()); });
+	return ui;
+};
+
+$(moduleTbodies).sortable({
+	items: '> tr',
+	handle: '.module-handle',
+	axis: 'y',
+	helper: sortHelper,
+	placeholder: 'module-placeholder',
+	forcePlaceholderSize: true,
+	update: function() {
+		// перенумеровуємо sort_order за новим порядком
+		$(this).find('input[name*=\'sort_order\']').each(function(i, element) {
+			$(element).val(i);
+		});
+	}
+});
+//--></script>
 </div>
 {{ footer }}
