@@ -3,6 +3,7 @@ namespace Cart;
 class Currency {
 	private $db;
 	private $language;
+	private $config;
 	private $currencies = array();
 	private $symbol_left_space = false;
 	private $symbol_right_space = false;
@@ -10,6 +11,7 @@ class Currency {
 	public function __construct($registry) {
 		$this->db = $registry->get('db');
 		$this->language = $registry->get('language');
+		$this->config = $registry->get('config');
 		$this->symbol_left_space = (bool)$registry->get('config')->get('config_symbol_left_space');
 		$this->symbol_right_space = (bool)$registry->get('config')->get('config_symbol_right_space');
 
@@ -31,6 +33,11 @@ class Currency {
 		$symbol_left = $this->currencies[$currency]['symbol_left'];
 		$symbol_right = $this->currencies[$currency]['symbol_right'];
 		$decimal_place = $this->currencies[$currency]['decimal_place'];
+
+		// UAH: в англійській версії (language_id=1, en-gb) показуємо "UAH" замість "грн."
+		if ($currency == 'UAH' && $this->config && (int)$this->config->get('config_language_id') == 1) {
+			$symbol_right = ' UAH';
+		}
 
 		if (!$value) {
 			$value = $this->currencies[$currency]['value'];

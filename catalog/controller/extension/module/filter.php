@@ -76,6 +76,31 @@ class ControllerExtensionModuleFilter extends Controller {
             $data['action'] = $this->url->link($route, http_build_query($url_params));
         }
 
+        // Чиста SEO-база (без фільтрів) + мапа слагів значень фільтрів — для JS (SEO-фільтри path)
+        if ($category_id) {
+            $data['filter_base'] = $this->url->link('product/category', 'path=' . ($this->request->get['path'] ?? $category_id));
+        } else {
+            $data['filter_base'] = $this->url->link($route);
+        }
+
+        $data['filter_slugs'] = [];
+        $sq = $this->db->query("SELECT query, keyword FROM " . DB_PREFIX . "seo_url WHERE query LIKE 'filter=%' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+        foreach ($sq->rows as $r) {
+            $data['filter_slugs'][(int)substr($r['query'], 7)] = $r['keyword'];
+        }
+
+        // SEO-сортування: "sort-order" → слаг (синхронно з startup/seo_url.php)
+        $data['sort_slugs'] = [
+            'pd.name-ASC'   => 'name-az',
+            'pd.name-DESC'  => 'name-za',
+            'p.price-ASC'   => 'cheap',
+            'p.price-DESC'  => 'expensive',
+            'ps.price-ASC'  => 'cheap',
+            'ps.price-DESC' => 'expensive',
+            'rating-DESC'   => 'popular',
+            'rating-ASC'    => 'rating-low',
+        ];
+
 
         // ======================
         // Вибрані фільтри

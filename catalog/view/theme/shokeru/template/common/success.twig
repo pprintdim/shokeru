@@ -1,14 +1,13 @@
 {{ header }}
-<main class="main">
     <section class="thanks">
         <div class="container">
             <div class="thanks__inner">
                 <h2 class="thanks__title">
-                    Ваше замовлення прийнято.
-                    {% if order_id %}<br>Номер замовлення №{{ order_id }}{% endif %}
+                    {{ text_order_accepted }}
+                    {% if order_id %}<br>{{ text_order_number }} №{{ order_id }}{% endif %}
                 </h2>
                 <a class="thanks__btn btn" href="{{ continue }}">
-                    На головну
+                    {{ button_home }}
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4.66602 12.0002L8.66602 8.00016L4.66602 4.00016L5.99935 2.66683L11.3327 8.00016L5.99935 13.3335L4.66602 12.0002Z" fill="#202222"/>
                     </svg>
@@ -16,5 +15,4 @@
             </div>
         </div>
     </section>
-</main>
 {{ footer }}

@@ -43,7 +43,7 @@ class ControllerCommonHeader extends Controller {
 
 		$data['base'] = $server;
 		$data['keywords'] = $this->document->getKeywords();
-		$data['links'] = $this->document->getLinks();
+		$data['links'] = $this->getHeaderLinks($server);
 		$data['styles'] = $this->document->getStyles();
 		$data['scripts'] = $this->document->getScripts('header');
 		$data['lang'] = $this->language->get('code');
@@ -130,5 +130,122 @@ class ControllerCommonHeader extends Controller {
 
 
 		return $this->load->view('common/header', $data);
+	}
+
+	// canonical (fallback) + hreflang-alternate лінки — як у well
+	private function getHeaderLinks($server) {
+		$links = array_values((array)$this->document->getLinks());
+
+		// якщо контролер не виставив canonical — ставимо self (чистий шлях, без GET)
+		$has_canonical = false;
+		foreach ($links as $link) {
+			if (strtolower((string)($link['rel'] ?? '')) === 'canonical') { $has_canonical = true; break; }
+		}
+
+		if (!$has_canonical) {
+			$path = parse_url((string)($this->request->server['REQUEST_URI'] ?? '/'), PHP_URL_PATH);
+			$path = '/' . ltrim((string)$path, '/');
+			$self = ($path === '/') ? rtrim($server, '/') . '/' : rtrim($server, '/') . rtrim($path, '/');
+			array_unshift($links, array('href' => $self, 'rel' => 'canonical'));
+		}
+
+		return array_merge($links, $this->getAlternateLinks());
+	}
+
+	private function getAlternateLinks() {
+		$route = $this->request->get['route'] ?? 'common/home';
+		$route = $route ?: 'common/home';
+		$args = $this->getAlternateArgs($route);
+
+		if ($args === null) {
+			return array();
+		}
+
+		$languages = $this->getActiveLanguages();
+		$default_code = $this->config->get('config_language');
+		$links = array();
+
+		foreach ($languages as $code => $language) {
+			$href = $this->getLocalizedUrl($route, $args, $code, (int)$language['language_id']);
+			if ($href) {
+				$links[] = array('href' => $href, 'rel' => 'alternate', 'hreflang' => $this->getHreflang($code));
+			}
+		}
+
+		if (isset($languages[$default_code])) {
+			$href = $this->getLocalizedUrl($route, $args, $default_code, (int)$languages[$default_code]['language_id']);
+			if ($href) {
+				$links[] = array('href' => $href, 'rel' => 'alternate', 'hreflang' => 'x-default');
+			}
+		}
+
+		return $links;
+	}
+
+	private function getAlternateArgs($route) {
+		$params_by_route = array(
+			'common/home'               => array(),
+			'product/shop'              => array('page'),
+			'product/latest'            => array('page'),
+			'product/special'           => array('page'),
+			'product/category'          => array('path', 'page'),
+			'product/product'           => array('product_id'),
+			'product/manufacturer/info' => array('manufacturer_id', 'page'),
+			'information/information'    => array('information_id'),
+			'information/about'         => array(),
+			'information/contact'       => array(),
+			'information/customer'      => array(),
+		);
+
+		if (!isset($params_by_route[$route])) {
+			return null;
+		}
+
+		$args = array();
+		foreach ($params_by_route[$route] as $key) {
+			if (isset($this->request->get[$key]) && $this->request->get[$key] !== '') {
+				$args[$key] = $this->request->get[$key];
+			}
+		}
+
+		return $args;
+	}
+
+	private function getActiveLanguages() {
+		$this->load->model('localisation/language');
+
+		$languages = array();
+		foreach ($this->model_localisation_language->getLanguages() as $code => $language) {
+			if (!empty($language['status'])) {
+				$languages[$code] = $language;
+			}
+		}
+
+		return $languages;
+	}
+
+	private function getLocalizedUrl($route, array $args, $language_code, $language_id) {
+		$old_language = $this->session->data['language'] ?? null;
+		$old_language_id = $this->config->get('config_language_id');
+
+		$this->session->data['language'] = $language_code;
+		$this->config->set('config_language_id', $language_id);
+
+		$query = http_build_query($args, '', '&');
+		$url = html_entity_decode($this->url->link($route, $query, true), ENT_QUOTES, 'UTF-8');
+
+		if ($old_language === null) {
+			unset($this->session->data['language']);
+		} else {
+			$this->session->data['language'] = $old_language;
+		}
+		$this->config->set('config_language_id', $old_language_id);
+
+		return $url;
+	}
+
+	private function getHreflang($code) {
+		$parts = explode('-', strtolower($code));
+		return $parts[0];
 	}
 }

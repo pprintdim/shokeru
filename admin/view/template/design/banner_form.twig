@@ -102,12 +102,20 @@
                         class="form-control">
                     </td>
 
-                    <!-- IMAGES -->
+                    <!-- IMAGES / VIDEO -->
                     <td class="text-center">
+                      <div style="margin-bottom:8px;text-align:left;">
+                        <select class="form-control banner-type-select"
+                          name="banner_image[{{ language.language_id }}][{{ row }}][type]"
+                          data-target-block="video-block{{ language.language_id }}-{{ row }}">
+                          <option value="image"{% if image.type != 'video' %} selected{% endif %}>Зображення</option>
+                          <option value="video"{% if image.type == 'video' %} selected{% endif %}>Відео</option>
+                        </select>
+                      </div>
                       <div class="banner-images-wrap">
 
                         <div class="banner-image-item">
-                          <div class="banner-image-label">Desktop</div>
+                          <div class="banner-image-label">{% if image.type == 'video' %}Постер ПК{% else %}Desktop{% endif %}</div>
                           <a
                             id="thumb-image{{ language.language_id }}-{{ row }}"
                             data-toggle="image"
@@ -141,6 +149,45 @@
                             id="input-image-mob{{ language.language_id }}-{{ row }}"
                             name="banner_image[{{ language.language_id }}][{{ row }}][mob_image]"
                             value="{{ image.mob_image }}">
+
+                        </div>
+
+                        <!-- VIDEO (показується при типі «Відео») -->
+                        <div class="banner-video-block" id="video-block{{ language.language_id }}-{{ row }}" style="display:{% if image.type == 'video' %}flex{% else %}none{% endif %};gap:10px;">
+
+                          <div class="banner-image-item">
+                            <div class="banner-image-label">Відео ПК</div>
+                            <a
+                              id="thumb-video{{ language.language_id }}-{{ row }}"
+                              data-toggle="image"
+                              data-target="input-video{{ language.language_id }}-{{ row }}"
+                              data-thumb="thumb-video{{ language.language_id }}-{{ row }}"
+                              class="img-thumbnail">
+                              <img src="{{ image.video_thumb ?: placeholder }}">
+                            </a>
+                            <input
+                              type="hidden"
+                              id="input-video{{ language.language_id }}-{{ row }}"
+                              name="banner_image[{{ language.language_id }}][{{ row }}][video]"
+                              value="{{ image.video }}">
+                          </div>
+
+                          <div class="banner-image-item">
+                            <div class="banner-image-label">Відео Телефон</div>
+                            <a
+                              id="thumb-mob-video{{ language.language_id }}-{{ row }}"
+                              data-toggle="image"
+                              data-target="input-mob-video{{ language.language_id }}-{{ row }}"
+                              data-thumb="thumb-mob-video{{ language.language_id }}-{{ row }}"
+                              class="img-thumbnail">
+                              <img src="{{ image.mob_video_thumb ?: placeholder }}">
+                            </a>
+                            <input
+                              type="hidden"
+                              id="input-mob-video{{ language.language_id }}-{{ row }}"
+                              name="banner_image[{{ language.language_id }}][{{ row }}][mob_video]"
+                              value="{{ image.mob_video }}">
+                          </div>
 
                         </div>
 
@@ -280,6 +327,14 @@ function addRow(lang) {
       </td>
 
       <td class="text-center">
+        <div style="margin-bottom:8px;text-align:left;">
+          <select class="form-control banner-type-select"
+            name="banner_image[${lang}][${row}][type]"
+            data-target-block="video-block${lang}-${row}">
+            <option value="image">Зображення</option>
+            <option value="video">Відео</option>
+          </select>
+        </div>
         <div class="banner-images-wrap">
 
           <div class="banner-image-item">
@@ -318,6 +373,42 @@ function addRow(lang) {
 
           </div>
 
+          <div class="banner-video-block" id="video-block${lang}-${row}" style="display:none;gap:10px;">
+
+            <div class="banner-image-item">
+              <div class="banner-image-label">Відео ПК</div>
+              <a
+                id="thumb-video${lang}-${row}"
+                data-toggle="image"
+                data-target="input-video${lang}-${row}"
+                data-thumb="thumb-video${lang}-${row}"
+                class="img-thumbnail">
+                <img src="{{ placeholder }}">
+              </a>
+              <input
+                type="hidden"
+                id="input-video${lang}-${row}"
+                name="banner_image[${lang}][${row}][video]">
+            </div>
+
+            <div class="banner-image-item">
+              <div class="banner-image-label">Відео Телефон</div>
+              <a
+                id="thumb-mob-video${lang}-${row}"
+                data-toggle="image"
+                data-target="input-mob-video${lang}-${row}"
+                data-thumb="thumb-mob-video${lang}-${row}"
+                class="img-thumbnail">
+                <img src="{{ placeholder }}">
+              </a>
+              <input
+                type="hidden"
+                id="input-mob-video${lang}-${row}"
+                name="banner_image[${lang}][${row}][mob_video]">
+            </div>
+
+          </div>
+
         </div>
       </td>
 
@@ -344,6 +435,12 @@ function addRow(lang) {
   $('#images' + lang + ' tbody').append(html);
   row++;
 }
+
+/* TYPE TOGGLE (Зображення / Відео) */
+$(document).on('change', '.banner-type-select', function () {
+  var block = document.getElementById($(this).data('target-block'));
+  if (block) block.style.display = (this.value === 'video') ? 'flex' : 'none';
+});
 
 /* INIT */
 $('#language a:first').tab('show');

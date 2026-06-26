@@ -1,0 +1,9 @@
+Options +FollowSymlinks
+Options -Indexes
+RewriteEngine On
+RewriteBase /shokeru/
+RewriteRule ^sitemap\.xml$ index.php?route=extension/feed/google_sitemap [L]
+RewriteRule ^sitemap/([a-z]+)\.xml$ index.php?route=extension/feed/google_sitemap&sitemap_section=$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]

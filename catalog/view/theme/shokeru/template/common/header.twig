@@ -24,8 +24,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="stylesheet" href="catalog/view/css/style.css?v=20260423">
-<link rel="stylesheet" href="catalog/view/css/animations.css?v=20260615c">
+<link rel="stylesheet" href="catalog/view/css/style.css?v=20260626b">
+<link rel="stylesheet" href="catalog/view/css/animations.css?v=20260626a">
 
 {% for style in styles %}
 <link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
@@ -36,18 +36,24 @@
 <script src="catalog/view/js/common.js?v=20260423"></script>
 
 {% for link in links %}
-<link href="{{ link.href }}" rel="{{ link.rel }}" />
+<link href="{{ link.href }}" rel="{{ link.rel }}"{% if link.hreflang %} hreflang="{{ link.hreflang }}"{% endif %} />
 {% endfor %}
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"{{ name|e('js') }}","url":"{{ base }}","logo":"{{ logo }}"{% if email %},"email":"{{ email }}"{% endif %}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"{{ name|e('js') }}","url":"{{ base }}","potentialAction":{"@type":"SearchAction","target":"{{ base }}index.php?route=product/search&search={search_term_string}","query-input":"required name=search_term_string"}}
+</script>
 </head>
 <body class="body" data-wishlist-products="{{ wishlist_product_ids|json_encode|e('html_attr') }}" data-wishlist-url="{{ wishlist }}" data-wishlist-total="{{ wishlist_total }}">
     <header class="header">
         <div class="container">
             <div class="header__inner">
-                <a class="header__logo" href="{{ home }}">
-                    <img src="{{ logo }}" alt="{{ name }}">
+                <a class="header__logo" href="{{ base }}">
+                    <img src="{{ logo }}?v=20260626b" alt="{{ name }}">
                 </a>
                 <div class="header__content">
                     <div class="header__top">
@@ -94,8 +100,8 @@
                 <div class="container">
                     <div class="header__menu-inner">
                         <div class="header__menu-top">
-                            <a class="header__menu-logo" href="{{ home }}">
-                                <img src="{{ logo }}" alt="{{ name }}">
+                            <a class="header__menu-logo" href="{{ base }}">
+                                <img src="{{ logo }}?v=20260626b" alt="{{ name }}">
                             </a>
                             <button class="header__login">{{ text_login }}</button>
                             <button class="header__menu-close menu-close">{{ text_close }}</button>

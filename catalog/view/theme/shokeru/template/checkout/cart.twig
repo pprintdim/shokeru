@@ -1,5 +1,4 @@
 {{ header }}
-<main class="main">
 {{ content_top }}
     <section class="cart">
         <div class="container">
@@ -48,7 +47,7 @@
                             {% for product in products %}
                                 <div class="cart__item" data-cart-id="{{ product.cart_id }}">
                                     {% if product.special_price and product.special_discount_percent %}
-                                        <span class="cart__item-action">Акція -{{ product.special_discount_percent }}%</span>
+                                        <span class="cart__item-action">{{ text_promo }} -{{ product.special_discount_percent }}%</span>
                                     {% endif %}
 
                                     <a class="cart__item-image" href="{{ product.href }}">
@@ -86,21 +85,21 @@
                                 <h1 class="cart__info-title">{{ text_order_details }}</h1>
                                 <div class="cart__info-block">
                                     <div class="cart__info-item">
-                                        <p class="cart__info-descr">Товарів на суму:</p>
+                                        <p class="cart__info-descr">{{ text_products_sum }}</p>
                                         <p class="cart__info-descr">{{ cart_subtotal }}</p>
                                     </div>
                                     {% if has_special_discount %}
                                         <div class="cart__info-item">
-                                            <p class="cart__info-descr">Акційна знижка:</p>
+                                            <p class="cart__info-descr">{{ text_promo_discount }}</p>
                                             <p class="cart__info-descr">{{ cart_special_discount }}</p>
                                         </div>
                                     {% endif %}
                                     <div class="cart__info-item">
-                                        <p class="cart__info-descr">Доставка:</p>
+                                        <p class="cart__info-descr">{{ text_shipping_label }}</p>
                                         <p class="cart__info-descr">{{ cart_shipping_total }}</p>
                                     </div>
                                     <div class="cart__info-item">
-                                        <p class="cart__info-name">До оплати:</p>
+                                        <p class="cart__info-name">{{ text_to_pay }}</p>
                                         <p class="cart__info-name">{{ cart_grand_total }}</p>
                                     </div>
                                 </div>
@@ -177,5 +176,4 @@
     })(jQuery);
     </script>
 {{ content_bottom }}
-</main>
 {{ footer }}

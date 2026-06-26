@@ -17,14 +17,14 @@
 		                            </a>
 		                            <div class="product__item-content">
 		                                <div class="product__item-buttons">
-		                                    <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
-		                                        В корзину
+		                                    <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
+		                                        {{ button_cart }}
 		                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
 		                                            <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
 		                                        </svg>
 		                                    </button>
 		                                    <a class="product__item-btn btn" href="{{ product.href }}">
-		                                        Подробнее
+		                                        {{ button_more }}
 		                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
 		                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
 		                                        </svg>
@@ -51,14 +51,14 @@
                         <div class="shop__bottom">
                             {% if next_page_url %}
                                 <button class="shop__more btn-4" type="button" data-next-url="{{ next_page_url }}">
-                                	показать больше товара
+                                	{{ button_load_more }}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99935 4.66602L7.99935 8.66602L11.9993 4.66602L13.3327 5.99935L7.99935 11.3327L2.66602 5.99935L3.99935 4.66602Z" fill="white"/>
                                     </svg>
                                 </button>
                             {% endif %}
                             <div class="shop__pages">
-                                <p class="shop__pages-title">Стараница</p>
+                                <p class="shop__pages-title">{{ text_pages }}</p>
                                 <div class="shop__pages-content">
                                     {% for pagination_page in pagination_pages %}
                                         {% if pagination_page.ellipsis %}<a class="shop__pages-dots">…</a>{% else %}<a {% if pagination_page.active %}class="active"{% endif %} href="{{ pagination_page.href }}">{{ pagination_page.text }}</a>{% endif %}
@@ -100,7 +100,7 @@
                                     </a>
                                     <div class="product__item-content">
                                         <div class="product__item-buttons">
-    	                                   <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
+    	                                   <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
     	                                        {{button_cart}}
     	                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
     	                                            <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
@@ -132,4 +132,9 @@
             </div>
         </section>
     {% endif %}
+{% if products %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","itemListElement":[{% for product in products %}{"@type":"ListItem","position":{{ loop.index }},"url":"{{ product.href }}","item":{"@type":"Product","name":"{{ product.name|e('js') }}"{% if product.thumb %},"image":"{{ product.thumb }}"{% endif %}{% if product.price or product.special %},"offers":{"@type":"Offer","priceCurrency":"UAH","price":"{{ (product.special ?: product.price)|replace({' ':'', '&nbsp;':'', 'грн.':'', 'грн':''}) }}","availability":"https://schema.org/InStock"}{% endif %}}}{% if not loop.last %},{% endif %}{% endfor %}]}
+</script>
+{% endif %}
 {{ footer }}

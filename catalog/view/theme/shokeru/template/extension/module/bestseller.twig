@@ -27,14 +27,14 @@
                                 </a>
                                 <div class="product__item-content">
                                     <div class="product__item-buttons">
-                                        <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
-                                            В корзину
+                                        <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
+                                            {{ button_cart }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                 <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
                                             </svg>
                                         </button>
                                         <a class="product__item-btn btn" href="{{ product.href }}">
-                                            Подробнее
+                                            {{ button_more }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
                                             </svg>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <a class="productSlider__btn btn-3" href="{{ catalog_href }}">
-                    Перейти В КАТАЛОГ
+                    {{ text_to_catalog }}
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4.6665 12.0002L8.6665 8.00016L4.6665 4.00016L5.99984 2.66683L11.3332 8.00016L5.99984 13.3335L4.6665 12.0002Z" fill="#202222"/>
                     </svg>

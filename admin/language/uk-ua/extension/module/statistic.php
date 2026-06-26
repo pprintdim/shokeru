@@ -1,4 +1,4 @@
 <?php
-$_['heading_title'] = 'Statistic';
-$_['text_success']  = 'Saved successfully';
-$_['error_permission'] = 'No permission';
+$_['heading_title']    = 'Статистика';
+$_['text_success']     = 'Налаштування збережено!';
+$_['error_permission'] = 'У вас немає прав!';

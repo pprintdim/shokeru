@@ -71,19 +71,19 @@
                             <div class="order__form-details">
                                 <label class="checkbox-block">
                                     <input type="radio" name="recipient_type" value="me" hidden {% if recipient_data.type != 'other' %}checked{% endif %}>
-                                    <span>Отримувач - Я</span>
+                                    <span>{{ text_recipient_me }}</span>
                                 </label>
                                 <label class="checkbox-block">
                                     <input type="radio" name="recipient_type" value="other" hidden {% if recipient_data.type == 'other' %}checked{% endif %}>
-                                    <span>Отримувач - інша людина</span>
+                                    <span>{{ text_recipient_other }}</span>
                                 </label>
                             </div>
                             <div id="recipient-other-fields" class="order__form-inputs checkout-order-inputs" {% if recipient_data.type != 'other' %}style="display:none"{% endif %}>
-                                <div class="checkout-field"><input type="text" name="recipient_firstname" placeholder="Ім'я" class="form-input" value="{{ recipient_data.firstname }}"></div>
-                                <div class="checkout-field"><input type="text" name="recipient_lastname" placeholder="Прізвище" class="form-input" value="{{ recipient_data.lastname }}"></div>
+                                <div class="checkout-field"><input type="text" name="recipient_firstname" placeholder="{{ text_firstname }}" class="form-input" value="{{ recipient_data.firstname }}"></div>
+                                <div class="checkout-field"><input type="text" name="recipient_lastname" placeholder="{{ text_lastname }}" class="form-input" value="{{ recipient_data.lastname }}"></div>
                                 <span></span>
-                                <div class="checkout-field"><input type="text" name="recipient_patronymic" placeholder="По-батькові" class="form-input" value="{{ recipient_data.patronymic }}"></div>
-                                <div class="checkout-field"><input type="tel" name="recipient_telephone" placeholder="Телефон" class="form-input" value="{{ recipient_data.telephone }}"></div>
+                                <div class="checkout-field"><input type="text" name="recipient_patronymic" placeholder="{{ text_patronymic }}" class="form-input" value="{{ recipient_data.patronymic }}"></div>
+                                <div class="checkout-field"><input type="tel" name="recipient_telephone" placeholder="{{ text_telephone }}" class="form-input" value="{{ recipient_data.telephone }}"></div>
                                 <span></span>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                     <div class="checkout-summary__content">
                                         <a class="checkout-summary__name" href="{{ product.href }}">{{ product.name }}</a>
                                         <div class="checkout-summary__meta">
-                                            <span>{{ product.quantity }} шт.</span>
+                                            <span>{{ product.quantity }} {{ text_pcs }}</span>
                                             {% if product.price %}
                                                 <span>{{ product.price }}</span>
                                             {% endif %}
@@ -134,14 +134,14 @@
                         {% endfor %}
 
                         <div class="order__info-item" id="order-delivery-item"{% if not delivery_summary %} style="display:none"{% endif %}>
-                            <p class="order__info-descr">Доставка:</p>
+                            <p class="order__info-descr">{{ text_shipping_label }}</p>
                             <p class="order__info-descr" id="order-delivery-summary">{{ delivery_summary }}</p>
                         </div>
                     </div>
 
                     <label class="order__info-agree checkbox-block">
                         <input type="checkbox" name="agree" class="visually-hidden" id="checkout-agree">
-                        <span>Оформляючи замовлення, Ви погоджуєтесь з договором оферти</span>
+                        <span>{{ text_offer_agreement }}</span>
                     </label>
 
                     <a class="order__info-send btn-4" href="#" id="checkout-summary-submit">{{ text_checkout_submit }}</a>

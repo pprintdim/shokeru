@@ -1,0 +1,45 @@
+{{ header }}
+{{ content_top }}
+    <section class="affiliate-login">
+        <div class="container">
+            <h1 class="affiliate-login__title main-title">{{ heading_title }}</h1>
+
+            {% if success %}
+            <div class="alert alert-success alert-dismissible">{{ success }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+            {% endif %}
+            {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible">{{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+            {% endif %}
+
+            {% if text_description %}
+            <div class="affiliate-login__descr">{{ text_description }}</div>
+            {% endif %}
+
+            <div class="affiliate-login__cols">
+                <div class="affiliate-login__col">
+                    <h2 class="affiliate-login__subtitle title">{{ text_new_affiliate }}</h2>
+                    <p class="affiliate-login__text">{{ text_register_account }}</p>
+                    <a class="affiliate-login__btn btn" href="{{ register }}">{{ button_continue }}</a>
+                </div>
+
+                <div class="affiliate-login__col">
+                    <h2 class="affiliate-login__subtitle title">{{ text_returning_affiliate }}</h2>
+                    <p class="affiliate-login__text">{{ text_i_am_returning_affiliate }}</p>
+
+                    <form class="affiliate-login__form" action="{{ action }}" method="post">
+                        <input class="form-input affiliate-login__input" type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" required>
+                        <input class="form-input affiliate-login__input" type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" required>
+                        <a class="affiliate-login__forgot" href="{{ forgotten }}">{{ text_forgotten }}</a>
+                        {% if redirect %}<input type="hidden" name="redirect" value="{{ redirect }}">{% endif %}
+                        <button class="affiliate-login__btn btn" type="submit">{{ button_login }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{{ content_bottom }}
+{{ footer }}

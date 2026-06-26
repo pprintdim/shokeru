@@ -37,7 +37,7 @@ class ControllerExtensionModuleStatistic extends Controller {
 
             if (!empty($module['module_description'][$language_id])) {
                 $desc = $module['module_description'][$language_id];
-                $data['title']       = html_entity_decode($desc['title'] ?? '', ENT_QUOTES, 'UTF-8');
+                $data['title']       = $this->parseBannerText($desc['title'] ?? '');
                 $data['description'] = html_entity_decode($desc['description'] ?? '', ENT_QUOTES, 'UTF-8');
             }
         }

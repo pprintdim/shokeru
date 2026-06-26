@@ -373,11 +373,15 @@ class ControllerProductSpecial extends Controller {
 		$data['pagination_pages'] = array();
 
 		$pagination_url = $this->url->link('product/special', $url . '&page={page}');
+		$pagination_url = str_replace(array('%7Bpage%7D', '%7bpage%7d'), '{page}', $pagination_url);
 		$first_page_url = str_replace(array('&amp;page={page}', '?page={page}', '&page={page}'), '', $pagination_url);
 
 		$tp = (int)$data['total_pages'];
 		$show = array();
-		for ($i = 1; $i <= min(3, $tp); $i++) { $show[$i] = true; }
+		$start = $page - 1;
+		if ($start > $tp - 2) { $start = $tp - 2; }
+		if ($start < 1) { $start = 1; }
+		for ($i = $start; $i <= min($start + 2, $tp); $i++) { $show[$i] = true; }
 		if ($tp >= 1) { $show[$tp] = true; }
 		ksort($show);
 		$prev = 0;

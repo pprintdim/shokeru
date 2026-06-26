@@ -338,6 +338,9 @@ class ControllerDesignBanner extends Controller {
 
 		$data['banner_images'] = array();
 
+		$cat = (defined('HTTPS_CATALOG') && HTTPS_CATALOG) ? HTTPS_CATALOG : HTTP_CATALOG;
+		$video_placeholder = $cat . 'image/catalog/video-placeholder.svg';
+
 		foreach ($banner_images as $key => $value) {
 			foreach ($value as $banner_image) {
 
@@ -357,15 +360,24 @@ class ControllerDesignBanner extends Controller {
 					$mob_thumb = 'no_image.png';
 				}
 
+				// відео (без resize — placeholder-прев'ю)
+				$video     = (!empty($banner_image['video']) && is_file(DIR_IMAGE . $banner_image['video'])) ? $banner_image['video'] : '';
+				$mob_video = (!empty($banner_image['mob_video']) && is_file(DIR_IMAGE . $banner_image['mob_video'])) ? $banner_image['mob_video'] : '';
+
 				$data['banner_images'][$key][] = array(
-					'title'      => $banner_image['title'],
-					'description' => $banner_image['description'],
-					'link'       => $banner_image['link'],
-					'image'      => $image,
-					'mob_image'  => $mob_image,
-					'mob_thumb'  => $this->model_tool_image->resize($mob_thumb, 100, 100),
-					'thumb'      => $this->model_tool_image->resize($thumb, 100, 100),
-					'sort_order' => $banner_image['sort_order']
+					'title'           => $banner_image['title'],
+					'description'     => $banner_image['description'],
+					'link'            => $banner_image['link'],
+					'type'            => isset($banner_image['type']) ? $banner_image['type'] : 'image',
+					'image'           => $image,
+					'mob_image'       => $mob_image,
+					'video'           => $video,
+					'mob_video'       => $mob_video,
+					'video_thumb'     => $video ? $video_placeholder : $this->model_tool_image->resize('no_image.png', 100, 100),
+					'mob_video_thumb' => $mob_video ? $video_placeholder : $this->model_tool_image->resize('no_image.png', 100, 100),
+					'mob_thumb'       => $this->model_tool_image->resize($mob_thumb, 100, 100),
+					'thumb'           => $this->model_tool_image->resize($thumb, 100, 100),
+					'sort_order'      => $banner_image['sort_order']
 				);
 			}
 		}

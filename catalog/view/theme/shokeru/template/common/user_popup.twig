@@ -6,7 +6,7 @@
         <div class="userPopup__inner">
             <div class="userPopup__top">
             <a class="userPopup__logo" href="{{ name }}">
-                <img src="{{ logo }}" alt="">
+                <img src="{{ logo }}?v=20260626b" alt="">
             </a>
             <button class="userPopup__close">{{ text_close }}</button>
         </div>
@@ -82,18 +82,18 @@
 
                         <button type="submit" class="userPopup__form-btn btn">{{ text_login }}</button>
 
-                        <div class="userPopup__form-more"><span></span> або <span></span></div>
+                        <div class="userPopup__form-more"><span></span> {{ text_or }} <span></span></div>
 
                         <div class="userPopup__form-buttons">
                             {% if google_client_id %}
                                 <button type="button" class="userPopup__form-log btn-2" id="btn-google-login">{{ button_google }}</button>
                             {% else %}
-                                <button type="button" class="userPopup__form-log btn-2" disabled title="Google OAuth не налаштовано">{{ button_google }}</button>
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="{{ text_google_oauth_off }}">{{ button_google }}</button>
                             {% endif %}
                             {% if facebook_app_id %}
                                 <button type="button" class="userPopup__form-log btn-2" id="btn-facebook-login">{{ button_facebook }}</button>
                             {% else %}
-                                <button type="button" class="userPopup__form-log btn-2" disabled title="Facebook OAuth не налаштовано">{{ button_facebook }}</button>
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="{{ text_fb_oauth_off }}">{{ button_facebook }}</button>
                             {% endif %}
                         </div>
                     </form>
@@ -225,18 +225,18 @@
 
                         <button class="userPopup__form-btn btn" type="submit">{{ button_register }}</button>
 
-                        <div class="userPopup__form-more"><span></span> або <span></span></div>
+                        <div class="userPopup__form-more"><span></span> {{ text_or }} <span></span></div>
 
                         <div class="userPopup__form-buttons">
                             {% if google_client_id %}
                                 <button type="button" class="userPopup__form-log btn-2" id="btn-google-register">{{ button_google }}</button>
                             {% else %}
-                                <button type="button" class="userPopup__form-log btn-2" disabled title="Google OAuth не налаштовано">{{ button_google }}</button>
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="{{ text_google_oauth_off }}">{{ button_google }}</button>
                             {% endif %}
                             {% if facebook_app_id %}
                                 <button type="button" class="userPopup__form-log btn-2" id="btn-facebook-register">{{ button_facebook }}</button>
                             {% else %}
-                                <button type="button" class="userPopup__form-log btn-2" disabled title="Facebook OAuth не налаштовано">{{ button_facebook }}</button>
+                                <button type="button" class="userPopup__form-log btn-2" disabled title="{{ text_fb_oauth_off }}">{{ button_facebook }}</button>
                             {% endif %}
                         </div>
                     </form>
@@ -370,7 +370,7 @@ window.fbAsyncInit = function() {
                         </div>
                         <div class="userData__info-content">
                             <h2 class="userData__info-title">{{ text_forgot }}</h2>
-                            <p class="userData__info-descr">Уведомление об изменении пароля будет отправлено Вам на почту</p>
+                            <p class="userData__info-descr">{{ text_pwd_change_notice }}</p>
                         </div>
                     </div>
                     <form id="popup-forgotten-form" class="userData__form form-block">
@@ -382,7 +382,7 @@ window.fbAsyncInit = function() {
                     <button class="userData__form-show form-show-password" type="button"></button>
                     <input class="userData__form-input form-input" type="password" name="accept" placeholder="{{ text_repeat_password }}*" required>
                 </div>
-                <button class="userData__form-btn btn" type="submit">Змінити</button>
+                <button class="userData__form-btn btn" type="submit">{{ button_change }}</button>
             </form>
        </div>
     </div>

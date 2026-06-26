@@ -17,23 +17,23 @@
     <input type="hidden" name="shipping_method" value="{{ novaposhta_code ?: default_code ?: code }}">
 
     <div class="order__form-delivery">
-        <h3 class="order__delivery-title">Виберіть зручний спосіб доставки</h3>
+        <h3 class="order__delivery-title">{{ text_choose_shipping }}</h3>
         <div class="order__delivery-box" id="np-delivery-box">
 
             <div class="order__delivery-block{% if np_delivery.type == 'np_branch' or not np_delivery.type %} active{% endif %}" data-np-block="np_branch">
                 <label class="checkbox-block">
                     <input type="radio" value="np_branch" name="np_delivery_type" hidden {% if np_delivery.type == 'np_branch' or not np_delivery.type %}checked{% endif %}>
-                    <span>Самовивіз з відділення Нової Пошти</span>
+                    <span>{{ text_np_warehouse }}</span>
                 </label>
                 <div class="order__form-inputs">
                     <div class="np-city-wrap">
-                        <input type="text" id="np-city-branch" class="form-input np-city-input" placeholder="Місто" autocomplete="off" data-target="np_city_ref" data-warehouse-select="np-warehouse-select" value="{{ np_delivery.city_name }}">
+                        <input type="text" id="np-city-branch" class="form-input np-city-input" placeholder="{{ text_city }}" autocomplete="off" data-target="np_city_ref" data-warehouse-select="np-warehouse-select" value="{{ np_delivery.city_name }}">
                         <div class="np-dropdown" id="np-dropdown-branch"></div>
                     </div>
                     <input type="hidden" name="np_city_ref" id="np_city_ref" value="{{ np_delivery.city_ref }}">
                     <input type="hidden" name="np_city_name" id="np_city_name" value="{{ np_delivery.city_name }}">
                     <div class="np-warehouse-wrap">
-                        <input type="text" id="np-warehouse-input" class="form-input" placeholder="Відділення" autocomplete="off" {% if not np_delivery.city_ref %}disabled{% endif %} value="{{ np_delivery.warehouse_name }}">
+                        <input type="text" id="np-warehouse-input" class="form-input" placeholder="{{ text_warehouse }}" autocomplete="off" {% if not np_delivery.city_ref %}disabled{% endif %} value="{{ np_delivery.warehouse_name }}">
                         <div class="np-dropdown" id="np-dropdown-warehouse"></div>
                         <input type="hidden" name="np_warehouse_ref" id="np-warehouse-select" value="{{ np_delivery.warehouse_ref }}">
                         <input type="hidden" name="np_warehouse_name" id="np_warehouse_name" value="{{ np_delivery.warehouse_name }}">
@@ -44,35 +44,35 @@
             <div class="order__delivery-block{% if np_delivery.type == 'np_courier' %} active{% endif %}" data-np-block="np_courier">
                 <label class="checkbox-block">
                     <input type="radio" value="np_courier" name="np_delivery_type" hidden {% if np_delivery.type == 'np_courier' %}checked{% endif %}>
-                    <span>Кур'єром Нової Пошти</span>
+                    <span>{{ text_np_courier }}</span>
                 </label>
                 <div class="order__form-inputs">
                     <div class="np-city-wrap">
-                        <input type="text" id="np-city-courier" class="form-input np-city-input" placeholder="Місто" autocomplete="off" data-target="np_courier_city_ref" value="{{ np_delivery.courier_city_name }}">
+                        <input type="text" id="np-city-courier" class="form-input np-city-input" placeholder="{{ text_city }}" autocomplete="off" data-target="np_courier_city_ref" value="{{ np_delivery.courier_city_name }}">
                         <div class="np-dropdown" id="np-dropdown-courier"></div>
                     </div>
                     <input type="hidden" name="np_courier_city_ref" id="np_courier_city_ref" value="{{ np_delivery.courier_city }}">
                     <input type="hidden" name="np_courier_city_name" id="np_courier_city_name" value="{{ np_delivery.courier_city_name }}">
-                    <input type="text" name="np_street" class="form-input" placeholder="Вулиця" value="{{ np_delivery.street }}">
-                    <input type="text" name="np_house" class="form-input" placeholder="Будинок / квартира" value="{{ np_delivery.house }}">
+                    <input type="text" name="np_street" class="form-input" placeholder="{{ text_street }}" value="{{ np_delivery.street }}">
+                    <input type="text" name="np_house" class="form-input" placeholder="{{ text_house }}" value="{{ np_delivery.house }}">
                 </div>
             </div>
 
             <div class="order__delivery-block{% if np_delivery.type == 'store_courier' %} active{% endif %}" data-np-block="store_courier">
                 <label class="checkbox-block">
                     <input type="radio" value="store_courier" name="np_delivery_type" hidden {% if np_delivery.type == 'store_courier' %}checked{% endif %}>
-                    <span>Кур'єром магазину</span>
+                    <span>{{ text_shop_courier }}</span>
                 </label>
                 <div class="order__form-inputs">
-                    <input type="text" name="sc_city" class="form-input" placeholder="Місто" value="{{ np_delivery.sc_city }}">
-                    <input type="text" name="sc_address" class="form-input" placeholder="Адреса" value="{{ np_delivery.sc_address }}">
+                    <input type="text" name="sc_city" class="form-input" placeholder="{{ text_city }}" value="{{ np_delivery.sc_city }}">
+                    <input type="text" name="sc_address" class="form-input" placeholder="{{ text_address }}" value="{{ np_delivery.sc_address }}">
                 </div>
             </div>
 
             <div class="order__delivery-block{% if np_delivery.type == 'other' %} active{% endif %}" data-np-block="other">
                 <label class="checkbox-block">
                     <input type="radio" value="other" name="np_delivery_type" hidden {% if np_delivery.type == 'other' %}checked{% endif %}>
-                    <span>Інша служба доставки</span>
+                    <span>{{ text_other_shipping }}</span>
                 </label>
             </div>
 

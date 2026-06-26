@@ -1,5 +1,4 @@
 {{ header }}
-<main class="main">
 {{ content_top }}
     <section class="sertificate">
         <div class="container">
@@ -58,7 +57,7 @@
                                 {% for voucher_amount in voucher_amounts %}
                                     <label>
                                         <input type="radio" name="amount" value="{{ voucher_amount }}" hidden {% if amount == voucher_amount or amount == voucher_amount|number_format(0, '.', '') %}checked{% endif %}>
-                                        <span>{{ voucher_amount }} <span>грн</span></span>
+                                        <span>{{ voucher_amount }} <span>{{ text_uah }}</span></span>
                                     </label>
                                 {% endfor %}
                             </div>
@@ -87,5 +86,4 @@
         </div>
     </section>
 {{ content_bottom }}
-</main>
 {{ footer }}

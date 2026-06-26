@@ -2,12 +2,12 @@
     <div class="order__client">
         <label>
             <input type="radio" name="client_tab" value="returning" hidden {% if account == 'login' %}checked{% endif %}>
-            <span>Постійний клієнт</span>
+            <span>{{ text_returning_customer }}</span>
         </label>
         <span class="order__client-line"></span>
         <label>
             <input type="radio" name="client_tab" value="new" hidden {% if account != 'login' %}checked{% endif %}>
-            <span>Новий покупець</span>
+            <span>{{ text_new_customer }}</span>
         </label>
     </div>
 

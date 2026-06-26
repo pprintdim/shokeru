@@ -5,12 +5,12 @@
     </a>
     <div class="product__item-content">
         <div class="product__item-buttons">
-            <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
+            <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
                 {{ button_cart }}
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/></svg>
             </button>
             <a class="product__item-btn btn" href="{{ product.href }}">
-                Подробнее                
+                {{ button_more }}                
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/></svg>
             </a>
         </div>

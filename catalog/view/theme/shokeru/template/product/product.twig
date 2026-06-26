@@ -1,4 +1,17 @@
 {{ header }}
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"Product",
+"name":"{{ heading_title|e('js') }}"
+{% if popup %},"image":"{{ popup }}"{% endif %}
+,"description":"{{ heading_title|e('js') }}"
+{% if manufacturer %},"brand":"{{ manufacturer|e('js') }}"{% endif %}
+{% if model %},"sku":"{{ model|e('js') }}"{% endif %}
+{% if price or special %},"offers":{"@type":"Offer","priceCurrency":"UAH","price":"{{ (special ?: price)|replace({' ':'', '&nbsp;':'', 'грн.':'', 'грн':''}) }}","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition"}{% endif %}
+{% if rating > 0 and reviews|length > 0 %},"aggregateRating":{"@type":"AggregateRating","ratingValue":"{{ rating }}","reviewCount":"{{ reviews|length }}"}{% endif %}
+}
+</script>
 
     <section class="prod">
             <div class="container">
@@ -56,7 +69,7 @@
                         <div class="prod__start">
                             <div class="prod__top">
                                 <div class="prod__top-info">
-                                    <p class="prod__top-name">Электрошокер</p>
+                                    <p class="prod__top-name">{{ text_product_label }}</p>
                                     <h1 class="prod__top-title">{{ name }}</h1>
                                     <p class="prod__top-made">{{ text_manufacturer }}: <strong>{{ manufacturer }}</strong> </p>
                                 </div>
@@ -73,7 +86,7 @@
                                 	{% endif %}
                                 	{{ special ?: price }}
                                 </p>
-                                <p class="prod__about-avaliable" data-product-avaliable="yes">Есть в наличии</p>
+                                <p class="prod__about-avaliable" data-product-avaliable="yes">{{ text_in_stock }}</p>
                                 <div class="prod__about-quantity">
                                     <button class="quantity-minus" type="button"></button>
                                     <input class="quantity-count" type="number" name="quantity" value="{{ minimum ?: 1 }}" min="{{ minimum ?: 1 }}" max="999">
@@ -113,13 +126,13 @@
 	                            </div>
 	                        {% endfor %}
                             <div class="prod__item">
-                                <h3 class="prod__item-title">Гарантийные обязательства</h3>
+                                <h3 class="prod__item-title">{{ text_warranty }}</h3>
                                 <div class="prod__item-content prod__item-info">
-                                    <p>Условия продажи электрошокера: <strong>18 лет, без лицензии</strong></p>
-                                    <p>Срок эксплуатации: <strong>3 года</strong></p>
-                                    <p>Гарантия: <strong>5 лет, включая ремонт:</strong></p>
-                                    <p>- 1 год посебестоемости запчастей;</p>
-                                    <p>- 4 года полная стоимость запчастей(+работа)</p>
+                                    <p>{{ text_warranty_1|raw }}</p>
+                                    <p>{{ text_warranty_2|raw }}</p>
+                                    <p>{{ text_warranty_3|raw }}</p>
+                                    <p>{{ text_warranty_4 }}</p>
+                                    <p>{{ text_warranty_5 }}</p>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="container">
         <div class="productSlider__inner">
             <div class="productSlider__top">
-                <h2 class="productSlider__title title">Подобрано Для Вас</h2>
+                <h2 class="productSlider__title title">{{ text_picked_for_you }}</h2>
                 <div class="productSlider__button slider-buttons">
                     <button class="productSlider-prev slider-btn-prev">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z" fill="#8A909B"/></svg>
@@ -219,12 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             </a>
                             <div class="product__item-content">
                                 <div class="product__item-buttons">
-                                    <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
+                                    <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
                                         {{ button_cart }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/></svg>
                                     </button>
                                     <a class="product__item-btn btn" href="{{ product.href }}">
-                                        Подробнее
+                                        {{ button_more }}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/></svg>
                                     </a>
                                 </div>
@@ -253,12 +266,12 @@ document.addEventListener('DOMContentLoaded', () => {
 <section class="feedback">
             <div class="container">
                 <div class="feedback__inner">
-                    <h2 class="feedback__title title">Контакт <span>Хотите поговорить с нами напрямую?</span></h2>
+                    <h2 class="feedback__title title">{{ text_contact_us }} <span>{{ text_contact_sub }}</span></h2>
                     <form class="feedback__form" action="#">
-                        <input class="feedback__form-input" type="text" placeholder="Ваше Имя" required>
+                        <input class="feedback__form-input" type="text" placeholder="{{ text_your_firstname }}" required>
                         <input class="feedback__form-input" type="text" placeholder="Email">
-                        <input class="feedback__form-input" type="text" placeholder="Ваш номер телефона" required>
-                        <button class="feedback__form-btn btn">Отправить</button>
+                        <input class="feedback__form-input" type="text" placeholder="{{ text_your_phone }}" required>
+                        <button class="feedback__form-btn btn">{{ button_send }}</button>
                     </form>
                 </div>
             </div>

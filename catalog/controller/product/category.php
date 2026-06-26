@@ -446,12 +446,16 @@ class ControllerProductCategory extends Controller {
 			$data['pagination_pages'] = array();
 
 			$pagination_url = $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&page={page}');
+			$pagination_url = str_replace(array('%7Bpage%7D', '%7bpage%7d'), '{page}', $pagination_url);
 			$first_page_url = str_replace(array('&amp;page={page}', '?page={page}', '&page={page}'), '', $pagination_url);
 
 			$tp = (int)$data['total_pages'];
 			$show = array();
-			for ($i = 1; $i <= min(3, $tp); $i++) { $show[$i] = true; } // перші 3
-			if ($tp >= 1) { $show[$tp] = true; }                        // остання
+			$start = $page - 1;                                         // макс 3 числа, ковзне вікно
+			if ($start > $tp - 2) { $start = $tp - 2; }
+			if ($start < 1) { $start = 1; }
+			for ($i = $start; $i <= min($start + 2, $tp); $i++) { $show[$i] = true; }
+			if ($tp >= 1) { $show[$tp] = true; }                        // остання (… + перехід в кінець)
 			ksort($show);
 			$prev = 0;
 			foreach (array_keys($show) as $i) {

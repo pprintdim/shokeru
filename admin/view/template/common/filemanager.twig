@@ -30,11 +30,15 @@
             <input type="checkbox" name="path[]" value="{{ image.path }}" />
             {{ image.name }}</label>
           {% endif %}
-          {% if image.type == 'image' %}
-          <a href="{{ image.href }}" class="thumbnail"><img src="{{ image.thumb }}" alt="{{ image.name }}" title="{{ image.name }}" /></a>
+          {% if image.type == 'image' or image.type == 'video' %}
+          <a href="{{ image.href }}" class="thumbnail fm-thumb">
+            <span class="fm-thumb__media">
+              <img src="{{ image.thumb }}" alt="{{ image.name }}" title="{{ image.name }}" />
+            </span>
+          </a>
           <label>
             <input type="checkbox" name="path[]" value="{{ image.path }}" />
-            {{ image.name }}</label>
+            {{ image.name }}{% if image.type == 'video' %} <i class="fa fa-video-camera"></i>{% endif %}</label>
           {% endif %}
         </div>
         {% endfor %}
@@ -45,6 +49,11 @@
     <div class="modal-footer">{{ pagination }}</div>
   </div>
 </div>
+<style>
+#filemanager .fm-thumb { align-items: center; display: flex; height: 112px; justify-content: center; overflow: hidden; padding: 5px; }
+#filemanager .fm-thumb__media { align-items: center; display: flex; height: 100px; justify-content: center; overflow: hidden; width: 100px; }
+#filemanager .fm-thumb__media img { height: auto; max-height: 100px; max-width: 100px; width: auto; }
+</style>
 <script type="text/javascript"><!--
 {% if target %}
 $('a.thumbnail').on('click', function(e) {

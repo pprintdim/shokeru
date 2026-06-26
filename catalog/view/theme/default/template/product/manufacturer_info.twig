@@ -97,4 +97,9 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
+{% if products %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","itemListElement":[{% for product in products %}{"@type":"ListItem","position":{{ loop.index }},"url":"{{ product.href }}","item":{"@type":"Product","name":"{{ product.name|e('js') }}"{% if product.thumb %},"image":"{{ product.thumb }}"{% endif %}{% if product.price or product.special %},"offers":{"@type":"Offer","priceCurrency":"UAH","price":"{{ (product.special ?: product.price)|replace({' ':'', '&nbsp;':'', 'грн.':'', 'грн':''}) }}","availability":"https://schema.org/InStock"}{% endif %}}}{% if not loop.last %},{% endif %}{% endfor %}]}
+</script>
+{% endif %}
 {{ footer }}

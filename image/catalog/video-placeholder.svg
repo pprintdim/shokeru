@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Video">
+  <rect width="120" height="120" rx="18" fill="#eef2f7"/>
+  <rect x="20" y="28" width="64" height="64" rx="10" fill="#cfd8e3"/>
+  <path d="M48 44v32l24-16-24-16z" fill="#3b4a5a"/>
+  <path d="M86 49l14-8v38l-14-8V49z" fill="#7b8a9a"/>
+</svg>

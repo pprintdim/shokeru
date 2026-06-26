@@ -29,3 +29,170 @@
         transition: none !important;
     }
 }
+
+/* ── Hero: текст з'являється ПІСЛЯ завантаження картинки (JS додає .hero--ready) ── */
+/* до готовності — ховаємо (тільки якщо працює JS) */
+.js-anim .hero:not(.hero--ready) .hero__slide-title,
+.js-anim .hero:not(.hero--ready) .hero__slide-descr,
+.js-anim .hero:not(.hero--ready) .hero__slide-buttons {
+    opacity: 0;
+}
+
+.hero--ready .hero__slide.swiper-slide-active .hero__slide-title,
+.hero--ready .hero__slide.swiper-slide-active .hero__slide-descr,
+.hero--ready .hero__slide.swiper-slide-active .hero__slide-buttons {
+    animation: heroTextIn 0.7s ease both;
+}
+.hero--ready .hero__slide.swiper-slide-active .hero__slide-descr   { animation-delay: 0.12s; }
+.hero--ready .hero__slide.swiper-slide-active .hero__slide-buttons { animation-delay: 0.24s; }
+
+@keyframes heroTextIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js-anim .hero .hero__slide-title,
+    .js-anim .hero .hero__slide-descr,
+    .js-anim .hero .hero__slide-buttons { opacity: 1 !important; animation: none !important; }
+}
+
+/* ===================================================================
+   Перенесено зі style.css — keyframe-анімації (єдине місце)
+   =================================================================== */
+
+/* ── Бігучий рядок акцій (saleTextLine) ── */
+.saleTextLine__inner { animation: scrollText 30s linear infinite; }
+@keyframes scrollText {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-104%); }
+}
+@media (max-width: 1279px) {
+    .saleTextLine__inner { animation: scrollText 10s linear infinite; }
+    @keyframes scrollText { 0% { transform: translateX(0%); } 100% { transform: translateX(-115.7%); } }
+}
+@media (max-width: 999px) {
+    @keyframes scrollText { 0% { transform: translateX(0%); } 100% { transform: translateX(-75.7%); } }
+}
+@media (max-width: 767px) {
+    @keyframes scrollText { 0% { transform: translateX(0%); } 100% { transform: translateX(-121.7%); } }
+}
+@media (max-width: 479px) {
+    @keyframes scrollText { 0% { transform: translateX(0%); } 100% { transform: translateX(-153.7%); } }
+}
+
+/* ── Бігучий рядок знижок слайдера (productScrollText) ── */
+.product-discount-inner { animation: productScrollText 100s linear infinite; }
+@keyframes productScrollText {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-64%); }
+}
+
+/* ── Заголовки по сайту: «вспл текст» (поява при скролі) ── */
+.js-anim .title:not(.title-in):not(.hero__slide-title),
+.js-anim .main-title:not(.title-in) {
+    opacity: 0;
+    transform: translateY(22px);
+}
+.title.title-in,
+.main-title.title-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+    .js-anim .title,
+    .js-anim .main-title { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ───────── Hero: електро-ефект (Ken Burns + блискавки + неон-свічіння) ───────── */
+.hero__slide-image img { will-change: transform; }
+.hero--ready .hero__slide.swiper-slide-active .hero__slide-image img {
+    animation: heroKenBurns 22s ease-in-out 0.3s infinite alternate;
+}
+@keyframes heroKenBurns {
+    from { transform: scale(1); }
+    to   { transform: scale(1.09); }
+}
+
+.hero__fx {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+/* пульсуюче неонове свічіння */
+.hero__fx-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 55% at 50% 42%, rgba(197,255,36,0.22), rgba(197,255,36,0.05) 45%, transparent 70%);
+    mix-blend-mode: screen;
+    opacity: 0;
+}
+.hero--ready .hero__slide.swiper-slide-active .hero__fx-glow {
+    animation: heroGlow 4.5s ease-in-out infinite;
+}
+@keyframes heroGlow {
+    0%, 100% { opacity: 0.22; }
+    50%      { opacity: 0.6; }
+}
+/* блискавки */
+.hero__fx-bolts { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero__bolt {
+    fill: none;
+    stroke: #C5FF24;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px rgba(197,255,36,0.9)) drop-shadow(0 0 14px rgba(197,255,36,0.5));
+}
+.hero--ready .hero__slide.swiper-slide-active .hero__bolt--1 { animation: heroBolt 7s linear 1.2s infinite; }
+.hero--ready .hero__slide.swiper-slide-active .hero__bolt--2 { animation: heroBolt 8s linear 3.6s infinite; }
+.hero--ready .hero__slide.swiper-slide-active .hero__bolt--3 { animation: heroBoltDraw 9s ease-in-out 5s infinite; }
+@keyframes heroBolt {
+    0%   { opacity: 0; stroke-dashoffset: 1200; }
+    1%   { opacity: 1; stroke-dashoffset: 0; }
+    3%   { opacity: 0.12; }
+    4%   { opacity: 0.95; }
+    6%   { opacity: 0; }
+    7.5% { opacity: 0.85; }
+    9%   { opacity: 0; }
+    100% { opacity: 0; }
+}
+@keyframes heroBoltDraw {
+    0%, 100% { opacity: 0; stroke-dashoffset: 1200; }
+    3%  { opacity: 1; }
+    9%  { opacity: 1; stroke-dashoffset: 0; }
+    12% { opacity: 0.2; }
+    14% { opacity: 0.9; }
+    18% { opacity: 0; stroke-dashoffset: 0; }
+}
+/* іскри на кінцях */
+.hero__spark {
+    fill: #fff;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    filter: drop-shadow(0 0 6px #C5FF24) drop-shadow(0 0 12px rgba(197,255,36,0.7));
+}
+.hero--ready .hero__slide.swiper-slide-active .hero__spark--1 { animation: heroSpark 7s linear 1.25s infinite; }
+.hero--ready .hero__slide.swiper-slide-active .hero__spark--2 { animation: heroSpark 8s linear 3.65s infinite; }
+.hero--ready .hero__slide.swiper-slide-active .hero__spark--3 { animation: heroSpark 9s linear 5.55s infinite; }
+@keyframes heroSpark {
+    0%, 100% { opacity: 0; transform: scale(0.4); }
+    2%  { opacity: 1; transform: scale(1.4); }
+    5%  { opacity: 0; transform: scale(0.6); }
+    7%  { opacity: 0.9; transform: scale(1.1); }
+    10% { opacity: 0; transform: scale(0.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__slide-image img,
+    .hero__fx-glow, .hero__bolt, .hero__spark { animation: none !important; }
+    .hero__fx-glow { opacity: 0.28; }
+    .hero__bolt, .hero__spark { opacity: 0; }
+}

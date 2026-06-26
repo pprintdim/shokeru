@@ -1,5 +1,4 @@
 {{ header }}
-<main class="main">
 	{{ content_top }}
     
 
@@ -35,7 +34,7 @@
                                 </a>
                                 <div class="product__item-content">
                                     <div class="product__item-buttons">
-                                        <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
+                                        <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
                                             {{ button_cart }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                 <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
@@ -82,4 +81,9 @@
         
     {{ content_bottom }}
 
+{% if products %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","itemListElement":[{% for product in products %}{"@type":"ListItem","position":{{ loop.index }},"url":"{{ product.href }}","item":{"@type":"Product","name":"{{ product.name|e('js') }}"{% if product.thumb %},"image":"{{ product.thumb }}"{% endif %}{% if product.price or product.special %},"offers":{"@type":"Offer","priceCurrency":"UAH","price":"{{ (product.special ?: product.price)|replace({' ':'', '&nbsp;':'', 'грн.':'', 'грн':''}) }}","availability":"https://schema.org/InStock"}{% endif %}}}{% if not loop.last %},{% endif %}{% endfor %}]}
+</script>
+{% endif %}
 {{ footer }}

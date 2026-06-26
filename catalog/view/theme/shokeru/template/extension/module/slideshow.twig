@@ -10,20 +10,57 @@
               <div class="hero__slide-image">
 
                 {# desktop #}
-                <img
-                  class="hide-mobile"
-                  src="{{ banner.images.desktop }}"
-                  alt="{{ banner.title|e }}"
-                  loading="lazy"
-                >
+                {% if banner.is_video %}
+                  <video
+                    class="hide-mobile"
+                    src="{{ banner.images.desktop }}"
+                    autoplay loop muted playsinline preload="auto"
+                    controlslist="nodownload noplaybackrate"
+                    disablepictureinpicture
+                    {% if banner.poster %}poster="{{ banner.poster }}"{% endif %}
+                  ></video>
+                {% else %}
+                  <img
+                    class="hide-mobile"
+                    src="{{ banner.images.desktop }}"
+                    alt="{{ banner.title|e }}"
+                    loading="lazy"
+                  >
+                {% endif %}
 
                 {# mobile #}
-                <img
-                  class="show-mobile"
-                  src="{{ banner.images.mob_image }}"
-                  alt="{{ banner.title|e }}"
-                  loading="lazy"
-                >
+                {% if banner.is_video_mob %}
+                  <video
+                    class="show-mobile"
+                    src="{{ banner.images.mob_image }}"
+                    autoplay loop muted playsinline preload="auto"
+                    controlslist="nodownload noplaybackrate"
+                    disablepictureinpicture
+                    {% if banner.mob_poster %}poster="{{ banner.mob_poster }}"{% endif %}
+                  ></video>
+                {% else %}
+                  <img
+                    class="show-mobile"
+                    src="{{ banner.images.mob_image }}"
+                    alt="{{ banner.title|e }}"
+                    loading="lazy"
+                  >
+                {% endif %}
+
+                {# електро-ефект (анімовані блискавки + неонове свічіння) — лише для картинки #}
+                {% if not banner.is_video and not banner.is_video_mob %}
+                <div class="hero__fx" aria-hidden="true">
+                  <span class="hero__fx-glow"></span>
+                  <svg class="hero__fx-bolts" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <path class="hero__bolt hero__bolt--1" d="M210 40 L260 190 L175 235 L255 380 L185 430"/>
+                    <path class="hero__bolt hero__bolt--2" d="M1250 60 L1195 215 L1285 270 L1180 430 L1255 500"/>
+                    <path class="hero__bolt hero__bolt--3" d="M720 -10 L765 130 L675 180 L740 320 L690 400"/>
+                    <circle class="hero__spark hero__spark--1" cx="185" cy="430" r="4"/>
+                    <circle class="hero__spark hero__spark--2" cx="1255" cy="500" r="5"/>
+                    <circle class="hero__spark hero__spark--3" cx="690" cy="400" r="4"/>
+                  </svg>
+                </div>
+                {% endif %}
 
               </div>
             {% endif %}
@@ -44,7 +81,7 @@
 
               {% if banner.link %}
                 <a class="hero__slide-more btn" href="{{ banner.link }}">
-                  Подробнее
+                  {{ button_more }}
                   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                       d="M5.1665 12.0002L9.1665 8.00016L5.1665 4.00016L6.49984 2.66683L11.8332 8.00016L6.49984 13.3335L5.1665 12.0002Z"
@@ -54,7 +91,7 @@
               {% endif %}
 
               <a class="hero__slide-btn btn-5" href="">
-                В КАТАЛОГ
+                {{ text_to_catalog }}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M4.6665 12.0002L8.6665 8.00016L4.6665 4.00016L5.99984 2.66683L11.3332 8.00016L5.99984 13.3335L4.6665 12.0002Z"

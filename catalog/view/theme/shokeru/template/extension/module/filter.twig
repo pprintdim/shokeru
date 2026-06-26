@@ -1,7 +1,7 @@
 <div class="shop__content">
     <form class="shop__filters" action="{{ action }}" method="get">
         <div class="shop__filters-top">
-            <button class="shop__filters-open" type="button">Фільтр</button>
+            <button class="shop__filters-open" type="button">{{ text_filter }}</button>
 
             {# Вибрані фільтри #}
             <div class="shop__filters-selected filters-selected">
@@ -37,8 +37,8 @@
         <div class="shop__filters-bottom">
             <div class="shop__filters-start">
                 <div class="container">
-                    <button class="shop__filters-start--reset" type="reset">Скинути фільтр</button>
-                    <p class="shop__filters-start--number">Фільтр ({{ selected_total|default(0) }})</p>
+                    <button class="shop__filters-start--reset" type="reset">{{ button_reset_filter }}</button>
+                    <p class="shop__filters-start--number">{{ text_filter }} ({{ selected_total|default(0) }})</p>
                 </div>
             </div>
             <div class="container">
@@ -78,8 +78,8 @@
                                     {% endfor %}
                                 </div>
                                 <div class="shop__filters-end">
-                                    <button class="shop__filters-send btn-4" type="submit">Підтвердити</button>
-                                    <button class="shop__filters-resets btn-3" type="button">Скинути фільтр</button>
+                                    <button class="shop__filters-send btn-4" type="submit">{{ button_confirm }}</button>
+                                    <button class="shop__filters-resets btn-3" type="button">{{ button_reset_filter }}</button>
                                 </div>
                             </div>
                         </div>
@@ -88,10 +88,10 @@
                     {# Ціновий фільтр #}
                     <div class="shop__filters-box">
                         <div class="shop__filters-block">
-                            <h3 class="shop__filters-title">Ціна</h3>
+                            <h3 class="shop__filters-title">{{ text_price_title }}</h3>
                             <div class="shop__filters-price filters-price">
-                                <input type="number" name="price_from" value="{{ price_from|default('') }}" min="0" placeholder="від">
-                                <input type="number" name="price_to" value="{{ price_to|default('') }}" min="0" placeholder="до">
+                                <input type="number" name="price_from" value="{{ price_from|default('') }}" min="0" placeholder="{{ text_from }}">
+                                <input type="number" name="price_to" value="{{ price_to|default('') }}" min="0" placeholder="{{ text_to }}">
                             </div>
                         </div>
                     </div>
@@ -99,9 +99,9 @@
 
                 {# Кнопки застосування / скидання #}
                 <div class="shop__filters-buttons">
-                    <button class="shop__filters-back btn-3" type="button">Назад</button>
-                    <button class="shop__filters-reset btn-3" type="reset">Скинути</button>
-                    <button class="shop__filters-submit btn-4" type="submit">Застосувати</button>
+                    <button class="shop__filters-back btn-3" type="button">{{ button_back }}</button>
+                    <button class="shop__filters-reset btn-3" type="reset">{{ button_reset }}</button>
+                    <button class="shop__filters-submit btn-4" type="submit">{{ button_apply }}</button>
                 </div>
             </div>
         </div>
@@ -115,6 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!filterForm) return;
 
     const baseUrl = document.querySelector('base')?.getAttribute('href') || '';
+    const filterBase = {{ filter_base|json_encode|raw }};
+    const filterSlugs = {{ filter_slugs|json_encode|raw }};
+    const sortSlugs = {{ sort_slugs|json_encode|raw }};
 
     function buildQuery(params) {
         const query = [];
@@ -230,66 +233,60 @@ document.addEventListener("DOMContentLoaded", function () {
     resetButtons.forEach(resetBtn => {
         resetBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const currentParams = new URLSearchParams(window.location.search);
-            const params = new URLSearchParams();
-            if (currentParams.has('route')) params.set('route', currentParams.get('route'));
-            if (currentParams.has('path')) params.set('path', currentParams.get('path'));
-            if (currentParams.has('search')) params.set('search', currentParams.get('search'));
-            redirectWithParams(params);
+            window.location.href = cleanBase();
         });
     });
 
+    // чиста SEO-база (категорія/каталог без фільтрів)
+    function cleanBase() {
+        return (filterBase || filterForm.getAttribute('action') || window.location.pathname)
+            .split('?')[0].replace(/\/+$/, '');
+    }
+
     function submitFilters() {
-        const currentParams = new URLSearchParams(window.location.search);
-        const params = new URLSearchParams();
+        let base = cleanBase();
 
-        // Зберігаємо route
-        if (currentParams.has('route')) {
-            params.set('route', currentParams.get('route'));
-        }
+        // вибрані фільтри → слаги у ШЛЯХ (SEO), решта (без слага) → query
+        const selected = Array.from(filterForm.querySelectorAll('input[name="filter"]:checked'))
+            .map(input => input.value).filter(Boolean);
 
-        if (currentParams.has('path')) {
-            params.set('path', currentParams.get('path'));
-        }
+        let path = '';
+        const noSlug = [];
+        selected.forEach(id => {
+            if (filterSlugs && filterSlugs[id]) { path += '/' + filterSlugs[id]; }
+            else { noSlug.push(id); }
+        });
 
-        // Search
+        const qs = new URLSearchParams();
+        if (noSlug.length) qs.set('filter', noSlug.join(','));
+
         const searchInput = filterForm.querySelector('input[name="search"]');
-        if (searchInput && searchInput.value.trim() !== '') {
-            params.set('search', searchInput.value.trim());
-        } else if (currentParams.has('search')) {
-            params.set('search', currentParams.get('search'));
-        }
+        if (searchInput && searchInput.value.trim() !== '') qs.set('search', searchInput.value.trim());
 
-        // Фільтри — беремо з чекбоксів форми (Twig вже відмітив потрібні)
-        const selectedFilters = Array.from(filterForm.querySelectorAll('input[name="filter"]:checked'))
-            .map(input => input.value)
-            .filter(Boolean);
-
-        if (selectedFilters.length) {
-            params.set('filter', selectedFilters.join(','));
-        }
-
-        // Ціна
         const priceFrom = filterForm.querySelector('input[name="price_from"]');
         const priceTo   = filterForm.querySelector('input[name="price_to"]');
-        if (priceFrom?.value) params.set('price_from', priceFrom.value);
-        if (priceTo?.value)   params.set('price_to', priceTo.value);
+        if (priceFrom?.value) qs.set('price_from', priceFrom.value);
+        if (priceTo?.value)   qs.set('price_to', priceTo.value);
 
-        // Сортування — беремо з select (без name, тому не потрапляє у нативний submit)
         const sortSelect = filterForm.querySelector('.shop__filters-sort');
         const sortValue = sortSelect?.value;
         if (sortValue) {
-            // Якщо value = "p-asc", "p-desc", "name-asc" тощо
-            const dashIndex = sortValue.lastIndexOf('-');
-            if (dashIndex !== -1) {
-                params.set('sort', sortValue.substring(0, dashIndex));
-                params.set('order', sortValue.substring(dashIndex + 1));
+            if (sortSlugs && sortSlugs[sortValue]) {
+                // SEO: сорт у шлях (/.../popular)
+                path += '/' + sortSlugs[sortValue];
             } else {
-                params.set('sort', sortValue);
+                const dashIndex = sortValue.lastIndexOf('-');
+                if (dashIndex !== -1) {
+                    qs.set('sort', sortValue.substring(0, dashIndex));
+                    qs.set('order', sortValue.substring(dashIndex + 1));
+                } else {
+                    qs.set('sort', sortValue);
+                }
             }
         }
 
-        redirectWithParams(params);
+        const q = qs.toString();
+        window.location.href = base + path + (q ? '?' + q : '');
     }
 });
 </script>

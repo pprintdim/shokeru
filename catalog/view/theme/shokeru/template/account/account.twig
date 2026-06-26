@@ -17,7 +17,7 @@
                                             <path d="M34 37C31.2 35 27.8 34 24 34C20.2 34 16.8 35.2 14 37" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </div>
-                                    <p class="profile__user-info--name">Ваша роль: <br><strong>{{ role }}</strong></p>
+                                    <p class="profile__user-info--name">{{ text_your_role }}: <br><strong>{{ role }}</strong></p>
                                 </div>
                                 <div class="profile__user-info">
                                     <div class="profile__user-info--icon">
@@ -27,13 +27,13 @@
                                             <path d="M35 40C37.7614 40 40 37.7614 40 35C40 32.2386 37.7614 30 35 30C32.2386 30 30 32.2386 30 35C30 37.7614 32.2386 40 35 40Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </div>
-                                    <p class="profile__user-info--name">Накопительная скидка: <strong>{{ discount }}%</strong></p>
+                                    <p class="profile__user-info--name">{{ text_cumulative_discount }}: <strong>{{ discount }}%</strong></p>
                                 </div>
                             </div>
                             <div class="profile__user-content">
                                 <div class="profile__user-select">
-                                    <button class="profile__user-btn active" data-profile-user-btn="my-data">Мои данные</button>
-                                    <button class="profile__user-btn" data-profile-user-btn="delivery-adress">Адреса доставки</button>
+                                    <button class="profile__user-btn active" data-profile-user-btn="my-data">{{ text_my_data }}</button>
+                                    <button class="profile__user-btn" data-profile-user-btn="delivery-adress">{{ text_delivery_addresses }}</button>
                                 </div>
                                 {{ edit }}
                                 <div class="profile__user-result profile__form" data-profile-user-result="delivery-adress">
@@ -41,7 +41,7 @@
                                         {% if addresses %}
                                             {% for address in addresses %}
                                                 <div class="profile__form-item">
-                                                    <label class="profile__form-label" for="profile-address-{{ address.address_id }}">Адрес</label>
+                                                    <label class="profile__form-label" for="profile-address-{{ address.address_id }}">{{ text_address }}</label>
                                                     <div class="profile__form-input">
                                                         <input type="text" id="profile-address-{{ address.address_id }}" readonly value="{{ address.address_plain }}">
                                                     </div>
@@ -72,7 +72,7 @@
     <div class="container">
                 <div class="userData__inner">
                     <button class="userData__close">
-                        Закрыть
+                        {{ button_close }}
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
                             <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>
                             <rect x="28.8008" y="31.6274" width="9" height="4" transform="rotate(-135 28.8008 31.6274)" fill="#202222"/>
@@ -89,20 +89,20 @@
                             </svg>
                         </div>
                         <div class="userData__info-content">
-                            <h2 class="userData__info-title">Изменить <br>e-mail</h2>
-                            <p class="userData__info-descr">Уведомление для подтверждения нового Email будет отправлено Вам на новую почту</p>
+                            <h2 class="userData__info-title">{{ text_change_email|raw }}</h2>
+                            <p class="userData__info-descr">{{ text_email_notice }}</p>
                         </div>
                     </div>
                     <form class="userData__form form-block" action="#">
                         <div class="userData__form-item">
                             <button class="userData__form-show form-show-password" type="button"></button>
-                            <input class="userData__form-input form-input" type="password" name="Пароль" placeholder="Пароль*" required>
+                            <input class="userData__form-input form-input" type="password" name="Пароль" placeholder="{{ text_password }}*" required>
                         </div>
                         <div class="userData__form-item">
                             <button class="userData__form-show form-show-password" type="button"></button>
-                            <input class="userData__form-input form-input" type="password" name="Повторите-пароль*" placeholder="Повторите пароль*" required>
+                            <input class="userData__form-input form-input" type="password" name="Повторите-пароль*" placeholder="{{ text_repeat_password }}*" required>
                         </div>
-                        <button class="userData__form-btn btn" type="submit">Изменить</button>
+                        <button class="userData__form-btn btn" type="submit">{{ button_change }}</button>
                     </form>
                 </div>
             </div>

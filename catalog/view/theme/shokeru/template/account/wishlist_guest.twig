@@ -1,5 +1,4 @@
 {{ header }}
-<main class="main">
     {{ content_top }}
 
     <section class="pageInfo">
@@ -34,7 +33,7 @@
                                 </a>
                                 <div class="product__item-content">
                                     <div class="product__item-buttons">
-                                        <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="Додано">
+                                        <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
                                             {{ button_cart }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                 <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>

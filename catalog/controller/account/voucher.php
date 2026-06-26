@@ -149,7 +149,7 @@ class ControllerAccountVoucher extends Controller {
 		}
 
 		$data['voucher_amounts'] = array(100, 500, 1000);
-		$data['voucher_image'] = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') . 'html/img/sertificate.png' : $this->config->get('config_url') . 'html/img/sertificate.png';
+		$data['voucher_image'] = $this->request->server['HTTPS'] ? $this->config->get('config_ssl') . 'image/catalog/sertificate.png' : $this->config->get('config_url') . 'image/catalog/sertificate.png';
 
 		if (isset($this->request->post['agree'])) {
 			$data['agree'] = $this->request->post['agree'];

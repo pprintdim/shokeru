@@ -1,10 +1,10 @@
 <?php
-$_['heading_title']    = 'HTML Repeater';
-$_['text_success']     = 'Success: You have modified HTML Repeater!';
-$_['text_edit']        = 'Edit HTML Repeater';
-$_['entry_name']       = 'Module Name';
-$_['entry_status']     = 'Status';
-$_['button_add']       = 'Add Item';
-$_['button_remove']    = 'Remove';
-$_['tab_items']        = 'Items';
-$_['error_permission'] = 'Warning: You do not have permission to modify HTML Repeater!';
+$_['heading_title']    = 'HTML-повторювач';
+$_['text_success']     = 'Успіх: модуль HTML-повторювач змінено!';
+$_['text_edit']        = 'Редагування HTML-повторювача';
+$_['entry_name']       = 'Назва модуля';
+$_['entry_status']     = 'Статус';
+$_['button_add']       = 'Додати елемент';
+$_['button_remove']    = 'Видалити';
+$_['tab_items']        = 'Елементи';
+$_['error_permission'] = 'Увага: у вас немає прав на зміну HTML-повторювача!';

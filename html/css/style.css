@@ -2260,7 +2260,6 @@ main.main{
     display: flex;
     align-items: center;
     white-space: nowrap;
-    animation: scrollText 30s linear infinite;
 }
 .saleTextLine-text {
     color: #202222;
@@ -2271,63 +2270,14 @@ main.main{
     padding: 0px 20px;
     display: inline-block;
 }
-@keyframes scrollText {
-    0% {
-        transform: translateX(0%);
-    }
-    100% {
-        transform: translateX(-104%);
-    }
-}
 @media (max-width: 1279px) {
     .saleTextLine{
         padding: 36px 0;
-    }
-    .saleTextLine__inner {
-        animation: scrollText 10s linear infinite;
     }
     .saleTextLine-text{
         font-size: 32px;
         padding: 0 15px;
         line-height: normal;
-    }
-    @keyframes scrollText {
-        0% {
-            transform: translateX(0%);
-        }
-        100% {
-            transform: translateX(-115.7%);
-        }
-    }
-}
-@media (max-width: 999px) {
-    @keyframes scrollText {
-        0% {
-            transform: translateX(0%);
-        }
-        100% {
-            transform: translateX(-75.7%);
-        }
-    }
-}
-@media (max-width: 767px) {
-    @keyframes scrollText {
-        0% {
-            transform: translateX(0%);
-        }
-        100% {
-            transform: translateX(-121.7%);
-        }
-    }
-}
-@media (max-width: 479px) {
-    @keyframes scrollText {
-        0% {
-            transform: translateX(0%);
-        }
-        100% {
-            transform: translateX(-153.7%);
-        }
     }
 }
 /* feedback */
@@ -3280,23 +3230,23 @@ main.main{
     line-height: normal;
 }
 .weworks__item-list li,
-.weworks__item-descr{
+.weworks__item p {
     color: #fff;
     font-size: 24px;
     line-height: 32px;
 }
-.weworks__item-descr{
+.weworks__item p {
     margin-top: 32px;
 }
 .weworks__item-btn{
     margin-top: 48px;
     max-width: 203px;
 }
-.weworks__item-list li{
+.weworks__item ul li{
     position: relative;
     padding-left: 34px;
 }
-.weworks__item-list li::before{
+.weworks__item ul li::before{
     content: '';
     position: absolute;
     background-color: #fff;
@@ -3306,13 +3256,13 @@ main.main{
     left: 13px;
     top: 16px;
 }
-.weworks__item-list{
+.weworks__item ul{
     margin-top: 20px;
 }
-.weworks__item-list li + li{
+.weworks__item ul li + li{
     margin-top: 18px;
 }
-.weworks__start{
+.weworks__start {
     display: flex;
     gap: 24px;
     margin-bottom: 64px;
@@ -4240,6 +4190,7 @@ main.main{
     display: flex;
     align-items: center;
     gap: 30px;
+    height: fit-content;
     justify-content: space-between;
 }
 .cart__item-action{
@@ -4718,6 +4669,10 @@ main.main{
 .order__info-send{
     margin-top: 32px;
     width: 100%;
+}
+.order__info-send.loading{
+    opacity: 0.6;
+    pointer-events: none;
 }
 .checkout-alert{
     margin: 24px 0 0;
@@ -5815,7 +5770,7 @@ main.main{
     position: absolute;
     top: 0;
     right: 0;
-    max-width: 30%;
+    max-width: 33%;
 }
 .shop__pages-title{
     font-size: 16px;
@@ -5847,6 +5802,10 @@ main.main{
     border-color: #202222;
     background-color: rgba(32, 34, 34, 0.12);
     color: #202222;
+}
+.shop__pages-content a.shop__pages-dots{
+    pointer-events: none;
+    cursor: default;
 }
 a.shop__pages-next{
     content: '';
@@ -6307,7 +6266,6 @@ a.shop__pages-next:not(:hover){
     display: flex;
     align-items: center;
     white-space: nowrap;
-    animation: productScrollText 100s linear infinite;
 }
 .product-discount-text {
     color: #202222;
@@ -6317,14 +6275,6 @@ a.shop__pages-next:not(:hover){
     text-transform: uppercase;
     padding: 0px 20px;
     display: inline-block;
-}
-@keyframes productScrollText {
-    0% {
-        transform: translateX(0%);
-    }
-    100% {
-        transform: translateX(-64%);
-    }
 }
 @media (max-width: 1279px) {
     .product__item-discount {
@@ -7655,4 +7605,70 @@ a.shop__pages-next:not(:hover){
 }
 @media (max-width: 479px) {
 
+}
+
+/* thanks / checkout success */
+.thanks {
+    padding: 104px 0;
+}
+.thanks__inner {
+    width: 100%;
+    max-width: 1113px;
+    margin: 0 auto;
+    padding: 64px 72px;
+    background-color: #202222;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    justify-content: center;
+}
+.thanks__title {
+    text-align: center;
+    color: #FFF;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 48px;
+}
+.thanks__btn {
+    max-width: 223px;
+    margin: 0 auto;
+    width: 100%;
+}
+@media (max-width: 1279px) {
+    .thanks {
+        padding: 80px 0;
+    }
+    .thanks__inner {
+        max-width: 800px;
+    }
+}
+@media (max-width: 767px) {
+    .thanks {
+        padding: 48px 0 72px;
+    }
+    .thanks__inner {
+        min-height: 588px;
+        padding: 20px 16px;
+    }
+    .thanks__title {
+        font-size: 24px;
+        line-height: 36px;
+    }
+}
+
+/* ── Affiliate login (стиль сайту) ── */
+.affiliate-login { padding: 80px 0; }
+.affiliate-login__title { margin-bottom: 24px; }
+.affiliate-login__descr { margin-bottom: 40px; max-width: 760px; line-height: 1.5; }
+.affiliate-login__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.affiliate-login__col { background: #f5f5f5; border-radius: 16px; padding: 32px; }
+.affiliate-login__subtitle { margin-bottom: 16px; }
+.affiliate-login__text { margin-bottom: 24px; line-height: 1.5; }
+.affiliate-login__form { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.affiliate-login__input { width: 100%; }
+.affiliate-login__forgot { text-decoration: underline; }
+@media (max-width: 767px) {
+    .affiliate-login { padding: 48px 0; }
+    .affiliate-login__cols { grid-template-columns: 1fr; gap: 20px; }
+    .affiliate-login__col { padding: 24px; }
 }

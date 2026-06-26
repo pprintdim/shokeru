@@ -15,3 +15,5 @@ Disallow: /*?filter_description=
 Disallow: /*&filter_description=
 Disallow: /*?route=product/search
 Disallow: /*&route=product/search
+
+Sitemap: https://shokeru.autochemicals.s3.monosite.com.ua/sitemap.xml

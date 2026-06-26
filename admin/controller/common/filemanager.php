@@ -45,7 +45,7 @@ class ControllerCommonFileManager extends Controller {
 			}
 
 			// Get files
-			$files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,png,gif,webp,svg,mp4,webm,JPG,JPEG,PNG,GIF,WEBP,SVG,MP4,WEBM}', GLOB_BRACE);
+			$files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,png,gif,webp,svg,svgz,mp4,webm,ogv,mov,m4v,JPG,JPEG,PNG,GIF,WEBP,SVG,SVGZ,MP4,WEBM,OGV,MOV,M4V}', GLOB_BRACE);
 
 
 			if (!$files) {
@@ -89,9 +89,12 @@ class ControllerCommonFileManager extends Controller {
 
 			    $relative = utf8_substr($image, utf8_strlen(DIR_IMAGE));
 			    $ext = strtolower(pathinfo($relative, PATHINFO_EXTENSION));
+			    $type = in_array($ext, ['mp4', 'webm', 'ogv', 'mov', 'm4v']) ? 'video' : 'image';
 
-			    if (in_array($ext, ['svg', 'mp4', 'webm'])) {
-			        $thumb = '';
+			    if ($type == 'video') {
+			        $thumb = $server . 'image/catalog/video-placeholder.svg';
+			    } elseif ($ext == 'svg') {
+			        $thumb = $server . 'image/' . $relative;
 			    } else {
 			        $thumb = $this->model_tool_image->resize($relative, 100, 100);
 			    }
@@ -99,7 +102,7 @@ class ControllerCommonFileManager extends Controller {
 			    $data['images'][] = array(
 			        'thumb' => $thumb,
 			        'name'  => implode(' ', $name),
-			        'type'  => 'image',
+			        'type'  => $type,
 			        'path'  => $relative,
 			        'href'  => $server . 'image/' . $relative
 			    );
@@ -258,8 +261,12 @@ class ControllerCommonFileManager extends Controller {
 					    'png',
 					    'webp',
 					    'svg',
+					    'svgz',
 					    'mp4',
-					    'webm'
+					    'webm',
+					    'ogv',
+					    'mov',
+					    'm4v'
 					);
 
 
@@ -277,14 +284,19 @@ class ControllerCommonFileManager extends Controller {
 					    'image/gif',
 					    'image/webp',
 					    'image/svg+xml',
+					    'application/svg+xml',
 					    'video/mp4',
-					    'video/webm'
+					    'video/webm',
+					    'video/ogg',
+					    'application/ogg',
+					    'video/quicktime',
+					    'video/x-m4v'
 					);
 
 
 					$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-					if (!in_array($ext, ['jpg','jpeg','png','gif','webp','svg','mp4','webm'])) {
+					if (!in_array($ext, ['jpg','jpeg','png','gif','webp','svg','svgz','mp4','webm','ogv','mov','m4v'])) {
 					    $json['error'] = $this->language->get('error_filetype');
 					}
 

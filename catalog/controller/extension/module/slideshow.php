@@ -38,31 +38,59 @@ class ControllerExtensionModuleSlideshow extends Controller {
 
         foreach ($results as $result) {
 
-            if (!empty($result['image']) && is_file(DIR_IMAGE . $result['image'])) {
+            $type = !empty($result['type']) ? $result['type'] : 'image';
+
+            if ($type === 'video') {
+                // потрібне відео ПК
+                if (empty($result['video']) || !is_file(DIR_IMAGE . $result['video'])) {
+                    continue;
+                }
+
+                $desktop = 'image/' . $result['video'];
+                $mob     = (!empty($result['mob_video']) && is_file(DIR_IMAGE . $result['mob_video']))
+                    ? 'image/' . $result['mob_video']
+                    : $desktop; // фолбек на десктопне відео
+
+                // постери (картинки) — поки відео вантажиться
+                $poster     = (!empty($result['image']) && is_file(DIR_IMAGE . $result['image'])) ? 'image/' . $result['image'] : '';
+                $mob_poster = (!empty($result['mob_image']) && is_file(DIR_IMAGE . $result['mob_image'])) ? 'image/' . $result['mob_image'] : $poster;
 
                 $data['banners'][] = [
-                    'title'       => $this->parseBannerText($result['title']),
-                    'link'        => $result['link'],
-
-                    // textarea (parsed)
-                    'description' => $this->parseBannerText($result['description']),
-
+                    'title'        => $this->parseBannerText($result['title']),
+                    'link'         => $result['link'],
+                    'description'  => $this->parseBannerText($result['description']),
+                    'is_video'     => true,
+                    'is_video_mob' => true,
+                    'poster'       => $poster,
+                    'mob_poster'   => $mob_poster,
                     'images' => [
-                        // no resize for desktop
-                        'desktop' => 'image/' . $result['image'],
+                        'desktop'   => $desktop,
+                        'tablet'    => $desktop,
+                        'mob_image' => $mob,
+                    ],
+                ];
+            } else {
+                // картинка
+                if (empty($result['image']) || !is_file(DIR_IMAGE . $result['image'])) {
+                    continue;
+                }
 
-                        // tablet resize
-                        'tablet' => $this->model_tool_image->resize(
-                            $result['image'],
-                            (int)$setting['width'],
-                            (int)$setting['height']
-                        ),
+                $has_mob = !empty($result['mob_image']) && is_file(DIR_IMAGE . $result['mob_image']);
+                $mob_src = $has_mob ? $result['mob_image'] : $result['image'];
 
-                        // mobile fallback
-                        'mob_image' => (!empty($result['image_mob']) && is_file(DIR_IMAGE . $result['image_mob']))
-                            ? 'image/' . $result['image_mob']
-                            : 'image/' . $result['image'],
-                    ]
+                $data['banners'][] = [
+                    'title'        => $this->parseBannerText($result['title']),
+                    'link'         => $result['link'],
+                    'description'  => $this->parseBannerText($result['description']),
+                    'is_video'     => false,
+                    'is_video_mob' => false,
+                    'poster'       => '',
+                    'mob_poster'   => '',
+                    'images' => [
+                        'desktop'   => 'image/' . $result['image'],
+                        'tablet'    => $this->model_tool_image->resize($result['image'], (int)$setting['width'], (int)$setting['height']),
+                        'mob_image' => 'image/' . $mob_src,
+                    ],
                 ];
             }
         }

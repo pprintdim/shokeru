@@ -12,10 +12,10 @@
 {% endif %}
 
 <div class="order__form-inputs checkout-order-inputs">
-    <div class="checkout-field"><input type="text" name="firstname" value="{{ firstname }}" placeholder="Ваше Ім'я" id="input-payment-firstname" class="form-input"></div>
+    <div class="checkout-field"><input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ text_your_firstname }}" id="input-payment-firstname" class="form-input"></div>
     <div class="checkout-field"><input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-payment-lastname" class="form-input"></div>
     <span></span>
-    <div class="checkout-field"><input type="text" name="patronymic" value="" placeholder="По-батькові" class="form-input"></div>
+    <div class="checkout-field"><input type="text" name="patronymic" value="" placeholder="{{ text_patronymic }}" class="form-input"></div>
     <div class="checkout-field"><input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-payment-telephone" class="form-input"></div>
     <span></span>
     <div class="checkout-field"><input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-payment-email" class="form-input"></div>
