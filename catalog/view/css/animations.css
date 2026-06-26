@@ -196,3 +196,96 @@
     .hero__fx-glow { opacity: 0.28; }
     .hero__bolt, .hero__spark { opacity: 0; }
 }
+
+/* Contact page motion */
+.js-anim .kk-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+    will-change: opacity, transform;
+}
+.js-anim .kk-reveal.anim-in {
+    opacity: 1;
+    transform: none;
+}
+.kk-card,
+.kk-card__icon,
+.kk-info__block,
+.kk-social,
+.kk-btn,
+.kk-faq__item,
+.kk-faq__q,
+.kk-faq__toggle,
+.kk-faq__a {
+    transition:
+        opacity .35s cubic-bezier(.2,.7,.2,1),
+        transform .35s cubic-bezier(.2,.7,.2,1),
+        color .25s cubic-bezier(.2,.7,.2,1),
+        background-color .25s cubic-bezier(.2,.7,.2,1),
+        border-color .25s cubic-bezier(.2,.7,.2,1),
+        box-shadow .35s cubic-bezier(.2,.7,.2,1),
+        max-height .45s cubic-bezier(.2,.7,.2,1);
+}
+.kk-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(197,255,36,.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 24px 50px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(197,255,36,.4);
+}
+.kk-card:hover .kk-card__icon {
+    transform: scale(1.08) rotate(-4deg);
+    background-color: rgba(197,255,36,.2);
+}
+.kk-info__block:hover,
+.kk-faq__item.is-open {
+    border-color: rgba(197,255,36,.45);
+}
+.kk-social:hover {
+    transform: translateY(-3px);
+    color: #c5ff24;
+    background-color: rgba(197,255,36,.08);
+    border-color: #c5ff24;
+}
+.kk-btn:hover {
+    transform: translateY(-2px);
+}
+.kk-btn:active {
+    transform: translateY(1px);
+}
+.kk-faq__q:hover {
+    color: #c5ff24;
+}
+.kk-faq__item.is-open .kk-faq__toggle {
+    transform: rotate(45deg);
+}
+.kk-toast {
+    animation: kkToastIn .35s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes kkToastIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .js-anim .kk-reveal,
+    .js-anim .kk-reveal.anim-in,
+    .kk-card,
+    .kk-card__icon,
+    .kk-info__block,
+    .kk-social,
+    .kk-btn,
+    .kk-faq__item,
+    .kk-faq__q,
+    .kk-faq__toggle,
+    .kk-faq__a,
+    .kk-toast {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}

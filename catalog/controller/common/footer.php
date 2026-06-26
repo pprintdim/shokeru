@@ -110,6 +110,20 @@ class ControllerCommonFooter extends Controller {
 
 		$data['scripts'] = $this->document->getScripts('footer');
 		$data['styles'] = $this->document->getStyles('footer');
+		$data['custom_scripts'] = array();
+
+		if ((int)$this->config->get('module_custom_scripts_status')) {
+			$custom_scripts_items = $this->config->get('module_custom_scripts_items') ?: array();
+
+			foreach ($custom_scripts_items as $script) {
+				if (!empty($script['code']) && (!empty($script['position']) && $script['position'] == 'footer')) {
+					$data['custom_scripts'][] = array(
+						'name' => $script['name'] ?? '',
+						'code' => html_entity_decode(trim($script['code'], '"\''), ENT_QUOTES, 'UTF-8')
+					);
+				}
+			}
+		}
 		
 		return $this->load->view('common/footer', $data);
 	}

@@ -15,6 +15,7 @@ $_['text_customer_group']       = 'Customer Groups';
 $_['text_customer_online']      = 'Customer Online';
 $_['text_customer_approval']    = 'Customer Approvals';
 $_['text_custom_field']         = 'Custom Fields';
+$_['text_custom_scripts']       = 'Custom scripts';
 $_['text_dashboard']            = 'Dashboard';
 $_['text_design']               = 'Design';
 $_['text_download']             = 'Downloads';

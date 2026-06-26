@@ -1,13 +1,21 @@
 /* animations.js — легкі анімації появи на скролі (нативний IntersectionObserver).
    Старт: 2 блоки головної — .aboutus та .safemode. Без сторонніх бібліотек. */
 (function () {
-    var SELECTOR = '.productSlider, .safemode';
+    var SELECTOR = '.productSlider, .safemode, .kk-reveal';
     var root = document.documentElement;
 
     // позначаємо, що JS працює → CSS вмикає старт-стан (інакше блоки видимі)
     root.classList.add('js-anim');
 
-    function reveal(el) { el.classList.add('anim-in'); }
+    function reveal(el) {
+        var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+
+        if (delay > 0) {
+            setTimeout(function () { el.classList.add('anim-in'); }, delay);
+        } else {
+            el.classList.add('anim-in');
+        }
+    }
 
     function inViewport(el) {
         var r = el.getBoundingClientRect();

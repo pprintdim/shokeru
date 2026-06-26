@@ -41,6 +41,9 @@
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
+{% for script in custom_scripts %}
+{{ script.code|raw }}
+{% endfor %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"{{ name|e('js') }}","url":"{{ base }}","logo":"{{ logo }}"{% if email %},"email":"{{ email }}"{% endif %}}
 </script>
