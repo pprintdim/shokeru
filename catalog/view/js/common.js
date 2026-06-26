@@ -119,6 +119,10 @@ function addThemeProductCardToCart(button, productId, quantity) {
     }
 
     cart.add(productId, quantity || 1, function() {
+        if (window.ShokeruGA4 && typeof window.ShokeruGA4.trackAddToCartFromElement === 'function') {
+            window.ShokeruGA4.trackAddToCartFromElement(button, quantity || 1);
+        }
+
         setProductButtonAdded(button);
         openThemeCart();
     });
@@ -404,6 +408,13 @@ var cart = {
         });
     },
     'remove': function(key) {
+        var cartItem = document.querySelector('#cart [data-cart-id="' + key + '"]');
+        var ga4Item = null;
+
+        if (window.ShokeruGA4 && cartItem && typeof window.ShokeruGA4.getItemFromNode === 'function') {
+            ga4Item = window.ShokeruGA4.getItemFromNode(cartItem);
+        }
+
         $.ajax({
             url: 'index.php?route=checkout/cart/remove',
             type: 'post',
@@ -412,6 +423,10 @@ var cart = {
             success: function(json) {
                 // Need to set timeout otherwise it wont update the total
                 $('.header__cart span').text(json['total']);
+
+                if (window.ShokeruGA4 && ga4Item && typeof window.ShokeruGA4.trackRemoveFromCart === 'function') {
+                    window.ShokeruGA4.trackRemoveFromCart(ga4Item);
+                }
 
                 if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
                     location = 'index.php?route=checkout/cart';

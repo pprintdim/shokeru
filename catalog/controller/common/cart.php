@@ -92,9 +92,11 @@ class ControllerCommonCart extends Controller {
 				
 				$price = $this->currency->format($unit_price, $this->session->data['currency']);
 				$total = $this->currency->format($unit_price * $product['quantity'], $this->session->data['currency']);
+				$ga4_price = $this->currency->format($unit_price, $this->session->data['currency'], '', false);
 			} else {
 				$price = false;
 				$total = false;
+				$ga4_price = 0;
 			}
 
 			$data['products'][] = array(
@@ -107,6 +109,7 @@ class ControllerCommonCart extends Controller {
 				'recurring' => ($product['recurring'] ? $product['recurring']['name'] : ''),
 				'quantity'  => $product['quantity'],
 				'price'     => $price,
+				'ga4_price' => $ga4_price,
 				'total'     => $total,
 				'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);

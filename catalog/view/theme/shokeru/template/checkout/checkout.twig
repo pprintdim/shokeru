@@ -151,6 +151,14 @@
     </div>
 </section>
 {{ content_bottom }}
+{% if ga4_checkout_items is defined and ga4_checkout_items and ga4_checkout_items != '[]' %}
+<script>
+window.ShokeruGA4Checkout = {
+    value: {{ ga4_checkout_total|default(0) }},
+    items: {{ ga4_checkout_items|raw }}
+};
+</script>
+{% endif %}
 <script type="text/javascript"><!--
 function checkoutScrollTo(target) {
     if (!target || !target.length) {
@@ -451,6 +459,11 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
                             return;
                         }
 
+                        if (window.ShokeruGA4 && typeof window.ShokeruGA4.trackPaymentInfo === 'function') {
+                            var paymentLabel = $('#collapse-payment-method input[name="payment_method"]:checked').closest('label').text().trim() || paymentCode;
+                            window.ShokeruGA4.trackPaymentInfo(paymentLabel);
+                        }
+
                         // Create order
                         $.ajax({
                             url: 'index.php?route=checkout/confirm',
@@ -500,6 +513,10 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
                         checkoutShowTopWarning(smJson['error']['warning'] || 'Оберіть спосіб доставки.');
                         checkoutScrollTo($shippingStep.closest('.order__form-box'));
                         return;
+                    }
+                    if (window.ShokeruGA4 && typeof window.ShokeruGA4.trackShippingInfo === 'function') {
+                        var shippingLabel = $shippingStep.find('input[type="radio"]:checked').closest('label').text().trim() || $shippingStep.find('select option:selected').text().trim();
+                        window.ShokeruGA4.trackShippingInfo(shippingLabel);
                     }
                     doPaymentAndConfirm();
                 },

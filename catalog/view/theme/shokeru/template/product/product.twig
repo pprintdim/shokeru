@@ -95,7 +95,7 @@
                             </div>
                             <div class="prod__buttons">
                                 <input type="hidden" name="product_id" value="{{ product_id }}">
-                                <button class="prod__add btn-4" type="button" data-product-id="{{ product_id }}">
+                                <button class="prod__add btn-4" type="button" data-product-id="{{ product_id }}" data-ga4-name="{{ name|e('html_attr') }}" data-ga4-price="{{ ga4_item_price }}" data-ga4-brand="{{ manufacturer|e('html_attr') }}">
                                     <span>{{ text_product_add }}</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                         <path d="M9.33496 6.66675H13.335V9.33374H9.33496V13.3337H6.66797V9.33374H2.66797V6.66675H6.66797V2.66675H9.33496V6.66675Z" fill="white"/>
@@ -195,6 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (window.cart && typeof window.cart.add === 'function') {
                 window.cart.add(productId, quantity, () => {
+                    if (window.ShokeruGA4 && typeof window.ShokeruGA4.trackAddToCartFromElement === 'function') {
+                        window.ShokeruGA4.trackAddToCartFromElement(addButton, quantity);
+                    }
+
                     window.openThemeCart();
                 });
             }

@@ -15,4 +15,9 @@
             </div>
         </div>
     </section>
+{% if ga4_purchase is defined and ga4_purchase %}
+<script>
+window.ShokeruGA4Purchase = {{ ga4_purchase|raw }};
+</script>
+{% endif %}
 {{ footer }}

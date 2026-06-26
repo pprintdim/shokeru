@@ -127,6 +127,7 @@ class ControllerCheckoutCheckout extends Controller {
 
 		$data['checkout_products'] = array();
 		$data['checkout_total_quantity'] = 0;
+		$data['ga4_checkout_items_data'] = array();
 
 		foreach ($products as $product) {
 			$data['checkout_total_quantity'] += (int)$product['quantity'];
@@ -141,9 +142,11 @@ class ControllerCheckoutCheckout extends Controller {
 				$unit_price = $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'));
 				$price = $this->currency->format($unit_price, $this->session->data['currency']);
 				$product_total = $this->currency->format($unit_price * $product['quantity'], $this->session->data['currency']);
+				$ga4_price = $this->currency->format($unit_price, $this->session->data['currency'], '', false);
 			} else {
 				$price = false;
 				$product_total = false;
+				$ga4_price = 0;
 			}
 
 			$data['checkout_products'][] = array(
@@ -155,10 +158,18 @@ class ControllerCheckoutCheckout extends Controller {
 				'total'      => $product_total,
 				'href'       => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);
+
+			$data['ga4_checkout_items_data'][] = array(
+				'item_id'   => (string)$product['product_id'],
+				'item_name' => $product['name'],
+				'price'     => (float)$ga4_price,
+				'quantity'  => (int)$product['quantity']
+			);
 		}
 
 		$data['checkout_totals'] = array();
 		$data['checkout_total'] = '';
+		$data['ga4_checkout_total'] = 0;
 
 		foreach ($totals as $index => $total_row) {
 			$formatted_total = $this->currency->format($total_row['value'], $this->session->data['currency']);
@@ -170,8 +181,11 @@ class ControllerCheckoutCheckout extends Controller {
 
 			if ($index === count($totals) - 1) {
 				$data['checkout_total'] = $formatted_total;
+				$data['ga4_checkout_total'] = $this->currency->format($total_row['value'], $this->session->data['currency'], '', false);
 			}
 		}
+
+		$data['ga4_checkout_items'] = json_encode($data['ga4_checkout_items_data'], JSON_UNESCAPED_UNICODE);
 
 		$data['text_order_details'] = 'Інформація про замовлення';
 		$data['text_checkout_submit'] = 'Оформити замовлення';

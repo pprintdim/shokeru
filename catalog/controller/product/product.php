@@ -336,6 +336,8 @@ class ControllerProductProduct extends Controller {
 				$data['tax'] = false;
 			}
 
+			$data['ga4_item_price'] = $this->currency->format($this->tax->calculate($tax_price, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'], '', false);
+
 			$discounts = $this->model_catalog_product->getProductDiscounts($this->request->get['product_id']);
 
 			$data['discounts'] = array();

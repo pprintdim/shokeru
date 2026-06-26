@@ -4,8 +4,49 @@ class ControllerCheckoutSuccess extends Controller {
 		$this->load->language('checkout/success');
 
 		$data['order_id'] = isset($this->session->data['order_id']) ? (int)$this->session->data['order_id'] : 0;
+		$data['ga4_purchase'] = '';
 
 		if (isset($this->session->data['order_id'])) {
+			$this->load->model('checkout/order');
+
+			$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
+			if ($order_info) {
+				$order_products = $this->model_checkout_order->getOrderProducts($this->session->data['order_id']);
+				$order_totals = $this->model_checkout_order->getOrderTotals($this->session->data['order_id']);
+				$items = array();
+				$shipping = 0;
+				$tax = 0;
+
+				foreach ($order_products as $product) {
+					$items[] = array(
+						'item_id'   => (string)$product['product_id'],
+						'item_name' => $product['name'],
+						'price'     => (float)$this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false),
+						'quantity'  => (int)$product['quantity']
+					);
+				}
+
+				foreach ($order_totals as $total) {
+					if ($total['code'] == 'shipping') {
+						$shipping = (float)$this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false);
+					}
+
+					if ($total['code'] == 'tax') {
+						$tax += (float)$this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false);
+					}
+				}
+
+				$data['ga4_purchase'] = json_encode(array(
+					'transaction_id' => (string)$order_info['order_id'],
+					'value'          => (float)$this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false),
+					'tax'            => $tax,
+					'shipping'       => $shipping,
+					'currency'       => $order_info['currency_code'],
+					'items'          => $items
+				), JSON_UNESCAPED_UNICODE);
+			}
+
 			$this->cart->clear();
 
 			unset($this->session->data['shipping_method']);
