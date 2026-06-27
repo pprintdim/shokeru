@@ -150,6 +150,12 @@
         </div>
     </div>
 </section>
+<div class="checkout-loader" id="checkout-loader" aria-live="polite" aria-busy="true" hidden>
+    <div class="checkout-loader__panel">
+        <span class="checkout-loader__ring"></span>
+        <img class="checkout-loader__logo" src="image/catalog/logo.svg?v=20260626b" alt="Shokeru">
+    </div>
+</div>
 {{ content_bottom }}
 {% if ga4_checkout_items is defined and ga4_checkout_items and ga4_checkout_items != '[]' %}
 <script>
@@ -179,6 +185,108 @@ function checkoutShowTopWarning(message) {
     var html = '<div class="alert alert-danger alert-dismissible checkout-alert" id="checkout-top-warning"><span class="checkout-alert__text">' + message + '</span><button type="button" class="close" data-dismiss="alert">&times;</button></div>';
     $('.breadcrumbs').after(html);
 }
+
+var checkoutLoaderState = {
+    count: 0,
+    timer: null,
+    startedAt: 0
+};
+
+function checkoutLoaderStart(options) {
+    options = options || {};
+
+    var delay = typeof options.delay === 'number' ? options.delay : 350;
+    var immediate = options.immediate === true;
+
+    checkoutLoaderState.count++;
+
+    window.clearTimeout(checkoutLoaderState.timer);
+
+    if (immediate || delay <= 0) {
+        checkoutLoaderShow();
+        return;
+    }
+
+    checkoutLoaderState.timer = window.setTimeout(function() {
+        if (checkoutLoaderState.count > 0) {
+            checkoutLoaderShow();
+        }
+    }, delay);
+}
+
+function checkoutLoaderStop(options) {
+    options = options || {};
+
+    checkoutLoaderState.count = Math.max(0, checkoutLoaderState.count - 1);
+
+    if (options.force) {
+        checkoutLoaderState.count = 0;
+    }
+
+    if (checkoutLoaderState.count > 0) {
+        return;
+    }
+
+    window.clearTimeout(checkoutLoaderState.timer);
+
+    var minimum = typeof options.minimum === 'number' ? options.minimum : 260;
+    var elapsed = Date.now() - checkoutLoaderState.startedAt;
+    var wait = checkoutLoaderState.startedAt && elapsed < minimum ? minimum - elapsed : 0;
+
+    window.setTimeout(function() {
+        if (checkoutLoaderState.count === 0) {
+            checkoutLoaderHide();
+        }
+    }, wait);
+}
+
+function checkoutLoaderShow() {
+    var $loader = $('#checkout-loader');
+
+    if (!$loader.length || $loader.hasClass('is-visible')) {
+        return;
+    }
+
+    checkoutLoaderState.startedAt = Date.now();
+    $loader.prop('hidden', false);
+
+    window.requestAnimationFrame(function() {
+        $loader.addClass('is-visible');
+        $('body').addClass('checkout-loading');
+    });
+}
+
+function checkoutLoaderHide() {
+    var $loader = $('#checkout-loader');
+
+    if (!$loader.length) {
+        return;
+    }
+
+    $loader.removeClass('is-visible');
+    $('body').removeClass('checkout-loading');
+
+    window.setTimeout(function() {
+        if (!$loader.hasClass('is-visible')) {
+            $loader.prop('hidden', true);
+        }
+    }, 220);
+}
+
+function checkoutIsLoaderAjax(settings) {
+    var url = settings && settings.url ? String(settings.url) : '';
+
+    return url.indexOf('route=checkout/') !== -1 || url.indexOf('route=extension/payment/') !== -1;
+}
+
+$(document).ajaxSend(function(event, xhr, settings) {
+    if (checkoutIsLoaderAjax(settings)) {
+        checkoutLoaderStart();
+        xhr.always(function() {
+            checkoutLoaderStop();
+        });
+    }
+});
 
 function reloadCheckoutStep(selector, url, callback) {
     var $target = $(selector);
@@ -404,6 +512,7 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
 
     var $btn = $('#checkout-summary-submit');
     $btn.addClass('loading');
+    checkoutLoaderStart({ immediate: true });
 
     var recipientType = $('input[name="recipient_type"]:checked').val() || 'me';
     var recipientPostData = { recipient_type: recipientType };
@@ -423,6 +532,7 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
         success: function(json) {
             if (json['error']) {
                 $btn.removeClass('loading');
+                checkoutLoaderStop({ force: true });
                 $('#recipient-other-fields .checkout-field').removeClass('has-error');
                 $('#recipient-other-fields .text-danger').remove();
                 Object.keys(json['error']).forEach(function(key) {
@@ -454,6 +564,7 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
                         if (pmJson && pmJson['redirect']) { location = pmJson['redirect']; return; }
                         if (pmJson && pmJson['error']) {
                             $btn.removeClass('loading');
+                            checkoutLoaderStop({ force: true });
                             checkoutShowTopWarning(pmJson['error']['warning'] || 'Помилка вибору оплати.');
                             checkoutScrollTo($('#collapse-payment-method').closest('.order__form-box'));
                             return;
@@ -486,12 +597,14 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
                             },
                             error: function() {
                                 $btn.removeClass('loading');
+                                checkoutLoaderStop({ force: true });
                                 checkoutShowTopWarning('Помилка при створенні замовлення. Спробуйте ще раз.');
                             }
                         });
                     },
                     error: function() {
                         $btn.removeClass('loading');
+                        checkoutLoaderStop({ force: true });
                         checkoutShowTopWarning('Помилка мережі. Спробуйте ще раз.');
                     }
                 });
@@ -510,6 +623,7 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
                     if (smJson && smJson['redirect']) { location = smJson['redirect']; return; }
                     if (smJson && smJson['error']) {
                         $btn.removeClass('loading');
+                        checkoutLoaderStop({ force: true });
                         checkoutShowTopWarning(smJson['error']['warning'] || 'Оберіть спосіб доставки.');
                         checkoutScrollTo($shippingStep.closest('.order__form-box'));
                         return;
@@ -522,6 +636,7 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
                 },
                 error: function() {
                     $btn.removeClass('loading');
+                    checkoutLoaderStop({ force: true });
                     checkoutShowTopWarning('Помилка збереження доставки. Спробуйте ще раз.');
                 }
             });
@@ -531,6 +646,7 @@ $(document).on('click', '#checkout-summary-submit', function(e) {
         },
         error: function(xhr, ajaxOptions, thrownError) {
             $btn.removeClass('loading');
+            checkoutLoaderStop({ force: true });
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
         }
     });
