@@ -210,6 +210,7 @@ class ControllerCommonHeader extends Controller {
 			'information/about'         => array(),
 			'information/contact'       => array(),
 			'information/customer'      => array(),
+			'information/payment_delivery' => array(),
 		);
 
 		if (!isset($params_by_route[$route])) {

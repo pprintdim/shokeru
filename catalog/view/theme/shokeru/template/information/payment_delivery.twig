@@ -1,0 +1,91 @@
+{{ header }}
+{{ content_top }}
+<section class="payment">
+    <div class="container">
+        <ul class="breadcrumbs">
+            {% for breadcrumb in breadcrumbs %}
+                <li>
+                    <a href="{{ breadcrumb.href }}" {% if loop.last %}class="active"{% endif %}>{{ breadcrumb.text }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="payment__inner">
+            <div class="payment__top">
+                <h1 class="payment__title main-title">{{ heading_title }}</h1>
+                <p class="payment__descr">{{ text_intro }}</p>
+            </div>
+
+            <div class="payment__content">
+                <div class="payment__box">
+                    <h3 class="payment__name">{{ text_payment }}</h3>
+                    <div class="payment__block">
+                        {% for method in payment_methods %}
+                            <div class="payment__item">
+                                <div class="payment__item-top">
+                                    <h4 class="payment__item-title">{{ method.title }}</h4>
+                                    <p class="payment__item-descr">{{ method.text }}</p>
+                                </div>
+                                <div class="payment__item-icon">
+                                    {% if method.icon == 'online' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                            <path d="M26.666 4H5.333C3.86 4 2.666 5.194 2.666 6.667V20c0 1.473 1.194 2.667 2.667 2.667h21.333c1.473 0 2.667-1.194 2.667-2.667V6.667C29.333 5.194 28.139 4 26.666 4Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M10.666 28h10.667M16 22.667V28" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                        </svg>
+                                    {% elseif method.icon == 'card' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                            <path d="M28 5.333H4A2.667 2.667 0 0 0 1.333 8v16A2.667 2.667 0 0 0 4 26.667h24A2.667 2.667 0 0 0 30.667 24V8A2.667 2.667 0 0 0 28 5.333Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M1.333 13.333h29.334" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                            <path d="M18.667 2.667H8A2.667 2.667 0 0 0 5.333 5.333v21.334A2.667 2.667 0 0 0 8 29.333h16a2.667 2.667 0 0 0 2.667-2.666v-16l-8-8Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M18.667 2.667v8h8M21.333 17.333H10.667M21.333 22.667H10.667M13.333 12h-2.666" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="payment__box">
+                    <h3 class="payment__name">{{ text_delivery }}</h3>
+                    <div class="payment__block">
+                        {% for method in delivery_methods %}
+                            <div class="payment__item">
+                                <div class="payment__item-top">
+                                    <h4 class="payment__item-title">{{ method.title }}</h4>
+                                    <p class="payment__item-descr">{{ method.text }}</p>
+                                </div>
+                                <div class="payment__item-icon">
+                                    {% if method.icon == 'pickup' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                            <path d="M21.333 4h-20v17.333h20V4Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M21.333 10.667h5.334l4 4v6.666h-9.334V10.667Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M7.333 28a3.333 3.333 0 1 0 0-6.667 3.333 3.333 0 0 0 0 6.667ZM24.667 28a3.333 3.333 0 1 0 0-6.667 3.333 3.333 0 0 0 0 6.667Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    {% elseif method.icon == 'nova_poshta' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                            <path d="M16 2.667 21.333 8h-3.2v5.333h-4.266V8h-3.2L16 2.667Z" stroke="#202222" stroke-width="2" stroke-linejoin="round"/>
+                                            <path d="M29.333 16 24 21.333v-3.2h-5.333v-4.266H24v-3.2L29.333 16Z" stroke="#202222" stroke-width="2" stroke-linejoin="round"/>
+                                            <path d="M16 29.333 10.667 24h3.2v-5.333h4.266V24h3.2L16 29.333Z" stroke="#202222" stroke-width="2" stroke-linejoin="round"/>
+                                            <path d="M2.667 16 8 10.667v3.2h5.333v4.266H8v3.2L2.667 16Z" stroke="#202222" stroke-width="2" stroke-linejoin="round"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                            <path d="M16 29.333s10.667-8.8 10.667-17.333A10.667 10.667 0 0 0 5.333 12C5.333 20.533 16 29.333 16 29.333Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M16 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="#202222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{{ content_bottom }}
+{{ footer }}

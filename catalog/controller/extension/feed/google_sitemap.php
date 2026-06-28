@@ -92,6 +92,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			['route' => 'information/about',    'changefreq' => 'monthly', 'priority' => '0.5'],
 			['route' => 'information/contact',  'changefreq' => 'monthly', 'priority' => '0.5'],
 			['route' => 'information/customer', 'changefreq' => 'monthly', 'priority' => '0.5'],
+			['route' => 'information/payment_delivery', 'changefreq' => 'monthly', 'priority' => '0.5'],
 		];
 
 		foreach ($pages as $page) {

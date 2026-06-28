@@ -68,6 +68,7 @@ class ControllerCommonFooter extends Controller {
 		$data['facebook'] = $this->config->get('config_facebook');
 		$data['instagram'] = $this->config->get('config_instagram');
 		$data['customers'] = $this->url->link('information/customer', '', true);
+		$data['payment_delivery'] = $this->url->link('information/payment_delivery', '', true);
 
 		$language_id = (int)$this->config->get('config_language_id');
 
