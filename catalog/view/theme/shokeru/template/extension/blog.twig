@@ -1,0 +1,68 @@
+{{ header }}
+{{ content_top }}
+<section class="bl-hero">
+    <div class="container">
+        <ul class="breadcrumbs">
+            {% for breadcrumb in breadcrumbs %}
+                <li><a {% if loop.last %}class="active"{% endif %} href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            {% endfor %}
+        </ul>
+        <h1 class="bl-hero__title main-title">{{ heading_title }}</h1>
+        <p class="bl-hero__lead">{{ text_lead }}</p>
+        <div class="bl-chips">
+            <a class="bl-chip{% if all_active %} is-active{% endif %}" href="{{ all_href }}">{{ text_all }}</a>
+            {% for category in categories %}
+                <a class="bl-chip{% if category.active %} is-active{% endif %}" href="{{ category.href }}">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="bl-section">
+    <div class="container">
+        {% if posts %}
+        <div class="bl-grid">
+            {% for post in posts %}
+            <a href="{{ post.href }}" class="bl-card{% if loop.first %} is-featured{% endif %}">
+                <div class="bl-card__media">
+                    {% if post.image %}
+                        <img src="{{ post.image }}" alt="{{ post.name }}" loading="lazy" decoding="async">
+                    {% endif %}
+                    {% if post.category %}<span class="bl-card__cat">{{ post.category }}</span>{% endif %}
+                </div>
+                <div class="bl-card__body">
+                    <div class="bl-card__meta">
+                        <span>{{ post.date }}</span>
+                        <span>{{ post.read_min }} {{ text_min_read }}</span>
+                        {% if post.author %}<span>{{ post.author }}</span>{% endif %}
+                    </div>
+                    <h2 class="bl-card__title">{{ post.name }}</h2>
+                    {% if post.excerpt %}<p class="bl-card__excerpt">{{ post.excerpt }}</p>{% endif %}
+                    <span class="bl-card__more">
+                        {{ text_read_more }}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if pages|length > 1 %}
+        <nav class="bl-pager">
+            {% for p in pages %}
+                <a class="{% if p.active %}is-active{% endif %}" href="{{ p.href }}">{{ p.text }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+        {% else %}
+        <p class="bl-empty">{{ text_empty }}</p>
+        {% endif %}
+    </div>
+</section>
+{% if posts %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Blog","name":"{{ heading_title|e('js') }}","blogPost":[{% for post in posts %}{"@type":"BlogPosting","headline":"{{ post.name|e('js') }}","url":"{{ post.href }}"{% if post.image %},"image":"{{ post.image }}"{% endif %}}{% if not loop.last %},{% endif %}{% endfor %}]}
+</script>
+{% endif %}
+{{ content_bottom }}
+{{ footer }}

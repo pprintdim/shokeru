@@ -1,0 +1,254 @@
+{{ header }}
+<div class="kk-scope contact-page">
+  <section class="kk-hero">
+    <div class="container kk-container">
+      <ul class="breadcrumbs kk-breadcrumbs kk-reveal">
+        {% for breadcrumb in breadcrumbs %}
+          <li>
+            <a href="{{ breadcrumb.href }}" {% if loop.last %}class="active"{% endif %}>{{ breadcrumb.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <h1 class="kk-hero__title kk-reveal">{{ text_hero_title|raw }}</h1>
+      <p class="kk-hero__lead kk-reveal">{{ text_hero_lead }}</p>
+    </div>
+  </section>
+
+  {% if success %}
+    <div class="kk-toast is-show" role="status" aria-live="polite">
+      <span class="kk-toast__dot"></span>
+      <span>{{ success }}</span>
+    </div>
+  {% endif %}
+
+  <section class="kk-quick">
+    <div class="container kk-container">
+      <div class="kk-quick__grid">
+        {% if phones %}
+          <a class="kk-card kk-reveal" href="{{ phones[0].href }}">
+            <span class="kk-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <span class="kk-card__label">{{ text_telephone }}</span>
+            <span class="kk-card__value">{{ phones[0].label }}</span>
+            <span class="kk-card__sub">{{ open|striptags }}</span>
+          </a>
+        {% endif %}
+
+        <a class="kk-card kk-reveal" href="mailto:{{ email }}" data-delay="80">
+          <span class="kk-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          </span>
+          <span class="kk-card__label">{{ text_email }}</span>
+          <span class="kk-card__value">{{ email }}</span>
+          <span class="kk-card__sub">{{ text_email_note }}</span>
+        </a>
+
+        <div class="kk-card kk-reveal" data-delay="160">
+          <span class="kk-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <span class="kk-card__label">{{ text_open }}</span>
+          <span class="kk-card__value">{{ text_working_days }}</span>
+          <span class="kk-card__sub">{{ open|striptags }}</span>
+        </div>
+
+        <div class="kk-card kk-reveal" data-delay="240">
+          <span class="kk-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4l-4 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          </span>
+          <span class="kk-card__label">{{ text_messengers }}</span>
+          <span class="kk-card__value">{{ text_messenger_channels }}</span>
+          <span class="kk-card__sub">{{ text_social_note }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kk-contact">
+    <div class="container kk-container">
+      <div class="kk-contact__grid">
+        <div class="kk-panel kk-reveal">
+          <h2 class="kk-panel__title">{{ text_write_us }}</h2>
+          <p class="kk-panel__desc">{{ text_write_us_note }}</p>
+
+          {% if error_warning %}
+            <div class="kk-alert kk-alert--error">{{ error_warning }}</div>
+          {% endif %}
+
+          <form class="kk-form" id="kkContactForm" action="{{ action }}" method="post" enctype="multipart/form-data" novalidate>
+            <div class="kk-form__group">
+              <label class="kk-form__label" for="kkName">{{ entry_name }}</label>
+              <input class="kk-form__input{% if error_name %} is-error{% endif %}" id="kkName" name="name" type="text" value="{{ name }}" required autocomplete="name">
+              {% if error_name %}<span class="kk-form__hint is-error">{{ error_name }}</span>{% endif %}
+            </div>
+
+            <div class="kk-form__group">
+              <label class="kk-form__label" for="kkPhone">{{ entry_telephone }}</label>
+              <input class="kk-form__input{% if error_telephone %} is-error{% endif %}" id="kkPhone" name="telephone" type="tel" value="{{ telephone }}" required autocomplete="tel">
+              {% if error_telephone %}<span class="kk-form__hint is-error">{{ error_telephone }}</span>{% endif %}
+            </div>
+
+            <div class="kk-form__group kk-form__group--full">
+              <label class="kk-form__label" for="kkEmail">{{ entry_email }}</label>
+              <input class="kk-form__input{% if error_email %} is-error{% endif %}" id="kkEmail" name="email" type="email" value="{{ email_value }}" required autocomplete="email">
+              {% if error_email %}<span class="kk-form__hint is-error">{{ error_email }}</span>{% endif %}
+            </div>
+
+            <div class="kk-form__group kk-form__group--full">
+              <label class="kk-form__label" for="kkMsg">{{ entry_enquiry }}</label>
+              <textarea class="kk-form__textarea{% if error_enquiry %} is-error{% endif %}" id="kkMsg" name="enquiry" required>{{ enquiry }}</textarea>
+              {% if error_enquiry %}<span class="kk-form__hint is-error">{{ error_enquiry }}</span>{% endif %}
+            </div>
+
+            {{ captcha }}
+
+            <div class="kk-form__actions">
+              <button class="kk-btn kk-btn--primary" type="submit">
+                {{ button_submit }}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+              <span class="kk-form__hint">{{ text_privacy_note|raw }}</span>
+            </div>
+          </form>
+        </div>
+
+        <aside class="kk-info">
+          <div class="kk-info__block kk-reveal" data-delay="80">
+            <div class="kk-info__title">{{ text_address }}</div>
+            <address class="kk-info__text">{{ address }}</address>
+          </div>
+
+          {% if phones %}
+            <div class="kk-info__block kk-reveal" data-delay="160">
+              <div class="kk-info__title">{{ text_telephone }}</div>
+              {% for phone in phones %}
+                <a class="kk-info__text kk-info__link" href="{{ phone.href }}">{{ phone.label }}</a>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="kk-info__block kk-reveal" data-delay="240">
+            <div class="kk-info__title">{{ text_socials }}</div>
+            <div class="kk-socials">
+              {% if instagram %}
+                <a class="kk-social" href="{{ instagram }}" target="_blank" rel="noopener" aria-label="{{ text_instagram }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+                </a>
+              {% endif %}
+              {% if facebook %}
+                <a class="kk-social" href="{{ facebook }}" target="_blank" rel="noopener" aria-label="{{ text_facebook }}">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.1.4-2 2-2h2V2h-3c-3 0-5 1.8-5 5v3H6v4h3v8z"/></svg>
+                </a>
+              {% endif %}
+              <a class="kk-social" href="mailto:{{ email }}" aria-label="{{ text_email }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  {% if map_query %}
+    <section class="kk-map">
+      <div class="container kk-container">
+        <div class="kk-map__frame kk-reveal">
+          <iframe src="https://www.google.com/maps?q={{ map_query|url_encode }}&hl={{ geocode_hl }}&z=15&output=embed" loading="lazy" title="{{ text_map_title }}"></iframe>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="kk-faq">
+    <div class="container kk-container">
+      <div class="kk-faq__head kk-reveal">
+        <h2 class="kk-faq__title">{{ text_faq_title }}</h2>
+        <p>{{ text_faq_note }}</p>
+      </div>
+
+      <div class="kk-faq__list" id="kkFaq">
+        <div class="kk-faq__item kk-reveal is-open">
+          <button class="kk-faq__q" type="button" aria-expanded="true">{{ text_faq_delivery }}<span class="kk-faq__toggle">+</span></button>
+          <div class="kk-faq__a" style="max-height: 140px;"><div class="kk-faq__a-inner">{{ text_faq_delivery_answer }}</div></div>
+        </div>
+        <div class="kk-faq__item kk-reveal" data-delay="60">
+          <button class="kk-faq__q" type="button" aria-expanded="false">{{ text_faq_warranty }}<span class="kk-faq__toggle">+</span></button>
+          <div class="kk-faq__a"><div class="kk-faq__a-inner">{{ text_faq_warranty_answer }}</div></div>
+        </div>
+        <div class="kk-faq__item kk-reveal" data-delay="120">
+          <button class="kk-faq__q" type="button" aria-expanded="false">{{ text_faq_payment }}<span class="kk-faq__toggle">+</span></button>
+          <div class="kk-faq__a"><div class="kk-faq__a-inner">{{ text_faq_payment_answer }}</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if phones %}
+    <section class="kk-cta">
+      <div class="container kk-container">
+        <div class="kk-cta__box kk-reveal">
+          <div class="kk-cta__text">
+            <h3>{{ text_cta_title }}</h3>
+            <p>{{ text_cta_note }}</p>
+          </div>
+          <a class="kk-btn kk-btn--primary" href="{{ phones[0].href }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            {{ text_call }}
+          </a>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+</div>
+
+<script>
+(function() {
+  var faq = document.getElementById('kkFaq');
+  var form = document.getElementById('kkContactForm');
+
+  if (faq) {
+    faq.addEventListener('click', function(event) {
+      var button = event.target.closest('.kk-faq__q');
+      if (!button) return;
+
+      var item = button.closest('.kk-faq__item');
+      var answer = item ? item.querySelector('.kk-faq__a') : null;
+      var open = item.classList.toggle('is-open');
+
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+      if (answer) {
+        answer.style.maxHeight = open ? answer.scrollHeight + 'px' : '0px';
+      }
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', function(event) {
+      var required = form.querySelectorAll('[required]');
+      var valid = true;
+
+      required.forEach(function(field) {
+        if (!field.value.trim()) {
+          field.classList.add('is-error');
+          valid = false;
+        }
+      });
+
+      if (!valid) {
+        event.preventDefault();
+      }
+    });
+
+    form.addEventListener('input', function(event) {
+      if (event.target.classList && event.target.classList.contains('is-error')) {
+        event.target.classList.remove('is-error');
+      }
+    });
+  }
+})();
+</script>
+{{ footer }}

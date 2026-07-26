@@ -1,0 +1,67 @@
+<form class="profile__user-result profile__form active" data-profile-user-result="my-data" method="post" action="{{ action }}">
+    <div class="profile__form-inputs">
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-first-name">{{ text_firstname }}</label>
+            <div class="profile__form-input">
+                <input type="text" name="firstname" id="profile-first-name" required value="{{ firstname }}">
+                {% if error_firstname %}
+                    <p class="text-danger">{{ error_firstname }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-last-name">{{ text_lastname }}</label>
+            <div class="profile__form-input">
+                <input type="text" name="lastname" id="profile-last-name" required value="{{ lastname }}">
+                {% if error_lastname %}
+                    <p class="text-danger">{{ error_lastname }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-email">E-mail</label>
+            <div class="profile__form-input">
+                <button class="change-email" type="button"></button>
+                <input type="email" name="email" id="profile-email" required value="{{ email }}" readonly>
+                {% if error_email %}
+                    <p class="text-danger">{{ error_email }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-phone">{{ text_telephone }}</label>
+            <div class="profile__form-input">
+                <button class="change-phone" type="button"></button>
+                <input type="text" name="telephone" id="profile-phone" required value="{{ telephone }}" readonly>
+                {% if error_telephone %}
+                    <p class="text-danger">{{ error_telephone }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile__form-item">
+            <label class="profile__form-label" for="profile-password">{{ text_password }}</label>
+
+            <div class="profile__form-input">
+                <button class="change-password" type="button"></button>
+                <button class="form-show-password profile-eye" type="button"></button>
+                <input type="password" id="profile-password" value="{{ current_password ?: '********' }}" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile__form-bottom">
+        <button class="profile__form-password btn-5 change-password" type="button">{{ button_change_password }}</button>
+        <span></span>
+        <button class="profile__form-submit btn" type="submit">{{ button_save_changes }}</button>
+    </div>
+
+    {% if success %}
+        <p class="text-success">{{ success }}</p>
+    {% endif %}
+
+</form>

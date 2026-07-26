@@ -1,0 +1,33 @@
+<section class="weworks">
+            <div class="container">
+                <div class="weworks__inner">
+                    <div class="weworks__start">
+                        <div class="weworks__start-content">
+                            <h1 class="weworks__start-title">{{ title }}</h1>
+                            {{ content|raw }}
+                        </div>
+                        <span class="weworks__start-line"></span>
+                        <div class="weworks__start-image">
+                            <img src="{{ image.full }}" alt="{{ title }}">
+                        </div>
+                    </div>
+                    {% if items %}
+                        <div class="weworks__top">
+                            <div class="weworks__content">
+                                <span class="weworks__line"></span>
+                            </div>
+                            <span class="weworks-vertical-line"></span>
+                            
+                            <div class="weworks__block">
+                                {% for item in items %}
+                                <div class="weworks__item">
+                                    <h3 class="weworks__item-title">{{ item.title }}</h3>
+                                    <p class="weworks__item-descr">{{ item.content|raw }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>

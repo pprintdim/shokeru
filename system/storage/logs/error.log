@@ -1,0 +1,50 @@
+2026-04-24 21:03:21 - PHP Warning:  Undefined array key "address_1" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 115
+2026-04-24 21:03:21 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-24 21:03:21 - PHP Warning:  Undefined array key "city" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 119
+2026-04-24 21:03:21 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-24 21:08:32 - PHP Warning:  Undefined array key "address_1" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 115
+2026-04-24 21:08:32 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-24 21:08:32 - PHP Warning:  Undefined array key "city" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 119
+2026-04-24 21:08:32 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 10:32:35 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:32:35 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:32:40 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:32:40 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:32:41 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:32:41 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:33:23 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:33:23 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:33:24 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:33:24 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:33:32 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:33:32 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:34:51 - PHP Warning:  Undefined array key "guest" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:34:51 - PHP Warning:  Trying to access array offset on null in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 69
+2026-04-29 10:46:08 - PHP Warning:  Undefined array key "address_1" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 116
+2026-04-29 10:46:08 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 10:46:08 - PHP Warning:  Undefined array key "city" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 120
+2026-04-29 10:46:08 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 10:47:55 - PHP Warning:  Undefined array key "address_1" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 116
+2026-04-29 10:47:55 - PHP Warning:  Undefined array key "address_1" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 116
+2026-04-29 10:47:55 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 10:47:55 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 10:47:55 - PHP Warning:  Undefined array key "city" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 120
+2026-04-29 10:47:55 - PHP Warning:  Undefined array key "city" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/guest_shipping.php on line 120
+2026-04-29 10:47:55 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 10:47:55 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 18:53:29 - PHP Warning:  Undefined array key "telephone" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/register.php on line 131
+2026-04-29 18:53:29 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 18:53:48 - PHP Warning:  Undefined array key "telephone" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/register.php on line 131
+2026-04-29 18:53:48 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 18:53:54 - PHP Warning:  Undefined array key "telephone" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/register.php on line 131
+2026-04-29 18:53:54 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 18:54:09 - PHP Warning:  Undefined array key "telephone" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/register.php on line 131
+2026-04-29 18:54:09 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-04-29 19:01:05 - PHP Warning:  Undefined array key "telephone" in /Applications/MAMP/htdocs/shokeru/catalog/controller/checkout/register.php on line 131
+2026-04-29 19:01:05 - PHP Unknown:  mb_strlen(): Passing null to parameter #1 ($string) of type string is deprecated in /Applications/MAMP/htdocs/shokeru/system/helper/utf8.php on line 6
+2026-05-12 15:57:38 - PHP Warning:  Undefined array key "image" in /Applications/MAMP/htdocs/shokeru/admin/controller/extension/module/safeimage.php on line 51
+2026-05-12 16:00:29 - PHP Warning:  Undefined array key "image" in /Applications/MAMP/htdocs/shokeru/admin/controller/extension/module/safeimage.php on line 90
+2026-05-12 16:00:32 - PHP Warning:  Undefined array key "image" in /Applications/MAMP/htdocs/shokeru/admin/controller/extension/module/safeimage.php on line 90
+2026-05-12 16:00:40 - PHP Warning:  Undefined array key "image" in /Applications/MAMP/htdocs/shokeru/admin/controller/extension/module/safeimage.php on line 90
+2026-05-12 16:00:42 - PHP Warning:  Undefined array key "image" in /Applications/MAMP/htdocs/shokeru/admin/controller/extension/module/safeimage.php on line 90
+2026-05-13 11:38:36 - PHP Warning:  Undefined variable $setting in /Applications/MAMP/htdocs/shokeru/catalog/controller/extension/module/saletextline.php on line 4

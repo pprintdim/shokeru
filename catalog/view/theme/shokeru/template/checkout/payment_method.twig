@@ -1,0 +1,26 @@
+<div class="checkout-methods">
+    {% if error_warning %}
+        <div class="checkout-methods__error">{{ error_warning }}</div>
+    {% endif %}
+
+    {% if payment_methods %}
+        <div class="order__form-payments">
+            {% for payment_method in payment_methods %}
+                <label class="checkbox-block checkout-payment-option{% if payment_method.code == code or not code %} active{% endif %}">
+                    <input type="radio" name="payment_method" value="{{ payment_method.code }}" hidden {% if payment_method.code == code or not code %}{% set code = payment_method.code %}checked="checked"{% endif %}>
+                    <span>{{ payment_method.title }}{% if payment_method.terms %} ({{ payment_method.terms }}){% endif %}</span>
+                </label>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="checkout-field checkout-field--full">
+        <textarea name="comment" rows="6" placeholder="{{ text_comments }}">{{ comment }}</textarea>
+    </div>
+
+    <input type="button" value="{{ button_continue }}" id="button-payment-method" data-loading-text="{{ text_loading }}" style="display:none">
+
+    {% for script in scripts %}
+        <script src="{{ script }}" type="text/javascript"></script>
+    {% endfor %}
+</div>

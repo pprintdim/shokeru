@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Мой профиль</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="body"> 
+    <header class="header">
+        <div class="container">
+            <div class="header__inner">
+                <a class="header__logo" href="index.html">
+                    <img src="img/logo.svg" alt="">
+                </a>
+                <div class="header__content">
+                    <div class="header__top">
+                        <nav class="header__top-menu">
+                            <ul>
+                                <li>
+                                    <a href="#">Каталог</a>
+                                </li>
+                                <li>
+                                    <a href="#">Новинки</a>
+                                </li>
+                                <li>
+                                    <a class="header__menu-sales" href="#">Sales</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <div class="header__box">
+                            <div class="header__lang">
+                                <button class="header__lang-selected">RU</button>
+                                <div class="header__lang-content">
+                                    <a class="header__lang-item" href="#">UA</a>
+                                    <a class="header__lang-item" href="#">EN</a>
+                                </div>
+                            </div>
+                            <span class="header__box-line"></span>
+                            <div class="header__user">
+                                <button class="header__favourite"><span>3</span></button>
+                                <button class="header__cart cart-open"><span>88</span></button>
+                            </div>
+                            <span class="header__box-line"></span>
+                            <button class="header__login">ВХОД</button>
+                            <button class="header__search-open"></button>
+                            <button class="header__open menu-open">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                    <path d="M20 30H34V26H20V30ZM6 10V14H20V10H6ZM6 22H34V18H6V22Z" fill="#C5FF24"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <form class="header__search" action="#">
+                        <input class="header__search-input" type="text" required>
+                        <button class="header__search-btn" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M21.0004 21L16.6504 16.65" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="header__menu">
+                <div class="container">
+                    <div class="header__menu-inner">
+                        <div class="header__menu-top">
+                            <a class="header__menu-logo" href="index.html">
+                                <img src="img/logo.svg" alt="">
+                            </a>
+                            <button class="header__login">ВХОД</button>
+                            <button class="header__menu-close menu-close">Закрыть</button>
+                        </div>
+                        <div class="header__menu-content">
+                            <div class="header__menu-image">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="694" height="355" viewBox="0 0 694 355" fill="none">
+                                    <path d="M433.42 0L166.648 177.064L116.251 75.2606C99.1154 40.6541 124.65 0 163.288 0H433.42ZM526.488 177.064H693.136L664.578 119.275C628.627 46.3659 554.039 0 472.73 0H433.42L346.736 177.064H526.488ZM166.648 177.064H0L28.5587 234.853C64.845 307.762 139.098 354.128 220.742 354.128H260.052L346.736 177.064H166.648ZM526.488 177.064L260.052 354.128H530.184C568.822 354.128 594.021 313.474 576.885 278.867L526.488 177.064Z" fill="#202222"/>
+                                </svg>
+                            </div>
+                            <nav class="header__menu-list">
+                                <ul>
+                                    <li>
+                                        <a class="active" href="#">Головна</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Про нас</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Магазин</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Информация покупателям</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Контакты</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <div class="header__menu-bottom">
+                                <div class="header__menu-block">
+                                    <div class="header__menu-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M22.0001 16.92V19.92C22.0012 20.1985 21.9441 20.4741 21.8326 20.7293C21.721 20.9845 21.5574 21.2136 21.3521 21.4018C21.1469 21.5901 20.9046 21.7335 20.6408 21.8227C20.377 21.9119 20.0974 21.945 19.8201 21.92C16.7429 21.5856 13.7871 20.5341 11.1901 18.85C8.77388 17.3146 6.72539 15.2661 5.19006 12.85C3.50003 10.2412 2.4483 7.27097 2.12006 4.17997C2.09507 3.90344 2.12793 3.62474 2.21656 3.3616C2.30518 3.09846 2.44763 2.85666 2.63482 2.6516C2.82202 2.44653 3.04986 2.28268 3.30385 2.1705C3.55783 2.05831 3.8324 2.00024 4.11006 1.99997H7.11006C7.59536 1.9952 8.06585 2.16705 8.43382 2.48351C8.80179 2.79996 9.04213 3.23942 9.11005 3.71997C9.23668 4.68004 9.47151 5.6227 9.81006 6.52997C9.9446 6.8879 9.97372 7.27689 9.89396 7.65086C9.81421 8.02482 9.62892 8.36809 9.36005 8.63998L8.09006 9.90997C9.51361 12.4135 11.5865 14.4864 14.0901 15.91L15.3601 14.64C15.6319 14.3711 15.9752 14.1858 16.3492 14.1061C16.7231 14.0263 17.1121 14.0554 17.4701 14.19C18.3773 14.5285 19.32 14.7634 20.2801 14.89C20.7658 14.9585 21.2095 15.2032 21.5266 15.5775C21.8437 15.9518 22.0122 16.4296 22.0001 16.92Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="header__menu-tel">
+                                        <a class="header__menu-link" href="tel:+380507202551">(050) 720-25-51</a>
+                                        <span>   /   </span>
+                                        <a class="header__menu-link" href="tel:+380674450300">(067) 445-03-00</a>
+                                    </div>
+                                </div>
+                                <div class="header__menu-block">
+                                    <div class="header__menu-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M22 6L12 13L2 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <a class="header__menu-link" href="mailto:admin@trikobakh.com">admin@trikobakh.com</a>
+                                </div>
+                                <div class="header__menu-social">
+                                    <a href="#" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                            <path d="M18.2327 0H6.76727C3.03574 0 0 3.03574 0 6.76727V18.2329C0 21.9643 3.03574 25 6.76727 25H18.2329C21.9643 25 25 21.9643 25 18.2329V6.76727C25 3.03574 21.9643 0 18.2327 0ZM12.5 19.3357C8.7307 19.3357 5.66425 16.2693 5.66425 12.5C5.66425 8.7307 8.7307 5.66425 12.5 5.66425C16.2693 5.66425 19.3357 8.7307 19.3357 12.5C19.3357 16.2693 16.2693 19.3357 12.5 19.3357ZM19.4992 7.27634C18.3853 7.27634 17.4793 6.37035 17.4793 5.25646C17.4793 4.14257 18.3853 3.23639 19.4992 3.23639C20.6131 3.23639 21.5193 4.14257 21.5193 5.25646C21.5193 6.37035 20.6131 7.27634 19.4992 7.27634Z" fill="#D2D2D2"/>
+                                            <path d="M12.5 7C9.46743 7 7 9.46724 7 12.5C7 15.5326 9.46743 18 12.5 18C15.5328 18 18 15.5326 18 12.5C18 9.46724 15.5328 7 12.5 7Z" fill="#D2D2D2"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                            <path d="M21.3379 0H3.66211C1.64299 0 0 1.64299 0 3.66211V21.3379C0 23.357 1.64299 25 3.66211 25H11.0352V16.1621H8.10547V11.7676H11.0352V8.78906C11.0352 6.36578 13.0064 4.39453 15.4297 4.39453H19.873V8.78906H15.4297V11.7676H19.873L19.1406 16.1621H15.4297V25H21.3379C23.357 25 25 23.357 25 21.3379V3.66211C25 1.64299 23.357 0 21.3379 0Z" fill="#D2D2D2"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="profile">
+            <div class="container">
+                <div class="profile__inner">
+                    <div class="profile__left">
+                        <div class="profile__left-top">
+                            <div class="profile__left-image">
+                                <img src="img/profile.png" alt="">
+                            </div>
+                            <div class="profile__left-about">
+                                <h1 class="profile__left-title">Мой профиль</h1>
+                                <p class="profile__left-email">Ekaterinamail@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="profile__left-select">
+                            <button class="profile__left-btn active" data-profile-btn="user-data">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M12 3H13.5C13.8978 3 14.2794 3.15804 14.5607 3.43934C14.842 3.72064 15 4.10218 15 4.5V15C15 15.3978 14.842 15.7794 14.5607 16.0607C14.2794 16.342 13.8978 16.5 13.5 16.5H4.5C4.10218 16.5 3.72064 16.342 3.43934 16.0607C3.15804 15.7794 3 15.3978 3 15V4.5C3 4.10218 3.15804 3.72064 3.43934 3.43934C3.72064 3.15804 4.10218 3 4.5 3H6" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M11.25 1.5H6.75C6.55109 1.5 6.36032 1.57902 6.21967 1.71967C6.07902 1.86032 6 2.05109 6 2.25V3.75C6 3.94891 6.07902 4.13968 6.21967 4.28033C6.36032 4.42098 6.55109 4.5 6.75 4.5H11.25C11.4489 4.5 11.6397 4.42098 11.7803 4.28033C11.921 4.13968 12 3.94891 12 3.75V2.25C12 2.05109 11.921 1.86032 11.7803 1.71967C11.6397 1.57902 11.4489 1.5 11.25 1.5V1.5Z" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9 8.25H12" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M9 12H12" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M6 8.25H6.0075" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M6 12H6.0075" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Мои данные
+                            </button>
+                            <button class="profile__left-btn" data-profile-btn="my-orders">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M14.25 2.25H3.75C2.92157 2.25 2.25 2.92157 2.25 3.75V14.25C2.25 15.0784 2.92157 15.75 3.75 15.75H14.25C15.0784 15.75 15.75 15.0784 15.75 14.25V3.75C15.75 2.92157 15.0784 2.25 14.25 2.25Z" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M8.25 2.25V8.25L10.5 6L12.75 8.25V2.25" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Мои заказы
+                            </button>
+                            <button class="profile__left-btn" data-profile-btn="tracked-products">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3 16.5H13.5C13.8978 16.5 14.2794 16.342 14.5607 16.0607C14.842 15.7794 15 15.3978 15 15V5.625L10.875 1.5H4.5C4.10218 1.5 3.72064 1.65804 3.43934 1.93934C3.15804 2.22064 3 2.60218 3 3V5.25" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10.5 1.5V6H15" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3.75 12.75C4.04547 12.75 4.33806 12.6918 4.61104 12.5787C4.88402 12.4657 5.13206 12.2999 5.34099 12.091C5.54992 11.8821 5.71566 11.634 5.82873 11.361C5.9418 11.0881 6 10.7955 6 10.5C6 10.2045 5.9418 9.91194 5.82873 9.63896C5.71566 9.36598 5.54992 9.11794 5.34099 8.90901C5.13206 8.70008 4.88402 8.53434 4.61104 8.42127C4.33806 8.3082 4.04547 8.25 3.75 8.25C3.15326 8.25 2.58097 8.48705 2.15901 8.90901C1.73705 9.33097 1.5 9.90326 1.5 10.5C1.5 11.0967 1.73705 11.669 2.15901 12.091C2.58097 12.5129 3.15326 12.75 3.75 12.75V12.75Z" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M6.75 13.5L5.625 12.375" stroke="#202222" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Отслеживаемы товары <span>3</span>
+                            </button>
+                            <button class="profile__left-btn" data-profile-btn="files">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M15.75 11.25V14.25C15.75 14.6478 15.592 15.0294 15.3107 15.3107C15.0294 15.592 14.6478 15.75 14.25 15.75H3.75C3.35218 15.75 2.97064 15.592 2.68934 15.3107C2.40804 15.0294 2.25 14.6478 2.25 14.25V11.25" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M5.25 7.5L9 11.25L12.75 7.5" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M9 11.25V2.25" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                </svg>
+                                Файли для скачивания
+                            </button>
+                            <button class="profile__left-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                    <path d="M6.75 15.75H3.75C3.35218 15.75 2.97064 15.592 2.68934 15.3107C2.40804 15.0294 2.25 14.6478 2.25 14.25V3.75C2.25 3.35218 2.40804 2.97064 2.68934 2.68934C2.97064 2.40804 3.35218 2.25 3.75 2.25H6.75" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M12 12.75L15.75 9L12 5.25" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                    <path d="M15.75 9H6.75" stroke="#202222" stroke-linecap="square" stroke-linejoin="round"/>
+                                </svg>
+                                Выйти
+                            </button>
+                        </div>
+                    </div>
+                    <div class="profile__content">
+                        <div class="profile__result profile-user active" data-profile-content="user-data">
+                            <div class="profile__user-top">
+                                <div class="profile__user-info">
+                                    <div class="profile__user-info--icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                            <path d="M38 44H10C7.8 44 6 42.2 6 40V12C6 9.8 7.8 8 10 8H38C40.2 8 42 9.8 42 12V40C42 42.2 40.2 44 38 44Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M32 4V8" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M16 4V8" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M24 28C27.3137 28 30 25.3137 30 22C30 18.6863 27.3137 16 24 16C20.6863 16 18 18.6863 18 22C18 25.3137 20.6863 28 24 28Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M34 37C31.2 35 27.8 34 24 34C20.2 34 16.8 35.2 14 37" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <p class="profile__user-info--name">Ваша роль: <br><strong>Оптовик</strong></p>
+                                </div>
+                                <div class="profile__user-info">
+                                    <div class="profile__user-info--icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                            <path d="M38 10L10 38" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M13 18C15.7614 18 18 15.7614 18 13C18 10.2386 15.7614 8 13 8C10.2386 8 8 10.2386 8 13C8 15.7614 10.2386 18 13 18Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M35 40C37.7614 40 40 37.7614 40 35C40 32.2386 37.7614 30 35 30C32.2386 30 30 32.2386 30 35C30 37.7614 32.2386 40 35 40Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <p class="profile__user-info--name">Накопительная скидка: <strong>4%</strong></p>
+                                </div>
+                            </div>
+                            <div class="profile__user-content">
+                                <div class="profile__user-select">
+                                    <button class="profile__user-btn active" data-profile-user-btn="my-data">Мои данные</button>
+                                    <button class="profile__user-btn" data-profile-user-btn="delivery-adress">Адреса доставки</button>
+                                </div>
+                                <form class="profile__user-result profile__form active" data-profile-user-result="my-data">
+                                    <div class="profile__form-inputs">
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-first-name">Имя</label>
+                                            <div class="profile__form-input">
+                                                <input type="text" name="first_name" id="profile-first-name" required value="Екатерина">
+                                            </div>
+                                        </div>
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-last-name">Фамилия</label>
+                                            <div class="profile__form-input">
+                                                <input type="text" name="last_name" id="profile-last-name" required value="Сухова">
+                                            </div>
+                                        </div>
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-patronymic">Отчество</label>
+                                            <div class="profile__form-input">
+                                                <input type="text" name="patronymic" id="profile-patronymic" required value="Владимировна">
+                                            </div>
+                                        </div>
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-email">E-mail</label>
+                                            <div class="profile__form-input">
+                                                <button class="change-email" type="button"></button>
+                                                <input type="email" name="email" id="profile-email" required value="sukhova766@gmail.com" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-phone">Телефон</label>
+                                            <div class="profile__form-input">
+                                                <button class="change-phone" type="button"></button>
+                                                <input type="text" name="phone" id="profile-phone" required value="+38 099 444 22 33" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-password">Пароль</label>
+                                            <div class="profile__form-input">
+                                                <button class="change-password" type="button"></button>
+                                                <input type="text" name="password" id="profile-password" required value="Password 12345" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__form-bottom">
+                                        <button class="profile__form-password btn-5 change-password" type="button">Изменить пароль</button>
+                                        <span></span>
+                                        <button class="profile__form-submit btn" type="submit">Сохранить изменения</button>
+                                    </div>
+                                </form>
+                                <form class="profile__user-result profile__form" data-profile-user-result="delivery-adress">
+                                    <div class="profile__form-inputs">
+                                        <div class="profile__form-item">
+                                            <label class="profile__form-label" for="profile-address">Адрес</label>
+                                            <div class="profile__form-input">
+                                                <input type="text" name="address" id="profile-address" required value="Аресса 1234">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__form-bottom">
+                                        <button class="profile__form-submit btn" type="submit">Сохранить изменения</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="profile__result profile-orders" data-profile-content="my-orders">
+                            <div class="profile__orders-top">
+                                <h2 class="profile__orders-heading">Мои заказы</h2>
+                                <form class="profile__orders-filters" action="#">
+                                    <select name="years-date">
+                                        <option value="2025" selected>2025</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                    </select>
+                                    <select name="status">
+                                        <option value="" selected disabled>Статус</option>
+                                        <option value="Принят">Принят</option>
+                                        <option value="Отправлен">Отправлен</option>
+                                    </select>
+                                    <button class="profile__orders-btn btn">Применить</button>
+                                </form>
+                            </div>
+                            <div class="profile__orders-block">
+                                <div class="profile__orders-item">
+                                    <div class="profile__orders-start">
+                                        <div class="profile__orders-start--left">
+                                            <p class="profile__orders-number">№ 56800 от 25.10.21 в 12:34</p>
+                                            <p class="profile__orders-status">В обработке</p>
+                                        </div>
+                                        <div class="profile__orders-start--content">
+                                            <div class="profile__orders-info">
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус заказа</h4>
+                                                    <p>Принят</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус оплаты</h4>
+                                                    <p>Оплачен</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Сумма</h4>
+                                                    <p>5 500 грн</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Всего товаров:</h4>
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__orders-content">
+                                        <div class="profile__orders-left">
+                                            <div class="profile__orders-left--block">
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Получатель</h4>
+                                                    <p>Дмитрий Верховецкий (050 478 90 00)</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Адрес доставки</h4>
+                                                    <p>Самовывоз из Новой Почты: <br>Запорожская обл., Бердянский р-н., Бердянск, Отделение №233, Софиевская ул., д.40</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Информация о заказе</h4>
+                                                    <p>ТТН 414063108</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile__orders-products">
+                                            <div class="profile__orders-products--block">
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile__orders-products--bottom">
+                                                <button class="profile__orders-products--repeat btn-4">Повторить заказ</button>
+                                                <div class="profile__orders-products--total">
+                                                    <h4 class="profile__orders-products--pay">Оплата при получении товара</h4>
+                                                    <div class="profile__orders-products--total-price">
+                                                        <h4>Итого: </h4>
+                                                        <p>900 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile__orders-item">
+                                    <div class="profile__orders-start">
+                                        <div class="profile__orders-start--left">
+                                            <p class="profile__orders-number">№ 56800 от 25.10.21 в 12:34</p>
+                                            <p class="profile__orders-status">В обработке</p>
+                                        </div>
+                                        <div class="profile__orders-start--content">
+                                            <div class="profile__orders-info">
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус заказа</h4>
+                                                    <p>Принят</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус оплаты</h4>
+                                                    <p>Оплачен</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Сумма</h4>
+                                                    <p>5 500 грн</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Всего товаров:</h4>
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__orders-content">
+                                        <div class="profile__orders-left">
+                                            <div class="profile__orders-left--block">
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Получатель</h4>
+                                                    <p>Дмитрий Верховецкий (050 478 90 00)</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Адрес доставки</h4>
+                                                    <p>Самовывоз из Новой Почты: <br>Запорожская обл., Бердянский р-н., Бердянск, Отделение №233, Софиевская ул., д.40</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Информация о заказе</h4>
+                                                    <p>ТТН 414063108</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile__orders-products">
+                                            <div class="profile__orders-products--block">
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile__orders-products--bottom">
+                                                <button class="profile__orders-products--repeat btn-4">Повторить заказ</button>
+                                                <div class="profile__orders-products--total">
+                                                    <h4 class="profile__orders-products--pay">Оплата при получении товара</h4>
+                                                    <div class="profile__orders-products--total-price">
+                                                        <h4>Итого: </h4>
+                                                        <p>900 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile__orders-item">
+                                    <div class="profile__orders-start">
+                                        <div class="profile__orders-start--left">
+                                            <p class="profile__orders-number">№ 56800 от 25.10.21 в 12:34</p>
+                                            <p class="profile__orders-status">В обработке</p>
+                                        </div>
+                                        <div class="profile__orders-start--content">
+                                            <div class="profile__orders-info">
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус заказа</h4>
+                                                    <p>Принят</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус оплаты</h4>
+                                                    <p>Оплачен</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Сумма</h4>
+                                                    <p>5 500 грн</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Всего товаров:</h4>
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__orders-content">
+                                        <div class="profile__orders-left">
+                                            <div class="profile__orders-left--block">
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Получатель</h4>
+                                                    <p>Дмитрий Верховецкий (050 478 90 00)</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Адрес доставки</h4>
+                                                    <p>Самовывоз из Новой Почты: <br>Запорожская обл., Бердянский р-н., Бердянск, Отделение №233, Софиевская ул., д.40</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Информация о заказе</h4>
+                                                    <p>ТТН 414063108</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile__orders-products">
+                                            <div class="profile__orders-products--block">
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile__orders-products--bottom">
+                                                <button class="profile__orders-products--repeat btn-4">Повторить заказ</button>
+                                                <div class="profile__orders-products--total">
+                                                    <h4 class="profile__orders-products--pay">Оплата при получении товара</h4>
+                                                    <div class="profile__orders-products--total-price">
+                                                        <h4>Итого: </h4>
+                                                        <p>900 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile__orders-item">
+                                    <div class="profile__orders-start">
+                                        <div class="profile__orders-start--left">
+                                            <p class="profile__orders-number">№ 56800 от 25.10.21 в 12:34</p>
+                                            <p class="profile__orders-status">В обработке</p>
+                                        </div>
+                                        <div class="profile__orders-start--content">
+                                            <div class="profile__orders-info">
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус заказа</h4>
+                                                    <p>Принят</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус оплаты</h4>
+                                                    <p>Оплачен</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Сумма</h4>
+                                                    <p>5 500 грн</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Всего товаров:</h4>
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__orders-content">
+                                        <div class="profile__orders-left">
+                                            <div class="profile__orders-left--block">
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Получатель</h4>
+                                                    <p>Дмитрий Верховецкий (050 478 90 00)</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Адрес доставки</h4>
+                                                    <p>Самовывоз из Новой Почты: <br>Запорожская обл., Бердянский р-н., Бердянск, Отделение №233, Софиевская ул., д.40</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Информация о заказе</h4>
+                                                    <p>ТТН 414063108</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile__orders-products">
+                                            <div class="profile__orders-products--block">
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile__orders-products--bottom">
+                                                <button class="profile__orders-products--repeat btn-4">Повторить заказ</button>
+                                                <div class="profile__orders-products--total">
+                                                    <h4 class="profile__orders-products--pay">Оплата при получении товара</h4>
+                                                    <div class="profile__orders-products--total-price">
+                                                        <h4>Итого: </h4>
+                                                        <p>900 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile__orders-item">
+                                    <div class="profile__orders-start">
+                                        <div class="profile__orders-start--left">
+                                            <p class="profile__orders-number">№ 56800 от 25.10.21 в 12:34</p>
+                                            <p class="profile__orders-status">В обработке</p>
+                                        </div>
+                                        <div class="profile__orders-start--content">
+                                            <div class="profile__orders-info">
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус заказа</h4>
+                                                    <p>Принят</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Статус оплаты</h4>
+                                                    <p>Оплачен</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Сумма</h4>
+                                                    <p>5 500 грн</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>Всего товаров:</h4>
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="profile__orders-content">
+                                        <div class="profile__orders-left">
+                                            <div class="profile__orders-left--block">
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Получатель</h4>
+                                                    <p>Дмитрий Верховецкий (050 478 90 00)</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Адрес доставки</h4>
+                                                    <p>Самовывоз из Новой Почты: <br>Запорожская обл., Бердянский р-н., Бердянск, Отделение №233, Софиевская ул., д.40</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>Информация о заказе</h4>
+                                                    <p>ТТН 414063108</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile__orders-products">
+                                            <div class="profile__orders-products--block">
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                                <div class="profile__orders-products--item">
+                                                    <a class="profile__orders-products--image" href="#">
+                                                        <img src="img/productSlider/1.png" alt="">
+                                                    </a>
+                                                    <a class="profile__orders-products--title" href="#">
+                                                        <h3>Шокер 1102 Scorpion (950W)</h3>
+                                                    </a>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Цена:</h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Кол-во: </h4>
+                                                        <p>1</p>
+                                                    </div>
+                                                    <div class="profile__orders-products--info">
+                                                        <h4>Сумма: </h4>
+                                                        <p>450 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile__orders-products--bottom">
+                                                <button class="profile__orders-products--repeat btn-4">Повторить заказ</button>
+                                                <div class="profile__orders-products--total">
+                                                    <h4 class="profile__orders-products--pay">Оплата при получении товара</h4>
+                                                    <div class="profile__orders-products--total-price">
+                                                        <h4>Итого: </h4>
+                                                        <p>900 грн</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile__orders-bottom">
+                                <h4 class="profile__orders-bottom--title">Стараница</h4>
+                                <div class="profile__orders-pages">
+                                    <a class="active" href="#">1</a>
+                                    <a href="#">2</a>
+                                    <a class="next-page" href="#"></a>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="profile__result profile-products" data-profile-content="tracked-products">
+                            <div class="profile__result-top">
+                                <h2 class="profile__result-heading">Отслеживаемые товары</h2>
+                                <button class="profile__products-reset">Очистить список товаров</button>
+                            </div>
+                            <p class="profile__result-name">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                            <div class="profile__products-block">
+                                <div class="product__item">
+                                    <button class="product__item-delete"></button>
+                                    <button class="product__item-fav active"></button>
+                                    <a class="product__item-image" href="#">
+                                        <img src="img/productSlider/1.png" alt="">
+                                    </a>
+                                    <div class="product__item-content">
+                                        <div class="product__item-buttons">
+                                            <button class="product__item-btn btn">
+                                                В корзину
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+                                                </svg>
+                                            </button>
+                                            <a class="product__item-btn btn" href="#">
+                                                Подробнее
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="product__item-info">
+                                            <a class="product__item-title" href="#">
+                                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                                            </a>
+                                            <p class="product__item-price">450 грн.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product__item">
+                                    <button class="product__item-delete"></button>
+                                    <button class="product__item-fav active"></button>
+                                    <a class="product__item-image" href="#">
+                                        <img src="img/productSlider/1.png" alt="">
+                                    </a>
+                                    <div class="product__item-content">
+                                        <div class="product__item-buttons">
+                                            <button class="product__item-btn btn">
+                                                В корзину
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+                                                </svg>
+                                            </button>
+                                            <a class="product__item-btn btn" href="#">
+                                                Подробнее
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="product__item-info">
+                                            <a class="product__item-title" href="#">
+                                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                                            </a>
+                                            <p class="product__item-price">450 грн.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product__item">
+                                    <button class="product__item-delete"></button>
+                                    <button class="product__item-fav active"></button>
+                                    <a class="product__item-image" href="#">
+                                        <img src="img/productSlider/1.png" alt="">
+                                    </a>
+                                    <div class="product__item-content">
+                                        <div class="product__item-buttons">
+                                            <button class="product__item-btn btn">
+                                                В корзину
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/>
+                                                </svg>
+                                            </button>
+                                            <a class="product__item-btn btn" href="#">
+                                                Подробнее
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="product__item-info">
+                                            <a class="product__item-title" href="#">
+                                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                                            </a>
+                                            <p class="product__item-price">450 грн.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="profile__result profile-files" data-profile-content="files">
+                            <div class="profile__result-top">
+                                <h2 class="profile__result-heading">Файли для скачивания</h2>
+                            </div>
+                            <p class="profile__result-name">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+                            <div class="profile__files-block">
+                                <div class="profile__files-item">
+                                    <h3 class="profile__files-title">Прайс-лист 2023</h3>
+                                    <p class="profile__files-descr">Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда </p>
+                                    <a class="profile__files-download" href="#"></a>
+                                </div>
+                                <div class="profile__files-item">
+                                    <h3 class="profile__files-title">Прайс-лист 2023</h3>
+                                    <p class="profile__files-descr">Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда </p>
+                                    <a class="profile__files-download" href="#"></a>
+                                </div>
+                                <div class="profile__files-item profile__files-action">
+                                    <h3 class="profile__files-title">Акции 2023</h3>
+                                    <p class="profile__files-descr">Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда </p>
+                                    <a class="profile__files-download" href="#"></a>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="userData" data-userData="change-email">
+            <div class="container">
+                <div class="userData__inner">
+                    <button class="userData__close">
+                        Закрыть
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>
+                            <rect x="28.8008" y="31.6274" width="9" height="4" transform="rotate(-135 28.8008 31.6274)" fill="#202222"/>
+                            <rect x="11.8281" y="9" width="9" height="4" transform="rotate(45 11.8281 9)" fill="#202222"/>
+                        </svg>
+                    </button>
+                    <div class="userData__info">
+                        <div class="userData__info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="30" viewBox="0 0 36 30" fill="none">
+                                <path d="M22.25 5.27148H5.25C4.12283 5.27148 3.04183 5.72149 2.2448 6.5225C1.44777 7.32352 1 8.40993 1 9.54273V24.4921C1 25.6249 1.44777 26.7113 2.2448 27.5123C3.04183 28.3134 4.12283 28.7634 5.25 28.7634H26.5C27.6272 28.7634 28.7082 28.3134 29.5052 27.5123C30.3022 26.7113 30.75 25.6249 30.75 24.4921V13.814" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M5.25 11.6777L15.875 18.0846L26.5 11.6777" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M30.75 1V9.5425" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M26.5 5.27148H35" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="userData__info-content">
+                            <h2 class="userData__info-title">Изменить <br>e-mail</h2>
+                            <p class="userData__info-descr">Уведомление для подтверждения нового Email будет отправлено Вам на новую почту</p>
+                        </div>
+                    </div>
+                    <form class="userData__form form-block" action="#">
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Пароль" placeholder="Пароль*" required>
+                        </div>
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Повторите-пароль*" placeholder="Повторите пароль*" required>
+                        </div>
+                        <button class="userData__form-btn btn" type="submit">Изменить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="userData" data-userData="change-password">
+            <div class="container">
+                <div class="userData__inner">
+                    <button class="userData__close">
+                        Закрыть
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>
+                            <rect x="28.8008" y="31.6274" width="9" height="4" transform="rotate(-135 28.8008 31.6274)" fill="#202222"/>
+                            <rect x="11.8281" y="9" width="9" height="4" transform="rotate(45 11.8281 9)" fill="#202222"/>
+                        </svg>
+                    </button>
+                    <div class="userData__info">
+                        <div class="userData__info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="30" viewBox="0 0 36 30" fill="none">
+                                <path d="M34.5658 14.0534V4.72954C34.5658 3.7404 34.1729 2.79178 33.4735 2.09236C32.7741 1.39293 31.8254 1 30.8363 1H4.72954C3.7404 1 2.79178 1.39293 2.09236 2.09236C1.39293 2.79178 1 3.7404 1 4.72954V15.9182C1 16.9073 1.39293 17.8559 2.09236 18.5553C2.79178 19.2548 3.7404 19.6477 4.72954 19.6477H17.7829" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M34.3421 21.3575C35.2633 21.9244 35.2055 23.3025 34.2582 23.4106L29.4713 23.9533L27.325 28.2646C26.8998 29.1205 25.5852 28.701 25.367 27.6418L23.0267 16.2369C22.8421 15.3418 23.6477 14.7786 24.4253 15.2579L34.3421 21.3575V21.3575Z" stroke="#202222" stroke-width="2"/>
+                                <path d="M17.7812 10.3425L17.7999 10.322" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M25.2422 10.3425L25.2608 10.322" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M10.3242 10.3425L10.3429 10.322" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="userData__info-content">
+                            <h2 class="userData__info-title">Изменить <br>пароль</h2>
+                            <p class="userData__info-descr">Придумайте сложный пароль, который нельзя подобрать: от 6 до 50 символов</p>
+                        </div>
+                    </div>
+                    <form class="userData__form form-block" action="#">
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Старый-пароль" placeholder="Старый пароль*" required>
+                        </div>
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Пароль" placeholder="Пароль*" required>
+                        </div>
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Повторите-пароль*" placeholder="Повторите пароль*" required>
+                        </div>
+                        <button class="userData__form-btn btn" type="submit">Изменить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="userData" data-userData="change-number">
+            <div class="container">
+                <div class="userData__inner">
+                    <button class="userData__close">
+                        Закрыть
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>
+                            <rect x="28.8008" y="31.6274" width="9" height="4" transform="rotate(-135 28.8008 31.6274)" fill="#202222"/>
+                            <rect x="11.8281" y="9" width="9" height="4" transform="rotate(45 11.8281 9)" fill="#202222"/>
+                        </svg>
+                    </button>
+                    <div class="userData__info">
+                        <div class="userData__info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <path d="M21.7147 6.6665H14.2861C13.2757 6.6665 12.3068 7.06786 11.5923 7.78229C10.8779 8.49671 10.4766 9.46568 10.4766 10.476V29.5236C10.4766 30.534 10.8779 31.503 11.5923 32.2174C12.3068 32.9318 13.2757 33.3332 14.2861 33.3332H25.7147C26.725 33.3332 27.694 32.9318 28.4084 32.2174C29.1228 31.503 29.5242 30.534 29.5242 29.5236V15.476M16.1908 29.5236H23.8099" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M29.75 3V11.5425" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <path d="M25.5 7.27148H34" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="userData__info-content">
+                            <h2 class="userData__info-title">Изменить номер <br>телефона</h2>
+                            <p class="userData__info-descr">Код подтверждения будет отправлен на номер •(•••) ••• •• 23</p>
+                        </div>
+                    </div>
+                    <form class="userData__form form-block" action="#">
+                        <div class="userData__form-item">
+                            <input class="userData__form-input form-input" type="tel" name="Новый-номер" placeholder="Новый номер" required>
+                        </div>
+                        <div class="userData__form-item userData__form-code">
+                            <input class="userData__form-input form-input" type="text" name="Код" placeholder="Код с СМС*" required>
+                        </div>
+                        <button class="userData__form-btn btn" type="submit">Изменить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="userPopup">
+            <div class="userPopup__image">
+                <img src="img/userPopup.png" alt="">
+            </div>
+            <div class="container">
+                <div class="userPopup__inner">
+                    <div class="userPopup__top">
+                        <a class="userPopup__logo" href="index.html">
+                            <img src="img/logo.svg" alt="">
+                        </a>
+                        <button class="userPopup__close">Закрыть</button>
+                    </div>
+                    <div class="userPopup__bottom">
+                        <div class="userPopup__left">
+                            <div class="header__menu-bottom">
+                                <div class="header__menu-block">
+                                    <div class="header__menu-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M22.0001 16.92V19.92C22.0012 20.1985 21.9441 20.4741 21.8326 20.7293C21.721 20.9845 21.5574 21.2136 21.3521 21.4018C21.1469 21.5901 20.9046 21.7335 20.6408 21.8227C20.377 21.9119 20.0974 21.945 19.8201 21.92C16.7429 21.5856 13.7871 20.5341 11.1901 18.85C8.77388 17.3146 6.72539 15.2661 5.19006 12.85C3.50003 10.2412 2.4483 7.27097 2.12006 4.17997C2.09507 3.90344 2.12793 3.62474 2.21656 3.3616C2.30518 3.09846 2.44763 2.85666 2.63482 2.6516C2.82202 2.44653 3.04986 2.28268 3.30385 2.1705C3.55783 2.05831 3.8324 2.00024 4.11006 1.99997H7.11006C7.59536 1.9952 8.06585 2.16705 8.43382 2.48351C8.80179 2.79996 9.04213 3.23942 9.11005 3.71997C9.23668 4.68004 9.47151 5.6227 9.81006 6.52997C9.9446 6.8879 9.97372 7.27689 9.89396 7.65086C9.81421 8.02482 9.62892 8.36809 9.36005 8.63998L8.09006 9.90997C9.51361 12.4135 11.5865 14.4864 14.0901 15.91L15.3601 14.64C15.6319 14.3711 15.9752 14.1858 16.3492 14.1061C16.7231 14.0263 17.1121 14.0554 17.4701 14.19C18.3773 14.5285 19.32 14.7634 20.2801 14.89C20.7658 14.9585 21.2095 15.2032 21.5266 15.5775C21.8437 15.9518 22.0122 16.4296 22.0001 16.92Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="header__menu-tel">
+                                        <a class="header__menu-link" href="tel:+380507202551">(050) 720-25-51</a>
+                                        <span>   /   </span>
+                                        <a class="header__menu-link" href="tel:+380674450300">(067) 445-03-00</a>
+                                    </div>
+                                </div>
+                                <div class="header__menu-block">
+                                    <div class="header__menu-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M22 6L12 13L2 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <a class="header__menu-link" href="mailto:admin@trikobakh.com">admin@trikobakh.com</a>
+                                </div>
+                                <div class="header__menu-social">
+                                    <a href="#" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                            <path d="M18.2327 0H6.76727C3.03574 0 0 3.03574 0 6.76727V18.2329C0 21.9643 3.03574 25 6.76727 25H18.2329C21.9643 25 25 21.9643 25 18.2329V6.76727C25 3.03574 21.9643 0 18.2327 0ZM12.5 19.3357C8.7307 19.3357 5.66425 16.2693 5.66425 12.5C5.66425 8.7307 8.7307 5.66425 12.5 5.66425C16.2693 5.66425 19.3357 8.7307 19.3357 12.5C19.3357 16.2693 16.2693 19.3357 12.5 19.3357ZM19.4992 7.27634C18.3853 7.27634 17.4793 6.37035 17.4793 5.25646C17.4793 4.14257 18.3853 3.23639 19.4992 3.23639C20.6131 3.23639 21.5193 4.14257 21.5193 5.25646C21.5193 6.37035 20.6131 7.27634 19.4992 7.27634Z" fill="#D2D2D2"/>
+                                            <path d="M12.5 7C9.46743 7 7 9.46724 7 12.5C7 15.5326 9.46743 18 12.5 18C15.5328 18 18 15.5326 18 12.5C18 9.46724 15.5328 7 12.5 7Z" fill="#D2D2D2"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                            <path d="M21.3379 0H3.66211C1.64299 0 0 1.64299 0 3.66211V21.3379C0 23.357 1.64299 25 3.66211 25H11.0352V16.1621H8.10547V11.7676H11.0352V8.78906C11.0352 6.36578 13.0064 4.39453 15.4297 4.39453H19.873V8.78906H15.4297V11.7676H19.873L19.1406 16.1621H15.4297V25H21.3379C23.357 25 25 23.357 25 21.3379V3.66211C25 1.64299 23.357 0 21.3379 0Z" fill="#D2D2D2"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="userPopup__content">
+                            <div class="userPopup__select userPopup__select-login">
+                                <button class="userPopup__btn active" data-userPopup-select="login">Войти</button>
+                                <button class="userPopup__btn" data-userPopup-select="register">Регистрация</button>
+                            </div>
+                            <div class="userPopup__result active" data-userPopup-result="login">
+                                <form class="userPopup__form" action="#">
+                                    <div class="userPopup__form-block">
+                                        <div class="userPopup__form-item">
+                                            <input class="userPopup__form-input" type="text" name="Email" placeholder="Email*" required>
+                                        </div>
+                                        <div class="userPopup__form-item">
+                                            <button class="userPopup__form-show" type="button"></button>
+                                            <input class="userPopup__form-input" type="password" name="Пароль" placeholder="Пароль*" required>
+                                        </div>
+                                    </div>
+                                    <button class="userPopup__form-forgot" type="button">Забыли пароль?</button>
+                                    <label class="userPopup__form-checkbox checkbox-block">
+                                        <input type="checkbox" name="checked" class="visually-hidden" required>
+                                        <span>Я согласен(а) с политикой конфиденциальности и правилами сайта</span>
+                                    </label>
+                                    <button class="userPopup__form-btn btn">Войти</button>
+                                    <div class="userPopup__form-more"> <span></span> или <span></span></div>
+                                    <div class="userPopup__form-buttons">
+                                        <button class="userPopup__form-log btn-2" type="button">Google</button>
+                                        <button class="userPopup__form-log btn-2" type="button">Facebook</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="userPopup__result" data-userPopup-result="register">
+                                <form class="userPopup__form" action="#">
+                                    <div class="userPopup__form-box">
+                                        <div class="userPopup__form-item">
+                                            <input class="userPopup__form-input" type="text" name="Имя" placeholder="Имя" required>
+                                        </div>
+                                        <div class="userPopup__form-item">
+                                            <input class="userPopup__form-input" type="text" name="Фамилия" placeholder="Фамилия" required>
+                                        </div>
+                                        <div class="userPopup__form-item">
+                                            <input class="userPopup__form-input" type="tel" name="Телефон" placeholder="Телефон" required>
+                                        </div>
+                                        <div class="userPopup__form-item">
+                                            <input class="userPopup__form-input" type="email" name="Email" placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <p class="userPopup__form-name">Создайте пароль</p>
+                                    <div class="userPopup__form-block">
+                                        <div class="userPopup__form-item">
+                                            <button class="userPopup__form-show" type="button"></button>
+                                            <input class="userPopup__form-input" type="password" name="Пароль" placeholder="Пароль*" required>
+                                        </div>
+                                        <div class="userPopup__form-item">
+                                            <button class="userPopup__form-show" type="button"></button>
+                                            <input class="userPopup__form-input" type="password" name="Повторите-пароль" placeholder="Повторите пароль*" required>
+                                        </div>
+                                    </div>
+                                    <label class="userPopup__form-checkbox checkbox-block">
+                                        <input type="checkbox" name="checked" class="visually-hidden" required>
+                                        <span>Я согласен(а) с политикой конфиденциальности и правилами сайта</span>
+                                    </label>
+                                    <button class="userPopup__form-btn btn">Зарегестрироваться</button>
+                                    <div class="userPopup__form-more"> <span></span> или <span></span></div>
+                                    <div class="userPopup__form-buttons">
+                                        <button class="userPopup__form-log btn-2" type="button">Google</button>
+                                        <button class="userPopup__form-log btn-2" type="button">Facebook</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="busket">
+            <div class="busket__inner">
+                <div class="busket__top">
+                    <h2 class="busket__title">Корзина (2)</h2>
+                    <button class="busket__close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="9" y="28.7988" width="28" height="4" transform="rotate(-45 9 28.7988)" fill="#202222"/>
+                            <rect x="28.7988" y="31.627" width="9" height="4" transform="rotate(-135 28.7988 31.627)" fill="#202222"/>
+                            <rect x="11.8281" y="9" width="9" height="4" transform="rotate(45 11.8281 9)" fill="#202222"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="busket__block">
+                    <div class="busket__item">
+                        <a class="busket__item-image" href="#">
+                            <img src="img/cart/1.png" alt="">
+                        </a>
+                        <div class="busket__item-content">
+                            <a class="busket__item-title" href="#">
+                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                            </a>
+                            <p class="busket__item-price"><span class="price-old">520 грн</span> 450 грн</p>
+                            <button class="busket__item-delete"></button>
+                        </div>
+                    </div>
+                    <div class="busket__item">
+                        <a class="busket__item-image" href="#">
+                            <img src="img/cart/1.png" alt="">
+                        </a>
+                        <div class="busket__item-content">
+                            <a class="busket__item-title" href="#">
+                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                            </a>
+                            <p class="busket__item-price"><span class="price-old">520 грн</span> 450 грн</p>
+                            <button class="busket__item-delete"></button>
+                        </div>
+                    </div>
+                    <div class="busket__item">
+                        <a class="busket__item-image" href="#">
+                            <img src="img/cart/1.png" alt="">
+                        </a>
+                        <div class="busket__item-content">
+                            <a class="busket__item-title" href="#">
+                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                            </a>
+                            <p class="busket__item-price"><span class="price-old">520 грн</span> 450 грн</p>
+                            <button class="busket__item-delete"></button>
+                        </div>
+                    </div>
+                    <div class="busket__item">
+                        <a class="busket__item-image" href="#">
+                            <img src="img/cart/1.png" alt="">
+                        </a>
+                        <div class="busket__item-content">
+                            <a class="busket__item-title" href="#">
+                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                            </a>
+                            <p class="busket__item-price"><span class="price-old">520 грн</span> 450 грн</p>
+                            <button class="busket__item-delete"></button>
+                        </div>
+                    </div>
+                    <div class="busket__item">
+                        <a class="busket__item-image" href="#">
+                            <img src="img/cart/1.png" alt="">
+                        </a>
+                        <div class="busket__item-content">
+                            <a class="busket__item-title" href="#">
+                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                            </a>
+                            <p class="busket__item-price"><span class="price-old">520 грн</span> 450 грн</p>
+                            <button class="busket__item-delete"></button>
+                        </div>
+                    </div>
+                    <div class="busket__item">
+                        <a class="busket__item-image" href="#">
+                            <img src="img/cart/1.png" alt="">
+                        </a>
+                        <div class="busket__item-content">
+                            <a class="busket__item-title" href="#">
+                                <h3>Шокер 1102 Scorpion (950W)</h3>
+                            </a>
+                            <p class="busket__item-price"><span class="price-old">520 грн</span> 450 грн</p>
+                            <button class="busket__item-delete"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="busket__bottom">
+                    <div class="busket__bottom-item">
+                        <p class="busket__bottom-descr">Итого</p>
+                        <p class="busket__bottom-descr">34450 грн</p>
+                    </div>
+                    <div class="busket__bottom-item">
+                        <p class="busket__bottom-descr">Скидка 5%</p>
+                        <p class="busket__bottom-descr">175 грн</p>
+                    </div>
+                    <div class="busket__bottom-item">
+                        <p class="busket__bottom-name">К оплате</p>
+                        <p class="busket__bottom-name">3325 грн</p>
+                    </div>
+                </div>
+                <div class="busket__buttons">
+                    <a class="busket__btn btn-3" href="#">Посмотреть корзину</a>
+                    <a class="busket__btn btn-4" href="#">Оформить заказ</a>
+                </div>
+            </div>
+        </section>
+        <section class="userData" data-userData="password-recovery">
+            <div class="container">
+                <div class="userData__inner">
+                    <button class="userData__close">
+                        Закрыть
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <rect x="9" y="28.7991" width="28" height="4" transform="rotate(-45 9 28.7991)" fill="#202222"/>
+                            <rect x="28.8008" y="31.6274" width="9" height="4" transform="rotate(-135 28.8008 31.6274)" fill="#202222"/>
+                            <rect x="11.8281" y="9" width="9" height="4" transform="rotate(45 11.8281 9)" fill="#202222"/>
+                        </svg>
+                    </button>
+                    <div class="userData__info">
+                        <div class="userData__info-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="33" height="36" viewBox="0 0 33 36" fill="none">
+                                <path d="M6.1 14.6V6.1C6.1 4.7474 6.63732 3.45019 7.59376 2.49376C8.55019 1.53732 9.8474 1 11.2 1H21.4C22.7526 1 24.0498 1.53732 25.0062 2.49376C25.9627 3.45019 26.5 4.7474 26.5 6.1V7.8M4.4 14.6H28.2C30.0778 14.6 31.6 16.1222 31.6 18V31.6C31.6 33.4778 30.0778 35 28.2 35H4.4C2.52223 35 1 33.4778 1 31.6V18C1 16.1222 2.52223 14.6 4.4 14.6Z" stroke="#202222" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+                                <circle cx="16.3013" cy="24.9656" r="1.49268" fill="#202222"/>
+                                <circle cx="11.3247" cy="24.9656" r="1.49268" fill="#202222"/>
+                                <circle cx="21.2739" cy="24.9656" r="1.49268" fill="#202222"/>
+                            </svg>
+                        </div>
+                        <div class="userData__info-content">
+                            <h2 class="userData__info-title">Восстановление пароля</h2>
+                            <p class="userData__info-descr">Уведомление об изменении пароля будет отправлено Вам на почту</p>
+                        </div>
+                    </div>
+                    <form class="userData__form form-block" action="#">
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Пароль" placeholder="Пароль*" required>
+                        </div>
+                        <div class="userData__form-item">
+                            <button class="userData__form-show form-show-password" type="button"></button>
+                            <input class="userData__form-input form-input" type="password" name="Повторите-пароль*" placeholder="Повторите пароль*" required>
+                        </div>
+                        <button class="userData__form-btn btn" type="submit">Изменить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__inner">
+                <div class="footer__start">
+                    <a class="footer__logo" href="index.html">
+                        <img src="img/logo.svg" alt="">
+                    </a>
+                    <div class="footer__time">
+                        <div class="footer__time-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#C5FF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 6V12L16 14" stroke="#C5FF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="footer__time-descr">с 10:00 до 18:00 <br>cб. - вс : выходной</p>
+                    </div>
+                </div>
+                <div class="footer__content">
+                    <div class="footer__block">
+                        <h3 class="footer__name">ИНФОРМАЦИЯ</h3>
+                        <ul class="footer__menu">
+                            <li>
+                                <a href="#">О нас</a>
+                            </li>
+                            <li>
+                                <a href="#">Информация клиентам</a>
+                            </li>
+                            <li>
+                                <a href="#">Политика Безопасности</a>
+                            </li>
+                            <li>
+                                <a href="#">Условия соглашения</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer__block">
+                        <h3 class="footer__name">ПОДДЕРЖКА</h3>
+                        <ul class="footer__menu">
+                            <li>
+                                <a href="#">Контакты</a>
+                            </li>
+                            <li>
+                                <a href="#">Возврат и обмен</a>
+                            </li>
+                            <li>
+                                <a href="#">Оплата и доставка</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer__block">
+                        <h3 class="footer__name">ДОПОЛНИТЕЛЬНО</h3>
+                        <ul class="footer__menu">
+                            <li>
+                                <a href="#">Акции</a>
+                            </li>
+                            <li>
+                                <a href="#">Подарочные сертификаты</a>
+                            </li>
+                            <li>
+                                <a href="#">Партнерская программа</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer__block">
+                        <div class="footer__social">
+                            <a class="footer__social-link" href="#" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                    <path d="M18.2327 0H6.76727C3.03574 0 0 3.03574 0 6.76727V18.2329C0 21.9643 3.03574 25 6.76727 25H18.2329C21.9643 25 25 21.9643 25 18.2329V6.76727C25 3.03574 21.9643 0 18.2327 0ZM12.5 19.3357C8.7307 19.3357 5.66425 16.2693 5.66425 12.5C5.66425 8.7307 8.7307 5.66425 12.5 5.66425C16.2693 5.66425 19.3357 8.7307 19.3357 12.5C19.3357 16.2693 16.2693 19.3357 12.5 19.3357ZM19.4992 7.27634C18.3853 7.27634 17.4793 6.37035 17.4793 5.25646C17.4793 4.14257 18.3853 3.23639 19.4992 3.23639C20.6131 3.23639 21.5193 4.14257 21.5193 5.25646C21.5193 6.37035 20.6131 7.27634 19.4992 7.27634Z" fill="#D2D2D2"/>
+                                    <path d="M12.5 7C9.46743 7 7 9.46724 7 12.5C7 15.5326 9.46743 18 12.5 18C15.5328 18 18 15.5326 18 12.5C18 9.46724 15.5328 7 12.5 7Z" fill="#D2D2D2"/>
+                                </svg>
+                            </a>
+                            <a class="footer__social-link" href="#" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                    <path d="M21.3379 0H3.66211C1.64299 0 0 1.64299 0 3.66211V21.3379C0 23.357 1.64299 25 3.66211 25H11.0352V16.1621H8.10547V11.7676H11.0352V8.78906C11.0352 6.36578 13.0064 4.39453 15.4297 4.39453H19.873V8.78906H15.4297V11.7676H19.873L19.1406 16.1621H15.4297V25H21.3379C23.357 25 25 23.357 25 21.3379V3.66211C25 1.64299 23.357 0 21.3379 0Z" fill="#D2D2D2"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container">
+                <div class="footer__bottom-inner">
+                    <p class="footer__bottom-copy">© 2003- 2023 Shokeru.in.ua  |  Все права защищены</p>
+                    <div class="footer__bottom-icons">
+                        <div class="footer__bottom-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="32" viewBox="0 0 48 32" fill="none">
+                                <path d="M40.3542 14.1042L41.1458 17.9583H38.2708C38.4653 17.4444 38.9236 16.2014 39.6458 14.2292L39.7083 14.0417C39.7639 13.9028 39.8333 13.7222 39.9167 13.5C40 13.2778 40.0625 13.0972 40.1042 12.9583L40.3542 14.1042ZM2.66667 9.60417C6.98611 10.7014 9.78472 13.0347 11.0625 16.6042L9.85417 10.4583C9.70139 9.70833 9.18056 9.33333 8.29167 9.33333H2.70833L2.66667 9.60417ZM18.4583 9.33333H14.7917L11.4167 18.4583L11.0625 16.6042C10.7014 15.6319 10.1111 14.7326 9.29167 13.9062C8.47222 13.0799 7.5625 12.4653 6.5625 12.0625L9.375 22.6875H13.0208L18.4583 9.33333ZM19.8542 9.33333L17.6875 22.7083H21.1458L23.3125 9.33333H19.8542ZM33.2083 12.5625L33.6875 9.66667C32.7292 9.29167 31.6944 9.10417 30.5833 9.10417C28.875 9.10417 27.4792 9.51389 26.3958 10.3333C25.3125 11.1528 24.7639 12.2153 24.75 13.5208C24.7361 14.9375 25.7431 16.1458 27.7708 17.1458C28.4375 17.4653 28.9028 17.75 29.1667 18C29.4306 18.25 29.5625 18.5208 29.5625 18.8125C29.5625 19.2292 29.3542 19.5486 28.9375 19.7708C28.5208 19.9931 28.0417 20.1042 27.5 20.1042C26.3056 20.1042 25.2222 19.875 24.25 19.4167L23.7917 19.1875L23.3125 22.1875C24.3403 22.6597 25.625 22.8958 27.1667 22.8958C28.9722 22.9097 30.4201 22.5 31.5104 21.6667C32.6007 20.8333 33.1597 19.7222 33.1875 18.3333C33.1875 16.8611 32.2153 15.6528 30.2708 14.7083C29.5903 14.3611 29.0972 14.0694 28.7917 13.8333C28.4861 13.5972 28.3333 13.3333 28.3333 13.0417C28.3333 12.7361 28.5035 12.4687 28.8438 12.2396C29.184 12.0104 29.6736 11.8958 30.3125 11.8958C31.2847 11.8819 32.1458 12.0486 32.8958 12.3958L33.2083 12.5625ZM45.3333 22.7083L42.5417 9.33333H39.875C38.9722 9.33333 38.3681 9.70833 38.0625 10.4583L32.9375 22.7083H36.5625L37.2917 20.7083H41.7083C41.7778 21.0139 41.9167 21.6806 42.125 22.7083H45.3333ZM47.2083 0.791667C47.7361 1.31944 48 1.94444 48 2.66667V29.3333C48 30.0556 47.7361 30.6806 47.2083 31.2083C46.6806 31.7361 46.0556 32 45.3333 32H2.66667C1.94444 32 1.31944 31.7361 0.791667 31.2083C0.263889 30.6806 0 30.0556 0 29.3333V2.66667C0 1.94444 0.263889 1.31944 0.791667 0.791667C1.31944 0.263889 1.94444 0 2.66667 0H45.3333C46.0556 0 46.6806 0.263889 47.2083 0.791667Z" fill="#8A909B"/>
+                            </svg>
+                        </div>
+                        <div class="footer__bottom-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="32" viewBox="0 0 48 32" fill="none">
+                                <path d="M13.7292 17.5833C13.8819 17.375 13.9653 17.1042 13.9792 16.7708H13.7083C13.0556 16.7708 12.7292 16.9931 12.7292 17.4375C12.7292 17.7431 12.8681 17.8958 13.1458 17.8958C13.3819 17.8958 13.5764 17.7917 13.7292 17.5833ZM22.9583 15.2292C22.5694 15.2292 22.3194 15.4931 22.2083 16.0208H23.5V15.9583C23.5139 15.9028 23.5174 15.8576 23.5104 15.8229C23.5035 15.7882 23.4965 15.7396 23.4896 15.6771C23.4826 15.6146 23.4688 15.559 23.4479 15.5104C23.4271 15.4618 23.3958 15.4167 23.3542 15.375C23.3125 15.3333 23.2604 15.2986 23.1979 15.2708C23.1354 15.2431 23.0556 15.2292 22.9583 15.2292ZM33.2083 17.5833C33.3611 17.375 33.4444 17.1042 33.4583 16.7708H33.2083C32.5417 16.7708 32.2083 16.9931 32.2083 17.4375C32.2083 17.7431 32.3472 17.8958 32.625 17.8958C32.8611 17.8958 33.0556 17.7917 33.2083 17.5833ZM39.8438 17.3125C40.0174 17.0347 40.1042 16.6736 40.1042 16.2292C40.1042 15.6597 39.8958 15.375 39.4792 15.375C39.2153 15.375 39 15.5139 38.8333 15.7917C38.6667 16.0694 38.5833 16.4236 38.5833 16.8542C38.5833 17.4375 38.7778 17.7292 39.1667 17.7292C39.4444 17.7292 39.6701 17.5903 39.8438 17.3125ZM8.85417 16.6875L10 13.2917H11.8125L10.8958 18.75H9.72917L10.3958 14.5625L8.91667 18.75H8.10417L8.02083 14.5833L7.3125 18.75H6.20833L7.125 13.2917H8.8125L8.85417 16.6875ZM13.7292 14.2292C14.7569 14.2292 15.2708 14.6597 15.2708 15.5208C15.2708 15.6042 15.2431 15.8958 15.1875 16.3958C14.9653 17.7986 14.8472 18.5833 14.8333 18.75H13.8542L13.875 18.2917C13.5972 18.6528 13.1944 18.8333 12.6667 18.8333C12.3472 18.8333 12.0868 18.7222 11.8854 18.5C11.684 18.2778 11.5833 17.9861 11.5833 17.625C11.5833 17.0833 11.7639 16.6632 12.125 16.3646C12.4861 16.066 12.9931 15.9167 13.6458 15.9167C13.8403 15.9167 14 15.9236 14.125 15.9375C14.125 15.8958 14.1285 15.8576 14.1354 15.8229C14.1424 15.7882 14.1493 15.7569 14.1562 15.7292C14.1632 15.7014 14.1667 15.6806 14.1667 15.6667C14.1667 15.3889 13.9167 15.25 13.4167 15.25C13.0139 15.25 12.6042 15.3194 12.1875 15.4583C12.1875 15.4028 12.2361 15.0694 12.3333 14.4583C12.8611 14.3056 13.3264 14.2292 13.7292 14.2292ZM17.4792 14.2292C17.8958 14.2292 18.2431 14.2569 18.5208 14.3125L18.3542 15.3333C18.0486 15.2917 17.7639 15.2708 17.5 15.2708C17.125 15.2708 16.9375 15.3889 16.9375 15.625C16.9375 15.7361 16.9688 15.8194 17.0312 15.875C17.0938 15.9306 17.2431 16.0069 17.4792 16.1042C18.0347 16.3681 18.3125 16.7847 18.3125 17.3542C18.3125 18.3542 17.7083 18.8472 16.5 18.8333C16.0278 18.8333 15.625 18.7917 15.2917 18.7083C15.2917 18.6806 15.3403 18.3403 15.4375 17.6875C15.8403 17.7986 16.1944 17.8542 16.5 17.8542C16.9444 17.8542 17.1667 17.7222 17.1667 17.4583C17.1667 17.3611 17.1354 17.2812 17.0729 17.2188C17.0104 17.1562 16.8611 17.0694 16.625 16.9583C16.0278 16.6806 15.7292 16.2708 15.7292 15.7292C15.7292 14.7292 16.3125 14.2292 17.4792 14.2292ZM20.4792 13.6458L20.3542 14.3125H20.9375L20.7917 15.3958H20.1875C20.1597 15.6319 20.1146 15.9132 20.0521 16.2396C19.9896 16.566 19.941 16.8333 19.9062 17.0417C19.8715 17.25 19.8542 17.375 19.8542 17.4167C19.8542 17.6389 19.9861 17.75 20.25 17.75C20.3611 17.75 20.4722 17.7361 20.5833 17.7083L20.4167 18.6875C20.125 18.7847 19.8472 18.8333 19.5833 18.8333C18.9861 18.8333 18.6736 18.5069 18.6458 17.8542C18.6458 17.6875 18.7014 17.2986 18.8125 16.6875C18.8542 16.4097 19.0278 15.3958 19.3333 13.6458H20.4792ZM24.1562 14.6667C24.441 14.9583 24.5833 15.3472 24.5833 15.8333C24.5833 16.1528 24.5347 16.5139 24.4375 16.9167H22.125C22.0833 17.2222 22.1528 17.4514 22.3333 17.6042C22.5139 17.7569 22.7778 17.8333 23.125 17.8333C23.5417 17.8333 23.9444 17.7361 24.3333 17.5417L24.1458 18.6667C23.7292 18.7778 23.3333 18.8333 22.9583 18.8333C21.6389 18.8333 20.9792 18.1736 20.9792 16.8542C20.9792 16.0903 21.1701 15.4618 21.5521 14.9688C21.934 14.4757 22.4167 14.2292 23 14.2292C23.4861 14.2292 23.8715 14.375 24.1562 14.6667ZM26.8854 14.3854C27.0451 14.2674 27.2431 14.2361 27.4792 14.2917C27.2986 14.6111 27.1458 15.0417 27.0208 15.5833C26.7153 15.5556 26.5 15.7222 26.375 16.0833C26.25 16.4444 26.0764 17.3333 25.8542 18.75H24.6875L24.75 18.4583C25.0556 16.6528 25.2569 15.2708 25.3542 14.3125H26.4167L26.3542 15C26.5486 14.7083 26.7257 14.5035 26.8854 14.3854ZM30.1042 13.1667C30.4653 13.1667 30.8889 13.2569 31.375 13.4375L31.1875 14.625C30.7986 14.4306 30.4514 14.3333 30.1458 14.3333C29.7153 14.3333 29.3611 14.5243 29.0833 14.9062C28.8056 15.2882 28.6667 15.7778 28.6667 16.375C28.6667 16.7917 28.7604 17.1181 28.9479 17.3542C29.1354 17.5903 29.4028 17.7083 29.75 17.7083C30.0417 17.7083 30.375 17.6181 30.75 17.4375L30.5417 18.6667C30.1528 18.7778 29.8056 18.8333 29.5 18.8333C28.875 18.8333 28.3785 18.6215 28.0104 18.1979C27.6424 17.7743 27.4583 17.2014 27.4583 16.4792C27.4583 15.5069 27.7049 14.7118 28.1979 14.0938C28.691 13.4757 29.3264 13.1667 30.1042 13.1667ZM33.2292 14.2292C34.2431 14.2292 34.75 14.6597 34.75 15.5208C34.75 15.7708 34.7222 16.0625 34.6667 16.3958C34.4861 17.4931 34.3681 18.2778 34.3125 18.75H33.3542L33.375 18.2917C33.0972 18.6528 32.6875 18.8333 32.1458 18.8333C31.8264 18.8333 31.5694 18.7222 31.375 18.5C31.1806 18.2778 31.0833 17.9861 31.0833 17.625C31.0833 17.0833 31.2604 16.6632 31.6146 16.3646C31.9688 16.066 32.4722 15.9167 33.125 15.9167C33.3333 15.9167 33.4931 15.9236 33.6042 15.9375C33.6319 15.8403 33.6458 15.75 33.6458 15.6667C33.6458 15.3889 33.3958 15.25 32.8958 15.25C32.4931 15.25 32.0833 15.3194 31.6667 15.4583C31.6667 15.4028 31.7222 15.0694 31.8333 14.4583C32.3611 14.3056 32.8264 14.2292 33.2292 14.2292ZM37.1146 14.3854C37.2743 14.2674 37.4653 14.2361 37.6875 14.2917C37.4931 14.625 37.3472 15.0556 37.25 15.5833C36.9306 15.5556 36.7118 15.7153 36.5938 16.0625C36.4757 16.4097 36.2986 17.3056 36.0625 18.75H34.8958L34.9583 18.4583C35.2222 17.0139 35.4236 15.6319 35.5625 14.3125H36.6458C36.6458 14.4653 36.6181 14.6944 36.5625 15C36.7708 14.7083 36.9549 14.5035 37.1146 14.3854ZM40.375 14.875L40.625 13.2917H41.7917L40.8958 18.75H39.7917L39.8542 18.3542C39.5347 18.6736 39.1736 18.8333 38.7708 18.8333C38.3403 18.8333 37.9965 18.6667 37.7396 18.3333C37.4826 18 37.3542 17.5556 37.3542 17C37.3542 16.2639 37.5451 15.625 37.9271 15.0833C38.309 14.5417 38.7569 14.2708 39.2708 14.2708C39.7014 14.2708 40.0694 14.4722 40.375 14.875ZM41.4271 21.6875C42.434 19.9514 42.9375 18.0556 42.9375 16C42.9375 13.9444 42.434 12.0486 41.4271 10.3125C40.4201 8.57639 39.0451 7.20139 37.3021 6.1875C35.559 5.17361 33.6597 4.66667 31.6042 4.66667C29.0903 4.66667 26.8125 5.43056 24.7708 6.95833C26.5347 8.56944 27.7222 10.5417 28.3333 12.875H27.2917C26.6806 10.7917 25.5833 9.03472 24 7.60417C22.4167 9.03472 21.3194 10.7917 20.7083 12.875H19.6667C20.2778 10.5417 21.4653 8.56944 23.2292 6.95833C21.1875 5.43056 18.9097 4.66667 16.3958 4.66667C14.3403 4.66667 12.441 5.17361 10.6979 6.1875C8.95486 7.20139 7.57986 8.57639 6.57292 10.3125C5.56597 12.0486 5.0625 13.9444 5.0625 16C5.0625 18.0556 5.56597 19.9514 6.57292 21.6875C7.57986 23.4236 8.95486 24.7986 10.6979 25.8125C12.441 26.8264 14.3403 27.3333 16.3958 27.3333C18.9097 27.3333 21.1875 26.5694 23.2292 25.0417C21.5625 23.5 20.4167 21.6667 19.7917 19.5417H20.8333C21.4722 21.4583 22.5278 23.0764 24 24.3958C25.4722 23.0764 26.5278 21.4583 27.1667 19.5417H28.2083C27.5833 21.6667 26.4375 23.5 24.7708 25.0417C26.8125 26.5694 29.0903 27.3333 31.6042 27.3333C33.6597 27.3333 35.559 26.8264 37.3021 25.8125C39.0451 24.7986 40.4201 23.4236 41.4271 21.6875ZM47.2083 0.791667C47.7361 1.31944 48 1.94444 48 2.66667V29.3333C48 30.0556 47.7361 30.6806 47.2083 31.2083C46.6806 31.7361 46.0556 32 45.3333 32H2.66667C1.94444 32 1.31944 31.7361 0.791667 31.2083C0.263889 30.6806 0 30.0556 0 29.3333V2.66667C0 1.94444 0.263889 1.31944 0.791667 0.791667C1.31944 0.263889 1.94444 0 2.66667 0H45.3333C46.0556 0 46.6806 0.263889 47.2083 0.791667Z" fill="#8A909B"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/profile.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% if heading_title or html %}
+<section class="infoBlock">
+    <div class="container">
+        <div class="infoBlock__inner">
+            {% if heading_title %}<h3 class="infoBlock__title">{{ heading_title|raw }}</h3>{% endif %}
+            {{ html|raw }}
+        </div>
+    </div>
+</section>
+{% endif %}

@@ -1,0 +1,212 @@
+{{ header }}
+{{ content_top }}
+
+<section class="bp-hero{% if not image %} bp-hero--noimg{% endif %}">
+    {% if image %}
+    <div class="bp-hero__media" aria-hidden="true">
+        <img src="{{ image }}" alt="">
+    </div>
+    <div class="bp-hero__overlay" aria-hidden="true"></div>
+    {% endif %}
+    <div class="container">
+        <div class="bp-hero__inner">
+            <ul class="breadcrumbs">
+                {% for breadcrumb in breadcrumbs %}
+                    <li><a {% if loop.last %}class="active"{% endif %} href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ul>
+            {% if category %}<span class="bp-eyebrow">{{ category }}</span>{% endif %}
+            <h1 class="bp-title">{{ heading_title }}</h1>
+            <div class="bp-meta">
+                {% if author %}
+                <span class="bp-meta__author">
+                    <span class="bp-avatar">{{ author_letter }}</span>
+                    {{ author }}
+                </span>
+                <span class="bp-meta__dot"></span>
+                {% endif %}
+                <span>{{ date }}</span>
+                <span class="bp-meta__dot"></span>
+                <span>{{ read_min }} {{ text_min_read }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="bp-layout">
+        <aside class="bp-toc" id="bp-toc" hidden aria-label="{{ text_toc }}">
+            <div class="bp-toc__head">{{ text_toc }}</div>
+            <ol class="bp-toc__list"></ol>
+        </aside>
+
+        <article class="bp-article" id="bp-article">
+            {{ description|raw }}
+        </article>
+    </div>
+</div>
+
+{% if products %}
+<section class="productSlider bp-products">
+    <div class="container">
+        <div class="productSlider__inner">
+            <div class="productSlider__top">
+                <h2 class="productSlider__title title">{{ text_products }}</h2>
+                <div class="productSlider__button slider-buttons">
+                    <button class="productSlider-prev slider-btn-prev">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z" fill="#8A909B"/></svg>
+                    </button>
+                    <button class="productSlider-next slider-btn-next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.99976 18.0002L12.9998 12.0002L6.99976 6.00024L8.99976 4.00024L16.9998 12.0002L8.99976 20.0002L6.99976 18.0002Z" fill="#8A909B"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="productSlider__slider">
+                <div class="swiper-wrapper">
+                    {% for product in products %}
+                        <div class="productSlider__slide swiper-slide product__item">
+                            <button class="product__item-fav" type="button" data-product-id="{{ product.product_id }}"></button>
+                            <a class="product__item-image" href="{{ product.href }}">
+                                <img src="{{ product.thumb }}" alt="{{ product.name }}" width="300" height="300" loading="lazy" decoding="async">
+                            </a>
+                            <div class="product__item-content">
+                                <div class="product__item-buttons">
+                                    <button class="product__item-btn btn" type="button" data-product-id="{{ product.product_id }}" data-quantity="{{ product.minimum|default(1) }}" data-added-text="{{ text_added }}">
+                                        {{ button_cart }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7 5H10V7H7V10H5V7H2V5H5V2H7V5Z" fill="#202222"/></svg>
+                                    </button>
+                                    <a class="product__item-btn btn" href="{{ product.href }}">
+                                        {{ button_more }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.99988 9.00012L6.99988 6.00012L3.99988 3.00012L4.99988 2.00012L8.99988 6.00012L4.99988 10.0001L3.99988 9.00012Z" fill="#202222"/></svg>
+                                    </a>
+                                </div>
+                                <div class="product__item-info">
+                                    <a class="product__item-title" href="{{ product.href }}">
+                                        <h3>{{ product.name }}</h3>
+                                    </a>
+                                    <p class="product__item-price">
+                                        {% if product.special %}
+                                            <span>{{ product.price }}</span>
+                                            {{ product.special }}
+                                        {% else %}
+                                            {{ product.price }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if related %}
+<section class="bp-related">
+    <div class="container">
+        <div class="bp-related__head">
+            <h2 class="title title-in">{{ text_related }}</h2>
+            <a href="{{ blog_href }}">
+                {{ text_all_posts }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="bl-grid bl-grid--related">
+            {% for post in related %}
+            <a href="{{ post.href }}" class="bl-card">
+                <div class="bl-card__media">
+                    {% if post.image %}
+                        <img src="{{ post.image }}" alt="{{ post.name }}" loading="lazy" decoding="async">
+                    {% endif %}
+                    {% if post.category %}<span class="bl-card__cat">{{ post.category }}</span>{% endif %}
+                </div>
+                <div class="bl-card__body">
+                    <div class="bl-card__meta">
+                        <span>{{ post.date }}</span>
+                        <span>{{ post.read_min }} {{ text_min_read }}</span>
+                    </div>
+                    <h3 class="bl-card__title">{{ post.name }}</h3>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // TOC зі змісту (h2 у статті)
+    var article = document.getElementById('bp-article');
+    var toc = document.getElementById('bp-toc');
+    if (article && toc) {
+        var list = toc.querySelector('.bp-toc__list');
+        var heads = article.querySelectorAll('h2');
+        if (heads.length >= 2) {
+            var OFFSET = 120; // враховує липку шапку
+
+            heads.forEach(function (h, i) {
+                if (!h.id) h.id = 'section-' + (i + 1);
+                var li = document.createElement('li');
+                var a = document.createElement('a');
+                a.href = '#' + h.id;
+                a.textContent = h.textContent;
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var top = h.getBoundingClientRect().top + window.scrollY - 90;
+                    window.scrollTo({ top: top, behavior: 'smooth' });
+                    history.replaceState(null, '', '#' + h.id);
+                    setActive(h.id);
+                });
+                li.appendChild(a);
+                list.appendChild(li);
+            });
+            toc.hidden = false;
+
+            var links = list.querySelectorAll('a');
+
+            function setActive(id) {
+                links.forEach(function (a) {
+                    a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+                });
+            }
+
+            // поточна секція = остання, чий заголовок вище лінії OFFSET;
+            // рахуємо на кожен скрол (надійно вгору/вниз, на короткій останній секції теж)
+            function updateActive() {
+                var current = heads[0].id;
+                for (var i = 0; i < heads.length; i++) {
+                    if (heads[i].getBoundingClientRect().top - OFFSET <= 1) {
+                        current = heads[i].id;
+                    } else {
+                        break;
+                    }
+                }
+                // біля самого низу сторінки — підсвітити останню секцію
+                if ((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 4)) {
+                    current = heads[heads.length - 1].id;
+                }
+                setActive(current);
+            }
+
+            var ticking = false;
+            function onScroll() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(function () { updateActive(); ticking = false; });
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+            updateActive();
+        }
+    }
+});
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"{{ heading_title|e('js') }}"{% if image %},"image":"{{ image }}"{% endif %},"datePublished":"{{ date_iso }}","author":{"@type":"Organization","name":"{{ author|e('js') }}"},"publisher":{"@type":"Organization","name":"Shokeru","url":"{{ blog_href }}"},"mainEntityOfPage":{"@type":"WebPage"}}
+</script>
+{{ content_bottom }}
+{{ footer }}

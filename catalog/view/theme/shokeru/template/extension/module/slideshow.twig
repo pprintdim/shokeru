@@ -1,0 +1,153 @@
+{% if banners[0] is defined and banners[0].is_video %}
+  {% if banners[0].poster %}<link rel="preload" href="{{ banners[0].poster }}" as="image" fetchpriority="high" media="(min-width: 769px)">{% endif %}
+  {% if banners[0].mob_poster %}<link rel="preload" href="{{ banners[0].mob_poster }}" as="image" fetchpriority="high" media="(max-width: 768px)">{% endif %}
+{% endif %}
+<section class="hero">
+  <div class="hero__slider swiper">
+    <div class="swiper-wrapper">
+
+      {% for banner in banners %}
+        <div class="hero__slide swiper-slide">
+          <div class="container">
+
+            {% if banner.images %}
+              <div class="hero__slide-image">
+
+                {# desktop #}
+                {% if banner.is_video %}
+                  <video
+                    class="hide-mobile"
+                    src="{{ banner.images.desktop }}"
+                    autoplay loop muted playsinline preload="metadata"
+                    controlslist="nodownload noplaybackrate"
+                    disablepictureinpicture
+                    {% if banner.poster %}poster="{{ banner.poster }}"{% endif %}
+                  ></video>
+                {% else %}
+                  <img
+                    class="hide-mobile"
+                    src="{{ banner.images.desktop }}"
+                    alt="{{ banner.title|e }}"
+                    {% if loop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                  >
+                {% endif %}
+
+                {# mobile #}
+                {% if banner.is_video_mob %}
+                  <video
+                    class="show-mobile"
+                    src="{{ banner.images.mob_image }}"
+                    autoplay loop muted playsinline preload="metadata"
+                    controlslist="nodownload noplaybackrate"
+                    disablepictureinpicture
+                    {% if banner.mob_poster %}poster="{{ banner.mob_poster }}"{% endif %}
+                  ></video>
+                {% else %}
+                  <img
+                    class="show-mobile"
+                    src="{{ banner.images.mob_image }}"
+                    alt="{{ banner.title|e }}"
+                    {% if loop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                  >
+                {% endif %}
+
+                {# електро-ефект (анімовані блискавки + неонове свічіння) — і для відео, і для картинки #}
+                <div class="hero__fx" aria-hidden="true">
+                  <span class="hero__fx-glow"></span>
+                  <svg class="hero__fx-bolts" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <path class="hero__bolt hero__bolt--1" d="M210 40 L260 190 L175 235 L255 380 L185 430"/>
+                    <path class="hero__bolt hero__bolt--2" d="M1250 60 L1195 215 L1285 270 L1180 430 L1255 500"/>
+                    <path class="hero__bolt hero__bolt--3" d="M720 -10 L765 130 L675 180 L740 320 L690 400"/>
+                    <circle class="hero__spark hero__spark--1" cx="185" cy="430" r="4"/>
+                    <circle class="hero__spark hero__spark--2" cx="1255" cy="500" r="5"/>
+                    <circle class="hero__spark hero__spark--3" cx="690" cy="400" r="4"/>
+                  </svg>
+                </div>
+
+              </div>
+            {% endif %}
+
+            {% if banner.title %}
+              <h1 class="hero__slide-title title">
+                {{ banner.title }}
+              </h1>
+            {% endif %}
+
+            {% if banner.description %}
+              <p class="hero__slide-descr">
+                {{ banner.description|raw }}
+              </p>
+            {% endif %}
+
+            <div class="hero__slide-buttons">
+
+              {% if banner.link %}
+                <a class="hero__slide-more btn" href="{{ banner.link }}">
+                  {{ button_more }}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M5.1665 12.0002L9.1665 8.00016L5.1665 4.00016L6.49984 2.66683L11.8332 8.00016L6.49984 13.3335L5.1665 12.0002Z"
+                      fill="#202222"/>
+                  </svg>
+                </a>
+              {% endif %}
+
+              <a class="hero__slide-btn btn-5" href="{{ catalog_url }}">
+                {{ text_to_catalog }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M4.6665 12.0002L8.6665 8.00016L4.6665 4.00016L5.99984 2.66683L11.3332 8.00016L5.99984 13.3335L4.6665 12.0002Z"
+                    fill="white"/>
+                </svg>
+              </a>
+
+            </div>
+
+            {% if note_title or note_text or note_benefits %}
+            <div class="hero__slide-note">
+                {% if note_title %}<p class="hero__slide-note--title">{{ note_title }}</p>{% endif %}
+                {% if note_text %}<p class="hero__slide-note--text">{{ note_text }}</p>{% endif %}
+                {% if note_benefits %}
+                <ul class="hero__slide-note--benefits">
+                    {% for benefit in note_benefits %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="hero__slider-bottom">
+    <div class="container">
+      <div class="hero__slider-content slider-content">
+
+        <div class="hero__slider-buttons slider-buttons">
+          <button class="hero__slider-prev slider-btn-prev">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M17.0002 18.0002L11.0002 12.0002L17.0002 6.00024L15.0002 4.00024L7.00024 12.0002L15.0002 20.0002L17.0002 18.0002Z"
+                fill="white"/>
+            </svg>
+          </button>
+
+          <button class="hero__slider-next slider-btn-next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M6.99976 18.0002L12.9998 12.0002L6.99976 6.00024L8.99976 4.00024L16.9998 12.0002L8.99976 20.0002L6.99976 18.0002Z"
+                fill="white"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="hero__slider-pagination slider-pagination"></div>
+
+      </div>
+    </div>
+  </div>
+</section>

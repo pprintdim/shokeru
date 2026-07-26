@@ -1,0 +1,141 @@
+{{ header }}
+<section class="profile">
+    <div class="container">
+        <div class="profile__inner">
+            {{ column_left }}
+
+            <div class="profile__content">
+                <div class="profile__result profile-orders" data-profile-content="my-orders">
+                    <div class="profile__orders-top">
+                        <h2 class="profile__orders-heading">{{ text_my_orders }}</h2>
+                        <form class="profile__orders-filters" action="{{ action ?: '' }}" method="get">
+                            <input type="hidden" name="route" value="account/order">
+                            <select name="year">
+                                <option value="0">{{ text_year }}</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}"{% if filter_year == year %} selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="order_status_id">
+                                <option value="0">{{ text_status }}</option>
+                                {% for order_status in order_statuses %}
+                                    <option value="{{ order_status.order_status_id }}"{% if filter_order_status_id == order_status.order_status_id %} selected{% endif %}>{{ order_status.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="profile__orders-btn btn">{{ button_apply }}</button>
+                        </form>
+                    </div>
+
+                    {% if orders %}
+                        <div class="profile__orders-block">
+                            {% for order in orders %}
+                                <div class="profile__orders-item">
+                                    <div class="profile__orders-start">
+                                        <div class="profile__orders-start--left">
+                                            <p class="profile__orders-number">№ {{ order.order_id }} от {{ order.date_added }} в {{ order.date_time }}</p>
+                                            <p class="profile__orders-status">{{ order.status }}</p>
+                                        </div>
+                                        <div class="profile__orders-start--content">
+                                            <div class="profile__orders-info">
+                                                <div class="profile__orders-info--block">
+                                                    <h4>{{ text_order_status }}</h4>
+                                                    <p>{{ order.status }}</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>{{ text_payment_status }}</h4>
+                                                    <p>{{ order.payment_status }}</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>{{ text_sum }}</h4>
+                                                    <p>{{ order.total }}</p>
+                                                </div>
+                                                <div class="profile__orders-info--block">
+                                                    <h4>{{ text_total_products }}</h4>
+                                                    <p>{{ order.products_count }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile__orders-content">
+                                        <div class="profile__orders-left">
+                                            <div class="profile__orders-left--block">
+                                                <div class="profile__orders-left--item">
+                                                    <h4>{{ text_recipient }}</h4>
+                                                    <p>{{ order.name }}{% if order.telephone %} ({{ order.telephone }}){% endif %}</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>{{ text_delivery_address }}</h4>
+                                                    <p>{{ order.shipping_method }}{% if order.shipping_address %}: <br>{{ order.shipping_address }}{% endif %}</p>
+                                                </div>
+                                                <div class="profile__orders-left--item">
+                                                    <h4>{{ text_order_info }}</h4>
+                                                    <p>{{ order.comment ?: 'Без додаткової інформації' }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile__orders-products">
+                                            <div class="profile__orders-products--block">
+                                                {% for product in order.products %}
+                                                    <div class="profile__orders-products--item">
+                                                        <a class="profile__orders-products--image" href="{{ product.href }}">
+                                                            <img src="{{ product.thumb }}" alt="{{ product.name }}">
+                                                        </a>
+                                                        <a class="profile__orders-products--title" href="{{ product.href }}">
+                                                            <h3>{{ product.name }}</h3>
+                                                        </a>
+                                                        <div class="profile__orders-products--info">
+                                                            <h4>{{ text_price }}</h4>
+                                                            <p>{{ product.price }}</p>
+                                                        </div>
+                                                        <div class="profile__orders-products--info">
+                                                            <h4>{{ text_qty }} </h4>
+                                                            <p>{{ product.quantity }}</p>
+                                                        </div>
+                                                        <div class="profile__orders-products--info">
+                                                            <h4>{{ text_sum }}: </h4>
+                                                            <p>{{ product.total }}</p>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="profile__orders-products--bottom">
+                                                <a class="profile__orders-products--repeat btn-4" href="{{ order.view }}">{{ button_reorder }}</a>
+                                                <div class="profile__orders-products--total">
+                                                    <h4 class="profile__orders-products--pay">{{ order.payment_method }}</h4>
+                                                    <div class="profile__orders-products--total-price">
+                                                        <h4>{{ text_grand_total }} </h4>
+                                                        <p>{{ order.total }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="profile__result-name">{{ text_empty }}</p>
+                    {% endif %}
+
+                    {% if order_pages %}
+                        <div class="profile__orders-bottom">
+                            <h4 class="profile__orders-bottom--title">{{ text_pages }}</h4>
+                            <div class="profile__orders-pages">
+                                {% for order_page in order_pages %}
+                                    <a class="{% if order_page.active %}active{% endif %}" href="{{ order_page.href }}">{{ order_page.page }}</a>
+                                {% endfor %}
+                                {% if next_page %}
+                                    <a class="next-page" href="{{ next_page }}"></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ footer }}
